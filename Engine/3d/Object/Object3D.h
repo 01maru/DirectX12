@@ -1,4 +1,5 @@
 #pragma once
+#define NOMINMAX
 #include "GPipeline.h"
 #include "Light.h"
 #include "MyMath.h"

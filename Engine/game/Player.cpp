@@ -46,7 +46,7 @@ void Player::Update()
 	if (!onGround) {
 		const float fallAcc = -0.01f;
 		const float fallVYMin = -0.5f;
-		fallVec.y = max(fallVec.y + fallAcc, fallVYMin);
+		//fallVec.y = max(fallVec.y + fallAcc, fallVYMin);
 		mat.trans += fallVec;
 	}
 	else if (Input::GetInstance()->GetTrigger(DIK_SPACE)) {
