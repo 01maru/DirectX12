@@ -9,7 +9,6 @@
 #include "Object2D.h"
 #include "Particle.h"
 #include "TouchableObject.h"
-
 #include "VolumeLight.h"
 #include "Player.h"
 #include "ICamera.h"
