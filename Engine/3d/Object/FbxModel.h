@@ -26,7 +26,7 @@ private:
 	void LoadMaterial(Mesh* dst, const aiMaterial* src, int index);
 	void LoadMesh(Mesh& dst, const aiMesh* src);
 	void LoadBone(UINT meshIndex, const aiMesh* src);
-	void LoadTexture(const std::string& filename, Mesh& dst, const aiMaterial* src);
+	void SetTextureFilePath(const std::string& filename, Mesh& dst, const aiMaterial* src);
 
 	void ReadNodeHeirarchy(float AnimationTime, const aiNode* pNode, const Matrix& ParentTransform);
 };

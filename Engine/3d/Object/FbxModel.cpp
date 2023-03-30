@@ -231,7 +231,7 @@ void FbxModel::LoadModel(const std::string& modelname, bool /*smoothing*/)
 
 		LoadMaterial(mesh, pMaterial, i);
 
-		LoadTexture(directoryPath + filename, *mesh, pMaterial);
+		SetTextureFilePath(directoryPath + filename, *mesh, pMaterial);
 	}
 }
 
@@ -328,7 +328,7 @@ void FbxModel::LoadBone(UINT meshIndex, const aiMesh* src)
 	}
 }
 
-void FbxModel::LoadTexture(const std::string& filename, Mesh& dst, const aiMaterial* src)
+void FbxModel::SetTextureFilePath(const std::string& filename, Mesh& dst, const aiMaterial* src)
 {
 	aiString path;
 	if (src->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), path) == AI_SUCCESS)
