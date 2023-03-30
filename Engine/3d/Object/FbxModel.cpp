@@ -285,6 +285,7 @@ void FbxModel::LoadMesh(Mesh& dst, const aiMesh* src)
 		vertex.pos = Vector3D(position->x, position->y, position->z);
 		vertex.normal = Vector3D(normal->x, normal->y, normal->z);
 		vertex.uv = Vector2D(uv->x, uv->y);
+		vertex.boneWeight[0] = 1.0f;			//	ƒ{[ƒ“‚È‚µ—p
 
 		dst.AddVertex(vertex);
 	}

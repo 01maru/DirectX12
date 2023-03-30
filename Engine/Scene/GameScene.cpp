@@ -26,7 +26,7 @@ void GameScene::MatUpdate()
 
 	player->MatUpdate();
 	tree->MatUpdate();
-	//tree->PlayAnimation();
+	tree->PlayAnimation();
 	for (int i = 0; i < tree2.size(); i++)
 	{
 		tree2[i]->MatUpdate();
@@ -254,7 +254,7 @@ void GameScene::LoadResources()
 	modelHill = std::make_unique<ObjModel>("ground1");
 	modelGround = std::make_unique<ObjModel>("ground");
 	//	‹u
-	modelTree = std::make_unique<FbxModel>("human");
+	modelTree = std::make_unique<FbxModel>("tree4");
 	modelTree2 = std::make_unique<ObjModel>("tree2");
 #pragma endregion
 	//	“V‹…
