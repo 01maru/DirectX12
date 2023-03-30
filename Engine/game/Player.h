@@ -18,7 +18,7 @@ private:
 	int jumpSound = -1;
 public:
 	static void SetCamera(ICamera* camera_);
-	void PlayerInitialize(Model* model_);
+	void PlayerInitialize(IModel* model_);
 	void Update();
 	void CollisionUpdate();
 	void OnCollision(const CollisionInfo& info) override;

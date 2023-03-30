@@ -3,7 +3,7 @@
 #include "DirectX.h"
 #include "Input.h"
 #include "Shader.h"
-#include "Model.h"
+#include "IModel.h"
 #include "Sprite.h"
 #include "Object3D.h"
 #include "Object2D.h"
@@ -29,12 +29,12 @@ private:
 
 	bool isDebug = true;
 #pragma region Model
-	std::unique_ptr<Model> modelSkydome;
-	std::unique_ptr<Model> modelGround;
-	std::unique_ptr<Model> modelHill;
-	std::unique_ptr<Model> modelSword;
-	std::unique_ptr<Model> modelTree;
-	std::unique_ptr<Model> modelTree2;
+	std::unique_ptr<IModel> modelSkydome;
+	std::unique_ptr<IModel> modelGround;
+	std::unique_ptr<IModel> modelHill;
+	std::unique_ptr<IModel> modelSword;
+	std::unique_ptr<IModel> modelTree;
+	std::unique_ptr<IModel> modelTree2;
 #pragma endregion
 
 #pragma region Sprite

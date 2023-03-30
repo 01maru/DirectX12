@@ -1,7 +1,7 @@
 #include "MeshCollider.h"
 #include "Collision.h"
 
-void MeshCollider::ConstructTriangles(Model* model)
+void MeshCollider::ConstructTriangles(IModel* model)
 {
 	triangles.clear();
 	const std::vector<Mesh*>& meshes = model->GetMeshes();

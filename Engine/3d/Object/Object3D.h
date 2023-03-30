@@ -3,7 +3,7 @@
 #include "GPipeline.h"
 #include "Light.h"
 #include "MyMath.h"
-#include "Model.h"
+#include "IModel.h"
 #include "ICamera.h"
 #include "CollisionInfo.h"
 
@@ -37,7 +37,7 @@ private:
 	ComPtr<ID3D12Resource> constBuffSkin;
 
 	Object3D* parent = nullptr;
-	Model* model = nullptr;
+	IModel* model = nullptr;
 	float animationTimer = 0.0f;
 protected:
 	MyMath::ObjMatrix mat;
@@ -48,7 +48,7 @@ public:
 	Object3D() = default;
 	virtual ~Object3D();
 
-	static Object3D* Create(Model* model = nullptr);
+	static Object3D* Create(IModel* model = nullptr);
 
 	virtual void Initialize();
 	virtual void ColliderUpdate();
@@ -59,7 +59,7 @@ public:
 	static void SetLight(Light* light_);
 	static void SetPipeline(GPipeline* pipeline_);
 	static void SetCamera(ICamera* camera_);
-	void SetModel(Model* model_);
+	void SetModel(IModel* model_);
 	void SetCollider(BaseCollider* collider_);
 	BaseCollider* GetCollider() { return collider; }
 	void SetAttribute(unsigned short attribute);
@@ -79,7 +79,7 @@ public:
 	void SetRotation(const Vector3D& rot_) { mat.rotAngle = rot_; }
 	const Vector3D& GetRotation() { return mat.rotAngle; }
 
-	inline Model* GetModel() { return model; }
+	inline IModel* GetModel() { return model; }
 	const Matrix& GetMatWorld() { return mat.matWorld; }
 
 	virtual void OnCollision(const CollisionInfo& info) { (void)info; }

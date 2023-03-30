@@ -13,7 +13,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\3d\Object\Material.cpp" />
     <ClCompile Include="Engine\3d\Object\Mesh.cpp" />
-    <ClCompile Include="Engine\3d\Object\Model.cpp" />
+    <ClCompile Include="Engine\3d\Object\IModel.cpp" />
     <ClCompile Include="Engine\3d\Object\Object2D.cpp" />
     <ClCompile Include="Engine\3d\Object\Object3D.cpp" />
     <ClCompile Include="Engine\3d\Object\TouchableObject.cpp" />
@@ -73,12 +73,14 @@
     <ClCompile Include="Engine\3d\camera\NormalCamera.cpp" />
     <ClCompile Include="Engine\Scene\TitleScene.cpp" />
     <ClCompile Include="Engine\3d\Light\VolumeLight.cpp" />
+    <ClCompile Include="Engine\3d\Object\FbxModel.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\3d\Object\ObjModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\3d\Object\Material.h" />
     <ClInclude Include="Engine\3d\Object\Mesh.h" />
-    <ClInclude Include="Engine\3d\Object\Model.h" />
+    <ClInclude Include="Engine\3d\Object\IModel.h" />
     <ClInclude Include="Engine\3d\Object\Object2D.h" />
     <ClInclude Include="Engine\3d\Object\Object3D.h" />
     <ClInclude Include="Engine\3d\Object\TouchableObject.h" />
@@ -140,6 +142,8 @@
     <ClInclude Include="Engine\Scene\TitleScene.h" />
     <ClInclude Include="Engine\3d\Light\VolumeLight.h" />
     <ClInclude Include="Engine\3d\Light\DistanceFog.h" />
+    <ClInclude Include="Engine\3d\Object\FbxModel.h" />
+    <ClInclude Include="Engine\3d\Object\ObjModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

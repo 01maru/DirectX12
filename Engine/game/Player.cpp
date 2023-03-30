@@ -16,7 +16,7 @@ void Player::SetCamera(ICamera* camera_)
 	camera = camera_;
 }
 
-void Player::PlayerInitialize(Model* model_)
+void Player::PlayerInitialize(IModel* model_)
 {
 	Initialize();
 	SetModel(model_);
@@ -44,8 +44,8 @@ void Player::Update()
 	}
 
 	if (!onGround) {
-		const float fallAcc = -0.01f;
-		const float fallVYMin = -0.5f;
+		//const float fallAcc = -0.01f;
+		//const float fallVYMin = -0.5f;
 		//fallVec.y = max(fallVec.y + fallAcc, fallVYMin);
 		mat.trans += fallVec;
 	}

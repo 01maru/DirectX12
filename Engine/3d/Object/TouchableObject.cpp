@@ -2,7 +2,7 @@
 #include "MeshCollider.h"
 #include "CollisionAttribute.h"
 
-TouchableObject* TouchableObject::Create(Model* model)
+TouchableObject* TouchableObject::Create(IModel* model)
 {
 	TouchableObject* instance = new TouchableObject();
 	if (instance == nullptr) {
@@ -17,7 +17,7 @@ TouchableObject* TouchableObject::Create(Model* model)
 	return instance;
 }
 
-bool TouchableObject::Initialize(Model* model_)
+bool TouchableObject::Initialize(IModel* model_)
 {
 	Object3D::Initialize();
 

@@ -25,7 +25,7 @@ void Object3D::SetCamera(ICamera* camera_)
 	Object3D::camera = camera_;
 }
 
-void Object3D::SetModel(Model* model_)
+void Object3D::SetModel(IModel* model_)
 {
 	model = model_;
 }
@@ -52,7 +52,7 @@ Object3D::~Object3D()
 	}
 }
 
-Object3D* Object3D::Create(Model* model)
+Object3D* Object3D::Create(IModel* model)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	Object3D* obj = new Object3D();

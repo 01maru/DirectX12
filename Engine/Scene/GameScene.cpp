@@ -9,6 +9,8 @@
 #include "MyXAudio.h"
 #include "NormalCamera.h"
 #include "TextureManager.h"
+#include "FbxModel.h"
+#include "ObjModel.h"
 
 void GameScene::CollisionUpdate()
 {
@@ -246,14 +248,14 @@ void GameScene::Finalize()
 void GameScene::LoadResources()
 {
 #pragma region Model
-	modelSword = std::make_unique<Model>("human",true);
+	modelSword = std::make_unique<FbxModel>("human");
 
-	modelSkydome = std::make_unique<Model>("skydome");
-	modelHill = std::make_unique<Model>("ground1");
-	modelGround = std::make_unique<Model>("ground");
+	modelSkydome = std::make_unique<ObjModel>("skydome");
+	modelHill = std::make_unique<ObjModel>("ground1");
+	modelGround = std::make_unique<ObjModel>("ground");
 	//	‹u
-	modelTree = std::make_unique<Model>("moveCube", true);
-	modelTree2 = std::make_unique<Model>("tree2");
+	modelTree = std::make_unique<FbxModel>("moveCube");
+	modelTree2 = std::make_unique<ObjModel>("tree2");
 #pragma endregion
 	//	“V‹…
 	skydome.reset(Object3D::Create(modelSkydome.get()));
