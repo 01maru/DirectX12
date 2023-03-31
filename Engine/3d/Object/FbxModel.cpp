@@ -285,6 +285,7 @@ void FbxModel::LoadMesh(Mesh& dst, const aiMesh* src)
 		vertex.pos = Vector3D(position->x, position->y, position->z);
 		vertex.normal = Vector3D(normal->x, normal->y, normal->z);
 		vertex.uv = Vector2D(uv->x, uv->y);
+		vertex.boneIndex[0] = 31;				//	bone最大許容数-1
 		vertex.boneWeight[0] = 1.0f;			//	ボーンなし用
 
 		dst.AddVertex(vertex);
