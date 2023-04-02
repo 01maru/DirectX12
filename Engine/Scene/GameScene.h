@@ -20,10 +20,6 @@ class GameScene :public IScene
 {
 private:
 	ICamera* camera = nullptr;
-	
-	Shader objShader;
-	std::unique_ptr<GPipeline> modelpipeline;
-	std::unique_ptr<GPipeline> obj2Dpipeline;
 
 	CollisionManager* collisionMan = nullptr;
 

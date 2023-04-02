@@ -7,6 +7,7 @@
 #include "Object3D.h"
 #include "ParticleCommon.h"
 #include "TextureManager.h"
+#include "PipelineManager.h"
 
 class Framework
 {
@@ -17,6 +18,7 @@ protected:
 	MyDirectX* dx = nullptr;
 	ParticleCommon* particleCommon = nullptr;
 	TextureManager* textureMan = nullptr;
+	PipelineManager* pipelineMan = nullptr;
 
 	bool isEndRoopFlag = false;
 public:

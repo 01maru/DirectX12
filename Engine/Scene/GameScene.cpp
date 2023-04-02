@@ -11,6 +11,7 @@
 #include "TextureManager.h"
 #include "FbxModel.h"
 #include "ObjModel.h"
+#include "PipelineManager.h"
 
 void GameScene::CollisionUpdate()
 {
@@ -64,38 +65,12 @@ void GameScene::Initialize()
 	camera = new MyDebugCamera();
 	camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
 
-	objShader.Initialize(L"Resources/shader/ObjVS.hlsl", L"Resources/shader/ObjPS.hlsl");
-
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyz座標
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	法線ベクトル
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uv座標
-		{"BONEINDICES",0,DXGI_FORMAT_R32G32B32A32_UINT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
-		{"BONEWEIGHTS",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
-	};
-	modelpipeline = std::make_unique<GPipeline>();
-	modelpipeline->Init(objShader, inputLayout, _countof(inputLayout), 4, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
-	modelpipeline->SetBlend(GPipeline::ALPHA_BLEND);
-
-	Object3D::SetPipeline(modelpipeline.get());
+	Object3D::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Model", GPipeline::ALPHA_BLEND));
 	Object3D::SetCamera(camera);
 	LoadResources();
 
-	D3D12_INPUT_ELEMENT_DESC inputLayout2D[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyz座標
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uv座標
-	};
-
-	Shader test2dShader(L"Resources/shader/SpriteVS.hlsl", L"Resources/shader/SpritePS.hlsl");
-	obj2Dpipeline = std::make_unique<GPipeline>();
-	obj2Dpipeline->Init(test2dShader, inputLayout2D, _countof(inputLayout2D), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE, D3D12_DEPTH_WRITE_MASK_ZERO);
-	obj2Dpipeline->SetBlend(GPipeline::ADD_BLEND);
-	Object2D::SetPipeline(obj2Dpipeline.get());
+	Object2D::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Obj2D", GPipeline::ADD_BLEND));
 	Object2D::SetCamera(camera);
-
-	//sphere2->SetCollider(new SphereCollider());
-	//sphere2->SetAttribute(COLLISION_ATTR_LANDSHAPE);
-	//sphere2->SetPosition(Vector3D(-3.0f, 1.0f, 0.0f));
 	
 	Player::SetCamera(camera);
 	player = std::make_unique<Player>();
@@ -329,24 +304,7 @@ void GameScene::Update()
 		SceneManager::GetInstance()->SetNextScene("TITLESCENE");
 	}
 
-	//grass->SetIsBillboard(input->GetKey(DIK_R));
-	//grass->SetIsBillboardY(input->GetKey(DIK_T));
-
 	camera->Update();
-
-	//player->Update();
-	//ground->ColliderUpdate();
-
-	//float left = (float)input->GetKey(DIK_W) - input->GetKey(DIK_S);
-	//float front = (float)input->GetKey(DIK_Q) - input->GetKey(DIK_E);
-	//float up = (float)input->GetKey(DIK_D) - input->GetKey(DIK_A);
-	//if (left == 0 && front == 0 && up == 0) left = 1.0f;
-	//Light::GetInstance()->SetDirLightDir(0, { left, up, front });
-	
-	//sphere->mat.rotAngle.y += 0.02f;
-	tree->ColliderUpdate();
-	//sphere2->mat.rotAngle.y += 0.02f;
-	//sphere2->ColliderUpdate();
 
 	sprite->Update();
 

@@ -26,6 +26,9 @@ void Framework::Initialize()
 	dx = MyDirectX::GetInstance();
 	dx->Initialize();
 
+	pipelineMan = PipelineManager::GetInstance();
+	pipelineMan->Initialize();
+
 	textureMan->SetWhiteTexHandle();
 
 	joypad = InputJoypad::GetInstance();
@@ -50,6 +53,7 @@ void Framework::Finalize()
 	InputJoypad::DeleteInstance();
 	Input::DeleteInstance();
 	MyXAudio::DeleteInstance();
+	PipelineManager::DeleteInstance();
 	MyDirectX::DeleteInstance();
 	TextureManager::DeleteInstance();
 	Window::DeleteInstance();
