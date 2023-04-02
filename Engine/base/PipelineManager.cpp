@@ -3,6 +3,14 @@
 
 PipelineManager::~PipelineManager()
 {
+	for (int i = 0; i < modelPipeline.size(); i++)
+	{
+		delete modelPipeline[i];
+	}
+	for (int i = 0; i < obj2DPipeline.size(); i++)
+	{
+		delete obj2DPipeline[i];
+	}
 	modelPipeline.clear();
 	obj2DPipeline.clear();
 }
