@@ -34,6 +34,7 @@ void TextureManager::Initialize()
 	uploadBuff.resize(kMaxSRVCount);
 	texExist.resize(kMaxSRVCount);
 	texExist[0] = true;			//	スクリーン用
+	texExist[1] = true;			//	スクリーン用
 }
 
 int TextureManager::LoadTextureGraph(const wchar_t* textureName)

@@ -73,13 +73,8 @@ void PostEffect::Draw()
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	BuffUpdate(cmdList);
-	//	テクスチャ]
-	if (Input::GetInstance()->GetKey(DIK_SPACE)) {
-		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(1));
-	}
-	else {
-		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(0));
-	}
+	//	テクスチャ
+	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(0));
 	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
 
 	cmdList->DrawIndexedInstanced(indexSize, 1, 0, 0, 0);

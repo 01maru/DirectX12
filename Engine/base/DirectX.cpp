@@ -21,6 +21,7 @@ MyDirectX* MyDirectX::GetInstance()
 
 void MyDirectX::DeleteInstance()
 {
+	PostEffect::DeleteInstance();
 	delete MyDirectX::GetInstance();
 }
 
@@ -297,6 +298,13 @@ void MyDirectX::Initialize()
 		postEffect->GetTextureBuff(0),
 		&_srvDesc,
 		srvHeap->GetCPUDescriptorHandleForHeapStart());
+	UINT incrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
+	srvHandle.ptr += incrementSize;
+	device->CreateShaderResourceView(
+		postEffect->GetTextureBuff(1),
+		&_srvDesc,
+		srvHandle);
 #pragma endregion
 #pragma endregion
 
