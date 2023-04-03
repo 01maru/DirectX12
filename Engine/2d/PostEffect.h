@@ -7,6 +7,9 @@ class PostEffect :public VertIdxBuff
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+	std::vector<ComPtr<ID3D12Resource>> texBuff;
+	int texNum = 2;
+
 	struct ConstBufferDataMaterial {
 		Vector4D color;	//	RGBA
 	};
@@ -26,6 +29,10 @@ public:
 
 	void Draw();
 	void SetColor(const Vector4D& color_);
+
+	ID3D12Resource* GetTextureBuff(int index = 0) { return texBuff[index].Get(); }
+	ID3D12Resource** GetTextureBuffPtr(int index = 0) { return texBuff[index].ReleaseAndGetAddressOf(); }
+	int GetTextureNum() { return texNum; }
 private:
 	void SetVertices() override;
 };

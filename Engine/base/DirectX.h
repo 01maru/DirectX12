@@ -50,27 +50,20 @@ private:
 	ComPtr<ID3D12Resource> depthBuff;
 
 	// screenTexture
-	ComPtr<ID3D12Resource> screenResource;
 	D3D12_RESOURCE_BARRIER screenBarrierDesc;
 	ComPtr<ID3D12DescriptorHeap> screenRTVHeap;
-	std::vector<ComPtr<ID3D12DescriptorHeap>> srvHeap;
+	//	一つだけ
+	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	
 	//	ビューポート
 	ViewPort viewPort;
 	// シザー矩形
 	ScissorRect scissorRect;
 
-	//int textureNum;
-	//std::vector<ComPtr<ID3D12Resource>> texBuff;
-	//std::vector<ComPtr<ID3D12Resource>> uploadBuff;
-	//UINT incrementSize;
-
 	std::chrono::steady_clock::time_point reference_;
 
 private:
 	void DebugLayer();
-
-	//void LoadWhiteTex();
 
 	void InitializeFPS();
 	void UpdateFPS();
@@ -80,9 +73,9 @@ private:
 	
 	void SetResourceBarrier(D3D12_RESOURCE_BARRIER& desc, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, ID3D12Resource* pResource = nullptr);
 	void CmdListDrawAble(D3D12_RESOURCE_BARRIER& barrierDesc, ID3D12Resource* pResource, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter,
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_, FLOAT* clearColor_ = nullptr);
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_, int rtDescNum = 1, FLOAT* clearColor_ = nullptr);
 public:
-	MyDirectX();
+	MyDirectX() {};
 	static MyDirectX* GetInstance();
 	void Initialize();
 	static void DeleteInstance();
@@ -91,14 +84,10 @@ public:
 	void PrevDraw(FLOAT* clearColor_ = nullptr);
 	void PostDraw();
 
-	//int LoadTextureGraph(const wchar_t* textureName);
-
 	//	Getter
-	const D3D12_CPU_DESCRIPTOR_HANDLE GetCPUSRVHeapForHeapStart() { return srvHeap[0]->GetCPUDescriptorHandleForHeapStart(); }
-	const D3D12_GPU_DESCRIPTOR_HANDLE GetGPUSRVHeapForHeapStart() { return srvHeap[0]->GetGPUDescriptorHandleForHeapStart(); }
+	const D3D12_CPU_DESCRIPTOR_HANDLE GetCPUSRVHeapForHeapStart() { return srvHeap->GetCPUDescriptorHandleForHeapStart(); }
+	const D3D12_GPU_DESCRIPTOR_HANDLE GetGPUSRVHeapForHeapStart() { return srvHeap->GetGPUDescriptorHandleForHeapStart(); }
 
-	//ID3D12Resource* GetTextureBuffer(uint32_t index) const { return texBuff[index - 1].Get(); }
-	//D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(int handle);
 	ID3D12Device* GetDev() { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCmdList() { return cmdList.Get(); }
 	Matrix GetViewportMat() { return viewPort.Mat(); }

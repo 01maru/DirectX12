@@ -25,7 +25,6 @@ void SceneManager::DeleteInstance()
 
 void SceneManager::Initialize()
 {
-	screen->Initialize();
 	scene = sceneFactry->CreateScene("GAMESCENE");
 	scene->Initialize();
 	endLoading = true;

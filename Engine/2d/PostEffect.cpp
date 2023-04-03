@@ -16,6 +16,8 @@ void PostEffect::DeleteInstance()
 
 void PostEffect::Initialize()
 {
+	texBuff.resize(texNum);
+
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	D3D12_RESOURCE_DESC cbResourceDesc{};
 #pragma region  ConstBuffer

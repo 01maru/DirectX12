@@ -1,5 +1,4 @@
 #include "Framework.h"
-#include "PostEffect.h"
 
 void Framework::Run()
 {
@@ -49,7 +48,6 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
-	PostEffect::DeleteInstance();
 	ParticleCommon::DeleteInstance();
 	SpriteCommon::DeleteInstance();
 	InputJoypad::DeleteInstance();

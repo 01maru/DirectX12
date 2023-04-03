@@ -1,9 +1,9 @@
 #include "DirectX.h"
 #include "Window.h"
+#include "PostEffect.h"
 #pragma comment (lib, "winmm.lib")
 #include <DirectXTex.h>
 using namespace DirectX;
-
 
 // 対応レベルの配列
 D3D_FEATURE_LEVEL levels[] = {
@@ -17,6 +17,11 @@ MyDirectX* MyDirectX::GetInstance()
 {
 	static MyDirectX* instance = new MyDirectX;
 	return instance;
+}
+
+void MyDirectX::DeleteInstance()
+{
+	delete MyDirectX::GetInstance();
 }
 
 void MyDirectX::DebugLayer()
@@ -51,10 +56,6 @@ void MyDirectX::UpdateFPS()
 	}
 
 	reference_ = std::chrono::steady_clock::now();
-}
-
-MyDirectX::MyDirectX()
-{
 }
 
 void MyDirectX::Initialize()
@@ -237,19 +238,23 @@ void MyDirectX::Initialize()
 	{
 		clearValue.Color[i] = clsClr[i];
 	}
-
+	PostEffect* postEffect = PostEffect::GetInstance();
+	postEffect->Initialize();
+	for (int i = 0; i < postEffect->GetTextureNum(); i++)
+	{
 	result = device->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		&clearValue,
-		IID_PPV_ARGS(screenResource.ReleaseAndGetAddressOf()));
+		IID_PPV_ARGS(postEffect->GetTextureBuffPtr(i)));
+	}
 
 #pragma region RTV
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = rtvHeap->GetDesc();
 	//	heap
-	heapDesc.NumDescriptors = 1;
+	heapDesc.NumDescriptors = postEffect->GetTextureNum();
 	result = device->CreateDescriptorHeap(
 		&heapDesc,
 		IID_PPV_ARGS(screenRTVHeap.ReleaseAndGetAddressOf()));
@@ -259,28 +264,26 @@ void MyDirectX::Initialize()
 	_rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
 	//	RTV
-	device->CreateRenderTargetView(
-		screenResource.Get(),
-		&_rtvDesc,
-		screenRTVHeap.Get()->GetCPUDescriptorHandleForHeapStart());
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = screenRTVHeap->GetCPUDescriptorHandleForHeapStart();
+	for (int i = 0; i < postEffect->GetTextureNum(); i++)
+	{
+		rtvHandle_.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * i;
+		device->CreateRenderTargetView(
+			postEffect->GetTextureBuff(i),
+			&_rtvDesc,
+			rtvHandle_);
+	}
 #pragma endregion
 #pragma region SRV
-	//textureNum = 0;			//	画像ロード失敗用の白色画像
 	const size_t kMaxSRVCount = 2056;
-
 	//	heapSETTING
 	heapDesc.NumDescriptors = kMaxSRVCount;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-	//	vector::resize
-	srvHeap.resize(heapDesc.NumDescriptors);
-	//texBuff.resize(heapDesc.NumDescriptors);
-	//uploadBuff.resize(heapDesc.NumDescriptors);
-
+	
 	result = device->CreateDescriptorHeap(
 		&heapDesc,
-		IID_PPV_ARGS(srvHeap[0].ReleaseAndGetAddressOf()));
+		IID_PPV_ARGS(srvHeap.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC _srvDesc = {};
@@ -291,9 +294,9 @@ void MyDirectX::Initialize()
 
 	//	SRV
 	device->CreateShaderResourceView(
-		screenResource.Get(),
+		postEffect->GetTextureBuff(),
 		&_srvDesc,
-		srvHeap[0]->GetCPUDescriptorHandleForHeapStart());
+		srvHeap->GetCPUDescriptorHandleForHeapStart());
 #pragma endregion
 #pragma endregion
 
@@ -342,9 +345,9 @@ void MyDirectX::Initialize()
 #pragma endregion fence
 
 	//	ビューポート
-	viewPort.Init(Window::window_width, Window::window_height, 0, 0);
+	viewPort.Init(Window::window_width, Window::window_height, 0, 0, 0.0f, 1.0f, postEffect->GetTextureNum());
 	// シザー矩形
-	scissorRect.Init(0, Window::window_width, 0, Window::window_height);
+	scissorRect.Init(0, Window::window_width, 0, Window::window_height, postEffect->GetTextureNum());
 }
 
 void MyDirectX::SetResourceBarrier(D3D12_RESOURCE_BARRIER& desc, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, ID3D12Resource* pResource)
@@ -357,27 +360,7 @@ void MyDirectX::SetResourceBarrier(D3D12_RESOURCE_BARRIER& desc, D3D12_RESOURCE_
 	cmdList->ResourceBarrier(1, &desc);
 }
 
-void MyDirectX::PrevDraw(FLOAT* clearColor_)
-{
-	// 1.リソースバリアで書き込み可能に変更
-#pragma region ReleaseBarrier
-	// バックバッファの番号を取得(2つなので0番か1番)
-	UINT64 bbIndex = swapChain->GetCurrentBackBufferIndex();		//	現在のバックバッファ設定
-#pragma endregion ReleaseBarrier
-	
-	// 2.描画先の変更
-#pragma region Change
-	// レンダーターゲットビューのハンドルを取得
-	rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
-	rtvHandle.ptr += bbIndex * device->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
-	dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
-#pragma endregion Change
-
-	CmdListDrawAble(barrierDesc, backBuffers[bbIndex].Get(),
-		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, rtvHandle, dsvHandle, clearColor_);
-}
-
-void MyDirectX::CmdListDrawAble(D3D12_RESOURCE_BARRIER& desc, ID3D12Resource* pResource, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_, FLOAT* clearColor_)
+void MyDirectX::CmdListDrawAble(D3D12_RESOURCE_BARRIER& desc, ID3D12Resource* pResource, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_, int rtDescNum, FLOAT* clearColor_)
 {
 	// 1.リソースバリアで書き込み可能に変更
 #pragma region ReleaseBarrier
@@ -385,7 +368,7 @@ void MyDirectX::CmdListDrawAble(D3D12_RESOURCE_BARRIER& desc, ID3D12Resource* pR
 #pragma endregion ReleaseBarrier
 	// 2.描画先の変更
 #pragma region Change
-	cmdList->OMSetRenderTargets(1, &rtvHandle_, false, &dsvHandle_);
+	cmdList->OMSetRenderTargets(rtDescNum, &rtvHandle_, false, &dsvHandle_);
 #pragma endregion Change
 	// 3.画面クリア
 #pragma region ScreenClear
@@ -397,6 +380,75 @@ void MyDirectX::CmdListDrawAble(D3D12_RESOURCE_BARRIER& desc, ID3D12Resource* pR
 	}
 	cmdList->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion
+}
+
+void MyDirectX::PrevDrawScreen()
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = screenRTVHeap->GetCPUDescriptorHandleForHeapStart();
+	dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+
+	int num = PostEffect::GetInstance()->GetTextureNum();
+	for (int i = 0; i < num; i++)
+	{
+		// 1.リソースバリアで書き込み可能に変更
+#pragma region ReleaseBarrier
+		SetResourceBarrier(screenBarrierDesc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_RENDER_TARGET, PostEffect::GetInstance()->GetTextureBuff(i));
+#pragma endregion ReleaseBarrier
+	}
+
+	// 2.描画先の変更
+#pragma region Change
+	cmdList->OMSetRenderTargets(num, &rtvHandle_, true, &dsvHandle);
+#pragma endregion Change
+
+	// 3.画面クリア
+#pragma region ScreenClear
+	for (int i = 0; i < PostEffect::GetInstance()->GetTextureNum(); i++)
+	{
+		rtvHandle_.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * i;
+
+		ScreenClear(rtvHandle_);
+	}
+	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+#pragma endregion
+
+	viewPort.Update();
+
+	scissorRect.Update();
+
+	cmdList->SetDescriptorHeaps(1, srvHeap.GetAddressOf());
+}
+
+void MyDirectX::PostDrawScreen()
+{
+	PostEffect* postEffect = PostEffect::GetInstance();
+
+	for (int i = 0; i < postEffect->GetTextureNum(); i++)
+	{
+		SetResourceBarrier(screenBarrierDesc, D3D12_RESOURCE_STATE_RENDER_TARGET
+			, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, postEffect->GetTextureBuff(i));
+	}
+}
+
+void MyDirectX::PrevDraw(FLOAT* clearColor_)
+{
+	// 1.リソースバリアで書き込み可能に変更
+#pragma region ReleaseBarrier
+	// バックバッファの番号を取得(2つなので0番か1番)
+	UINT64 bbIndex = swapChain->GetCurrentBackBufferIndex();		//	現在のバックバッファ設定
+#pragma endregion ReleaseBarrier
+
+	// 2.描画先の変更
+#pragma region Change
+	// レンダーターゲットビューのハンドルを取得
+	rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	rtvHandle.ptr += bbIndex * device->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
+	dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+#pragma endregion Change
+
+	CmdListDrawAble(barrierDesc, backBuffers[bbIndex].Get(),
+		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, rtvHandle, dsvHandle, 1, clearColor_);
 }
 
 void MyDirectX::PostDraw()
@@ -437,31 +489,6 @@ void MyDirectX::PostDraw()
 	result = cmdList->Reset(cmdAllocator.Get(), nullptr);
 	assert(SUCCEEDED(result));
 #pragma endregion ChangeScreen
-}
-
-void MyDirectX::DeleteInstance()
-{
-	delete MyDirectX::GetInstance();
-}
-
-void MyDirectX::PrevDrawScreen()
-{
-	rtvHandle = screenRTVHeap->GetCPUDescriptorHandleForHeapStart();
-	dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
-	CmdListDrawAble(screenBarrierDesc, screenResource.Get(),
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET,
-		rtvHandle, dsvHandle);
-
-	viewPort.Update(cmdList.Get());
-
-	scissorRect.Update(cmdList.Get());
-
-	cmdList->SetDescriptorHeaps(1, srvHeap[0].GetAddressOf());
-}
-
-void MyDirectX::PostDrawScreen()
-{
-	SetResourceBarrier(screenBarrierDesc, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void MyDirectX::ScreenClear(FLOAT* clearColor_, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_)

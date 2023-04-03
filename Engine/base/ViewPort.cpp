@@ -1,26 +1,32 @@
 #include "ViewPort.h"
+#include "DirectX.h"
 
 ViewPort::ViewPort()
 {
 }
 
-void ViewPort::Init(const int width, const int height, const int topLftX, const int topLftY, const float MinDepth, const float MaxDepth)
+void ViewPort::Init(const int width, const int height, const int topLftX, const int topLftY, const float MinDepth, const float MaxDepth, int viewportNum)
 {
-	viewport.Width = (FLOAT)width;
-	viewport.Height = (FLOAT)height;
-	viewport.TopLeftX = (FLOAT)topLftX;
-	viewport.TopLeftY = (FLOAT)topLftY;
-	viewport.MinDepth = MinDepth;
-	viewport.MaxDepth = MaxDepth;
+	viewport.resize(viewportNum);
 
-	mat.m[0][0] = viewport.Width / 2;
-	mat.m[1][1] = -viewport.Height / 2;
-	mat.m[3][0] = viewport.Width / 2;
-	mat.m[3][1] = viewport.Height / 2;
+	for (int i = 0; i < viewportNum; i++)
+	{
+		viewport[i].Width = (FLOAT)width;
+		viewport[i].Height = (FLOAT)height;
+		viewport[i].TopLeftX = (FLOAT)topLftX;
+		viewport[i].TopLeftY = (FLOAT)topLftY;
+		viewport[i].MinDepth = MinDepth;
+		viewport[i].MaxDepth = MaxDepth;
+	}
+
+	mat.m[0][0] = viewport[0].Width / 2;
+	mat.m[1][1] = -viewport[0].Height / 2;
+	mat.m[3][0] = viewport[0].Width / 2;
+	mat.m[3][1] = viewport[0].Height / 2;
 }
 
-void ViewPort::Update(ID3D12GraphicsCommandList* cmdList)
+void ViewPort::Update()
 {
 	// ビューポート設定コマンドを、コマンドリストに積む
-	cmdList->RSSetViewports(1, &viewport);
+	MyDirectX::GetInstance()->GetCmdList()->RSSetViewports((UINT)viewport.size(), &viewport.front());
 }
