@@ -1,8 +1,20 @@
-#include "ScreenPolygon.h"
+#include "PostEffect.h"
 #include "DirectX.h"
 #include "TextureManager.h"
+#include "PipelineManager.h"
 
-ScreenPolygon::ScreenPolygon()
+PostEffect* PostEffect::GetInstance()
+{
+	static PostEffect* instance = new PostEffect;
+	return instance;
+}
+
+void PostEffect::DeleteInstance()
+{
+	delete PostEffect::GetInstance();
+}
+
+void PostEffect::Initialize()
 {
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	D3D12_RESOURCE_DESC cbResourceDesc{};
@@ -39,7 +51,6 @@ ScreenPolygon::ScreenPolygon()
 	vertices.push_back({ { 1.0f, 1.0f,0.0f},{1,0} });
 
 	UINT sizePV = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
-	indexSize = 6;
 	//	インデックスデータ
 	indices[0] = 0;
 	indices[1] = 1;
@@ -49,22 +60,15 @@ ScreenPolygon::ScreenPolygon()
 	indices[5] = 3;
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * indexSize);
 	BuffInitialize(MyDirectX::GetInstance()->GetDev(), sizePV, sizeIB, indices, indexSize);
-
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyz座標
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uv座標
-	};
-	Shader shader;
-	shader.Initialize(L"Resources/shader/ScreenVS.hlsl", L"Resources/shader/ScreenPS.hlsl");
-	pipeline.Init(shader, inputLayout, _countof(inputLayout), 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-		, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 }
 
-void ScreenPolygon::Draw()
+void PostEffect::Draw()
 {
+	GPipeline* pipeline = PipelineManager::GetInstance()->GetPipeline("PostEffect", GPipeline::ALPHA_BLEND);
+
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
-	pipeline.Setting();
-	pipeline.Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pipeline->Setting();
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	BuffUpdate(cmdList);
 	//	テクスチャ
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(0));
@@ -73,7 +77,7 @@ void ScreenPolygon::Draw()
 	cmdList->DrawIndexedInstanced(indexSize, 1, 0, 0, 0);
 }
 
-void ScreenPolygon::SetColor(const Vector4D& color_)
+void PostEffect::SetColor(const Vector4D& color_)
 {
 	ConstBufferDataMaterial* mapMaterial = nullptr;
 	HRESULT result = material->Map(0, nullptr, (void**)&mapMaterial);	//	マッピング
@@ -82,7 +86,7 @@ void ScreenPolygon::SetColor(const Vector4D& color_)
 	material->Unmap(0, nullptr);
 }
 
-void ScreenPolygon::SetVertices()
+void PostEffect::SetVertices()
 {
 	// 頂点1つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(vertices[0]);

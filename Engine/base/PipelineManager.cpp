@@ -11,8 +11,13 @@ PipelineManager::~PipelineManager()
 	{
 		delete obj2DPipeline[i];
 	}
+	for (int i = 0; i < postEffectPipeline.size(); i++)
+	{
+		delete postEffectPipeline[i];
+	}
 	modelPipeline.clear();
 	obj2DPipeline.clear();
+	postEffectPipeline.clear();
 }
 
 PipelineManager* PipelineManager::GetInstance()
@@ -74,6 +79,20 @@ void PipelineManager::Initialize()
 	}
 #pragma endregion
 
+#pragma region PostEffect
+	postEffectPipeline.reserve(blendMordNum);
+	Shader postEffect(L"Resources/shader/ScreenVS.hlsl", L"Resources/shader/ScreenPS.hlsl");
+	for (int i = 0; i < blendMordNum; i++)
+	{
+		GPipeline* postEffectpipe_ = new GPipeline();
+		postEffectpipe_->Init(postEffect, inputLayout2D, _countof(inputLayout2D), 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
+			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+		postEffectpipe_->SetBlend(i);
+
+		//	pipeline’Ç‰Á
+		postEffectPipeline.emplace_back(postEffectpipe_);
+	}
+#pragma endregion
 }
 
 GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::BlendMord blend)
@@ -83,6 +102,9 @@ GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::Blen
 	}
 	else if (name == "Obj2D") {
 		return obj2DPipeline[blend];
+	}
+	else if (name == "PostEffect") {
+		return postEffectPipeline[blend];
 	}
 	return nullptr;
 }

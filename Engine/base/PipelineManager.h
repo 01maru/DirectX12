@@ -7,6 +7,7 @@ class PipelineManager
 private:
 	std::vector<GPipeline*> modelPipeline;
 	std::vector<GPipeline*> obj2DPipeline;
+	std::vector<GPipeline*> postEffectPipeline;
 
 	PipelineManager() {};
 public:

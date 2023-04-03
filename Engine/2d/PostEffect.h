@@ -1,8 +1,8 @@
 #pragma once
 #include "GPipeline.h"
 #include "VertIdxBuff.h"
-
-class ScreenPolygon :public VertIdxBuff
+//	‚Ø‚çƒ|ƒŠƒSƒ“
+class PostEffect :public VertIdxBuff
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -12,14 +12,18 @@ private:
 	};
 	ComPtr<ID3D12Resource> material;
 
-	GPipeline pipeline;
 	std::vector<ScreenVertex> vertices;
-	UINT indexSize;
-	unsigned short indices[6];
+	UINT indexSize = 6;
+	unsigned short indices[6] = {};
 
 	Vector4D color = { 1.0f,1.0f,1.0f,1.0f };
 public:
-	ScreenPolygon();
+	PostEffect() {};
+	~PostEffect() {};
+	static PostEffect* GetInstance();
+	static void DeleteInstance();
+	void Initialize();
+
 	void Draw();
 	void SetColor(const Vector4D& color_);
 private:

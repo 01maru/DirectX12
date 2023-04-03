@@ -25,6 +25,7 @@ void SceneManager::DeleteInstance()
 
 void SceneManager::Initialize()
 {
+	screen->Initialize();
 	scene = sceneFactry->CreateScene("GAMESCENE");
 	scene->Initialize();
 	endLoading = true;
@@ -55,7 +56,7 @@ void SceneManager::Update()
 				screenColor.z = color;
 
 				//	色設定
-				screen.SetColor(screenColor);
+				screen->SetColor(screenColor);
 
 				scene->MatUpdate();
 			}
@@ -76,7 +77,7 @@ void SceneManager::Update()
 				screenColor.z = color;
 
 				//	色設定
-				screen.SetColor(screenColor);
+				screen->SetColor(screenColor);
 			}
 
 			if (sceneChangeTimer >= SCENE_CHANGE_TIME) {
@@ -119,7 +120,7 @@ void SceneManager::Draw()
 #pragma region MultiPath
 	dx->PrevDraw();
 
-	screen.Draw();
+	screen->Draw();
 	if (!endLoading) {
 		//	ロード画面
 		loadSprite->Draw();

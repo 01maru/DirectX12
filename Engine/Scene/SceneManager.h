@@ -1,7 +1,7 @@
 #pragma once
 #include "IScene.h"
 #include "DirectX.h"
-#include "ScreenPolygon.h"
+#include "PostEffect.h"
 #include "SceneFactory.h"
 #include "ImGuiManager.h"
 #include "Sprite.h"
@@ -19,7 +19,7 @@ private:
 	AbstractSceneFactory* sceneFactry = new SceneFactory();
 	ImGuiManager* imguiMan = nullptr;
 
-	ScreenPolygon screen;
+	PostEffect* screen = PostEffect::GetInstance();
 
 	Vector4D screenColor = { 1.0f,1.0f,1.0f,1.0f };
 
@@ -46,7 +46,7 @@ public:
 	void Update();
 	void Draw();
 
-	void ChangeScreenColor(const Vector4D& color) { screen.SetColor(color); }
+	void ChangeScreenColor(const Vector4D& color) { screen->SetColor(color); }
 	void SceneChange();
 	void SetNextScene(const std::string& sceneName);
 };

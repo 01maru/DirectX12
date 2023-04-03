@@ -192,7 +192,7 @@
     <ClCompile Include="Engine\base\ScissorRect.cpp">
       <Filter>ソース ファイル\lib\Screen</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2d\ScreenPolygon.cpp">
+    <ClCompile Include="Engine\2d\PostEffect.cpp">
       <Filter>ソース ファイル\lib\Screen</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collider\BaseCollider.cpp">
@@ -401,7 +401,7 @@
     <ClInclude Include="Engine\base\ViewPort.h">
       <Filter>ヘッダー ファイル\lib\Screen</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2d\ScreenPolygon.h">
+    <ClInclude Include="Engine\2d\PostEffect.h">
       <Filter>ヘッダー ファイル\lib\Screen</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\VertIdxBuff.h">
