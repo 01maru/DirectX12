@@ -294,7 +294,7 @@ void MyDirectX::Initialize()
 
 	//	SRV
 	device->CreateShaderResourceView(
-		postEffect->GetTextureBuff(),
+		postEffect->GetTextureBuff(0),
 		&_srvDesc,
 		srvHeap->GetCPUDescriptorHandleForHeapStart());
 #pragma endregion

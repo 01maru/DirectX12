@@ -1,6 +1,7 @@
 #include "GPipeline.h"
 #include <vector>
 #include "DirectX.h"
+#include "PostEffect.h"
 
 MyDirectX* GPipeline::dx = MyDirectX::GetInstance();
 
@@ -46,8 +47,11 @@ void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT 
 	pipelineDesc.PrimitiveTopologyType = topologyType;
 
 	// その他の設定
-	pipelineDesc.NumRenderTargets = 1;							  // 描画対象は1つ
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
+	pipelineDesc.NumRenderTargets = PostEffect::GetInstance()->GetTextureNum();		// 描画対象は1つ
+	for (int i = 0; i < PostEffect::GetInstance()->GetTextureNum(); i++)
+	{
+		pipelineDesc.RTVFormats[i] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
+	}
 	pipelineDesc.SampleDesc.Count = 1;							  // 1ピクセルにつき1回サンプリング
 
 	//	デプスステンシルステート設定
@@ -203,6 +207,10 @@ void GPipeline::SetBlend(int mord)
 	Blend(blenddesc, mord);
 	HRESULT result = dx->GetDev()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&state));
 	assert(SUCCEEDED(result));
+	for (int i = 0; i < PostEffect::GetInstance()->GetTextureNum() - 1; i++)
+	{
+		pipelineDesc.BlendState.RenderTarget[i + 1] = pipelineDesc.BlendState.RenderTarget[i];
+	}
 }
 
 void GPipeline::SetShader(Shader shader)

@@ -2,6 +2,7 @@
 #include "DirectX.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
+#include "Input.h"
 
 PostEffect* PostEffect::GetInstance()
 {
@@ -72,8 +73,13 @@ void PostEffect::Draw()
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	BuffUpdate(cmdList);
-	//	テクスチャ
-	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(0));
+	//	テクスチャ]
+	if (Input::GetInstance()->GetKey(DIK_SPACE)) {
+		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(1));
+	}
+	else {
+		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(0));
+	}
 	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
 
 	cmdList->DrawIndexedInstanced(indexSize, 1, 0, 0, 0);

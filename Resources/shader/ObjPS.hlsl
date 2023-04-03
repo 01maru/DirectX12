@@ -4,8 +4,9 @@ Texture2D<float4> tex: register(t0);
 SamplerState smp : register(s0);
 
 
-float4 main(VSOutput input) : SV_TARGET
+PSOutput main(VSOutput input)
 {
+	PSOutput output;
 	float3 eyedir = normalize(cameraPos - input.worldpos.xyz);
 	const float shininess = 4.0f;
 	float4 shadercolor;
@@ -110,8 +111,12 @@ float4 main(VSOutput input) : SV_TARGET
 		float linerPos = length(cameraPos - input.worldpos) * linerDepth;
 		float fogFactor = saturate((distanceFog.fogEnd - linerPos) / (distanceFog.fogEnd - distanceFog.fogStart));
 
-		return lerp(fogColor, shadercolor * texcolor, fogFactor);
+		output.target0 = lerp(fogColor, shadercolor * texcolor, fogFactor);
+		output.target1 = float4(1 - output.target0.rgb, 1);
+		return output;
 	}
 
-	return shadercolor * texcolor;
+	output.target0 = shadercolor * texcolor;
+	output.target1 = float4(1 - output.target0.rgb, 1);
+	return output;
 }
