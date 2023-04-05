@@ -66,5 +66,5 @@ std::wstring ReplaceExtension(const std::wstring& origin, const wchar_t* ext)
 
 void Material::LoadTexture()
 {
-	textureHandle = TextureManager::GetInstance()->LoadTextureGraph(wfilepath);
+	texture = TextureManager::GetInstance()->LoadTextureGraph(wfilepath);
 }

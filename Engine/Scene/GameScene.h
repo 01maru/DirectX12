@@ -12,6 +12,7 @@
 #include "VolumeLight.h"
 #include "Player.h"
 #include "ICamera.h"
+#include "Texture.h"
 
 
 class CollisionManager;
@@ -40,8 +41,8 @@ private:
 #pragma endregion
 	int bgmSound = -1;
 #pragma region Texture
-	int reimuG = -1;
-	int grassG = -1;
+	Texture reimuG;
+	Texture grassG;
 #pragma endregion
 	std::unique_ptr<Object3D> skydome;
 	std::unique_ptr<TouchableObject> ground;

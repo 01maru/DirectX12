@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "MyXAudio.h"
 #include "ICamera.h"
+#include "Texture.h"
 
 class TitleScene :public IScene
 {
@@ -22,7 +23,7 @@ private:
 #pragma endregion
 
 #pragma region Texture
-	int pressG = -1;
+	Texture pressG;
 #pragma endregion
 public:
 	TitleScene();

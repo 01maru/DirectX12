@@ -1,6 +1,7 @@
 #pragma once
 #include "SpriteCommon.h"
 #include "VertIdxBuff.h"
+#include "Texture.h"
 
 class Sprite :public VertIdxBuff
 {
@@ -22,7 +23,7 @@ private:
 	Vector2D textureLeftTop;
 	Vector2D textureSize = { 100.0f,100.0f };
 
-	int handle = -1;
+	Texture handle;
 
 	bool isFlipX = false;
 	bool isFlipY = false;
@@ -52,8 +53,8 @@ private:
 	ComPtr<ID3D12Resource> material;
 	ConstBufferDataMaterial* mapMaterial = nullptr;
 public:
-	Sprite(uint32_t handle_ = UINT32_MAX);
-	void Initialize(uint32_t handle_ = UINT32_MAX);
+	Sprite(Texture texture_);
+	void Initialize(Texture texture_);
 	void Update();
 	void MatUpdate();
 	void Draw();
@@ -71,7 +72,7 @@ public:
 	float GetRotation() const { return rotAngle; }
 	void SetColor(const Vector4D& color_) { color = color_; }
 	const Vector4D& GetColor() const { return color; }
-	void SetHandle(int handle_) { handle = handle_; }
+	void SetHandle(Texture handle_) { handle = handle_; }
 	void TransferVertex();
 private:
 	void SetVertices() override;

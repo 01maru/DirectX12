@@ -6,6 +6,7 @@
 #include "ImGuiManager.h"
 #include "Sprite.h"
 #include <future>
+#include "Texture.h"
 
 class SceneManager
 {
@@ -30,7 +31,7 @@ private:
 	bool endLoading = false;
 	bool sceneInitialized = true;
 
-	int loadTex = -1;
+	Texture loadTex;
 	std::unique_ptr<Sprite> loadSprite;
 #pragma endregion
 

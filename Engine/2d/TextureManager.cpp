@@ -3,7 +3,7 @@
 #include <DirectXTex.h>
 using namespace DirectX;
 
-int TextureManager::whiteTexHandle = 0;
+Texture TextureManager::whiteTexHandle;
 
 void TextureManager::SetWhiteTexHandle()
 {
@@ -37,7 +37,7 @@ void TextureManager::Initialize()
 	texExist[1] = true;			//	スクリーン用
 }
 
-int TextureManager::LoadTextureGraph(const wchar_t* textureName)
+Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 {
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
@@ -189,8 +189,9 @@ int TextureManager::LoadTextureGraph(const wchar_t* textureName)
 
 	dx->GetDev()->CreateShaderResourceView(texBuff[buffIndex].Get(), &srvDesc, srvHandle);
 #pragma endregion
-
-	return index;
+	Texture ans;
+	ans.Create("test", index, texBuff[buffIndex].Get());
+	return ans;
 }
 
 void TextureManager::DeleteTexture(int handle)

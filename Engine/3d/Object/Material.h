@@ -2,6 +2,7 @@
 #include <string>
 #include "Vector3D.h"
 #include "DirectX.h"
+#include "Texture.h"
 
 class Material
 {
@@ -26,7 +27,7 @@ public:
 	std::string textureFilename;
 	wchar_t wfilepath[128];
 
-	int textureHandle = -1;
+	Texture texture;
 private:
 	ComPtr<ID3D12Resource> material;
 
@@ -37,7 +38,7 @@ public:
 	void Update();
 	void LoadTexture();
 
-	const int GetTextureHandle() { return textureHandle; }
+	const int GetTextureHandle() { return texture.GetHandle(); }
 	ID3D12Resource* GetMaterialConstBuff() { return material.Get(); }
 };
 

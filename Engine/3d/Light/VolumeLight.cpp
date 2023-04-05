@@ -1,12 +1,12 @@
 #include "VolumeLight.h"
-int VolumeLightObj::handle = -1;
+Texture VolumeLightObj::handle;
 
 VolumeLightObj::VolumeLightObj(const Vector2D& scale_, const Vector3D& pos, float angle)
 {
 	Initialize(scale_, pos, angle);
 }
 
-void VolumeLightObj::SetLightGraph(int handle_)
+void VolumeLightObj::SetLightGraph(Texture handle_)
 {
 	handle = handle_;
 }
@@ -33,6 +33,6 @@ void VolumeLightObj::MatUpdate()
 void VolumeLightObj::Draw()
 {
 	for (int i = 0; i < 2; i++) {
-		lightObj[i].Draw(handle);
+		lightObj[i].Draw(handle.GetHandle());
 	}
 }

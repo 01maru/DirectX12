@@ -1,14 +1,12 @@
 #pragma once
-#include <d3d12.h>
+#include "Texture.h"
 #include <vector>
-#include <wrl.h>
-#pragma comment(lib, "d3d12.lib")
 
 class TextureManager
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	static int whiteTexHandle;
+	static Texture whiteTexHandle;
 
 	int textureNum = 0;
 	std::vector<ComPtr<ID3D12Resource>> texBuff;
@@ -22,8 +20,8 @@ public:
 	~TextureManager() {};
 	void Initialize();
 	void DeleteTexture(int handle);
-	int LoadTextureGraph(const wchar_t* textureName);
+	Texture LoadTextureGraph(const wchar_t* textureName);
+	//	Getter
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(int handle);
-	ID3D12Resource* GetTextureBuffer(uint32_t index) const { return texBuff[index - 1].Get(); }
 };
 

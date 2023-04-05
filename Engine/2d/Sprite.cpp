@@ -2,17 +2,17 @@
 #include "DirectX.h"
 #include "TextureManager.h"
 
-void Sprite::Initialize(uint32_t handle_)
+void Sprite::Initialize(Texture texture_)
 {
 	common = SpriteCommon::GetInstance();
 	
 	HRESULT result;
 
-	if (handle_ != UINT32_MAX) {
-		handle = handle_;
+	//if (handle_ != UINT32_MAX) {
+		handle = texture_;
 		AdjustTextureSize();
 		size = textureSize;
-	}
+	//}
 
 	float left = (0.0f - anchorPoint.x) * size.x;
 	float right = (1.0f - anchorPoint.x) * size.x;
@@ -97,7 +97,7 @@ void Sprite::Initialize(uint32_t handle_)
 
 void Sprite::Update()
 {
-	ID3D12Resource* texBuff = TextureManager::GetInstance()->GetTextureBuffer(handle);
+	ID3D12Resource* texBuff = handle.GetResourceBuff();
 
 	if (texBuff) {
 		D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
@@ -117,9 +117,9 @@ void Sprite::Update()
 	MatUpdate();
 }
 
-Sprite::Sprite(uint32_t handle_)
+Sprite::Sprite(Texture texture_)
 {
-	Initialize(handle_);
+	Initialize(texture_);
 }
 
 void Sprite::MatUpdate()
@@ -150,7 +150,7 @@ void Sprite::Draw()
 	common->Draw();
 	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
 	//	テクスチャ
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle));
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
 	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
 	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
 
@@ -230,7 +230,7 @@ void Sprite::SetMatTransform()
 
 void Sprite::AdjustTextureSize()
 {
-	ID3D12Resource* texBuff = TextureManager::GetInstance()->GetTextureBuffer(handle);
+	ID3D12Resource* texBuff = handle.GetResourceBuff();
 	assert(texBuff);
 
 	D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();

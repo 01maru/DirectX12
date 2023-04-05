@@ -273,7 +273,7 @@ void GameScene::Draw()
 	
 	for (int i = 0; i < grass.size(); i++)
 	{
-		grass[i].Draw(grassG);
+		grass[i].Draw(grassG.GetHandle());
 	}
 	for (int i = 0; i < testVolLight.size(); i++)
 	{

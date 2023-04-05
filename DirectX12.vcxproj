@@ -77,6 +77,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\3d\Object\ObjModel.cpp" />
     <ClCompile Include="Engine\base\PipelineManager.cpp" />
+    <ClCompile Include="Engine\2d\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\3d\Object\Material.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="Engine\3d\Object\FbxModel.h" />
     <ClInclude Include="Engine\3d\Object\ObjModel.h" />
     <ClInclude Include="Engine\base\PipelineManager.h" />
+    <ClInclude Include="Engine\2d\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
