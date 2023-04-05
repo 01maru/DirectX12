@@ -33,7 +33,7 @@ public:
 	void SetColor(const Vector4D& color_);
 
 	ID3D12Resource* GetTextureBuff(int index = 0) { return texture[index].GetResourceBuff(); }
-	ID3D12Resource** GetTextureBuffPtr(int index = 0) { return texture[index].GetResourceBuffPtrPtr(); }
+	ID3D12Resource** GetTextureBuffPtr(int index = 0) { return texture[index].GetResourceBuffAddress(); }
 	int GetTextureNum() { return texNum; }
 private:
 	void SetVertices() override;
