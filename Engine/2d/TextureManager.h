@@ -21,7 +21,9 @@ public:
 	void Initialize();
 	void DeleteTexture(int handle);
 	Texture LoadTextureGraph(const wchar_t* textureName);
+	void CreateNoneGraphTexture(const std::string& texName, Texture& texture);
 	//	Getter
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(int handle);
+	ID3D12Resource* GetTextureBuffer(uint32_t index) const { return texBuff[index - 1].Get(); }
 };
 

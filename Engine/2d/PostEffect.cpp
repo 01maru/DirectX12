@@ -17,7 +17,11 @@ void PostEffect::DeleteInstance()
 
 void PostEffect::Initialize()
 {
-	texBuff.resize(texNum);
+	texture.resize(texNum);
+	for (int i = 0; i < texNum; i++)
+	{
+		TextureManager::GetInstance()->CreateNoneGraphTexture("postEffect", texture[i]);
+	}
 
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
 	D3D12_RESOURCE_DESC cbResourceDesc{};

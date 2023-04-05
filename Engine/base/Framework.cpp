@@ -44,6 +44,7 @@ void Framework::Update()
 
 	input->Update();
 	joypad->Update();
+	dx->UpdateFPS();
 }
 
 void Framework::Finalize()

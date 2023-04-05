@@ -66,7 +66,6 @@ private:
 	void DebugLayer();
 
 	void InitializeFPS();
-	void UpdateFPS();
 
 	void ScreenClear(FLOAT* clearColor_, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_);
 	void ScreenClear(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_);
@@ -79,6 +78,7 @@ public:
 	static MyDirectX* GetInstance();
 	void Initialize();
 	static void DeleteInstance();
+	void UpdateFPS();
 	void PrevDrawScreen();
 	void PostDrawScreen();
 	void PrevDraw(FLOAT* clearColor_ = nullptr);

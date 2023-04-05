@@ -352,6 +352,8 @@ void MyDirectX::Initialize()
 	result = device->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 #pragma endregion fence
 
+	InitializeFPS();
+
 	//	ビューポート
 	viewPort.Init(Window::window_width, Window::window_height, 0, 0, 0.0f, 1.0f, postEffect->GetTextureNum());
 	// シザー矩形

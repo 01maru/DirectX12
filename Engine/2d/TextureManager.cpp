@@ -190,7 +190,7 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 	dx->GetDev()->CreateShaderResourceView(texBuff[buffIndex].Get(), &srvDesc, srvHandle);
 #pragma endregion
 	Texture ans;
-	ans.Create("test", index, texBuff[buffIndex].Get());
+	ans.Initialize("test", index, texBuff[buffIndex].Get());
 	return ans;
 }
 
@@ -200,6 +200,25 @@ void TextureManager::DeleteTexture(int handle)
 	{
 		texExist[handle] = false;
 	}
+}
+
+void TextureManager::CreateNoneGraphTexture(const std::string& texName, Texture& texture)
+{
+	int index = 0;		//	‰æ‘œ‚Ìindex
+	for (int i = 0; i < texExist.size(); i++)
+	{
+		//	‰æ‘œ‚ª‚»‚Ì”z—ñ‚É‚È‚©‚Á‚½‚ç
+		if (texExist[i] == false)
+		{
+			texExist[i] = true;
+			index = i;
+			break;
+		}
+	}
+	textureNum++;
+	int buffIndex = index - 1;
+
+	texture.Initialize(texName, index, texBuff[buffIndex].Get());
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetTextureHandle(int handle)
