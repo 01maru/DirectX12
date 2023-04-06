@@ -69,8 +69,8 @@ void GameScene::Initialize()
 	Object3D::SetCamera(camera);
 	LoadResources();
 
-	Particle::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Particle", GPipeline::ALPHA_BLEND));
-	Particle::SetCamera(camera);
+	Grass::SetPipeline(PipelineManager::GetInstance()->GetPipeline("GrassParticle", GPipeline::ALPHA_BLEND));
+	Grass::SetCamera(camera);
 
 	Object2D::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Obj2D", GPipeline::ADD_BLEND));
 	Object2D::SetCamera(camera);
@@ -82,32 +82,32 @@ void GameScene::Initialize()
 	player->SetScale({ size,size,size });
 	player->SetRotation({ 0.0f,MyMath::PI,0.0f });
 
-	grass.push_back(Particle());
+	grass.push_back(Grass());
 	float dis = 6.0f;
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f,dis), 0.0f, 0.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f,dis), 0.0f, 0.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f,dis), 0.0f, 0.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, 2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, 2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, 2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -2.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -3.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -3.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -3.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -3.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -3.0f)));
-	grass.push_back(Particle(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -3.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f,dis), 0.0f, 0.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f,dis), 0.0f, 0.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f,dis), 0.0f, 0.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, 2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, 2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, 2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -2.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -3.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -3.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -3.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -3.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -3.0f)));
+	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -3.0f)));
 
 	testVolLight.push_back(VolumeLightObj(Vector2D(5.0f, 25.0f), Vector3D(0.0f, 0.0f, -2.0f), 30.0f));
 
@@ -178,7 +178,7 @@ void GameScene::Update()
 			camera = new MyDebugCamera();
 			camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 0.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
 			Player::SetCamera(camera);
-			Particle::SetCamera(camera);
+			Grass::SetCamera(camera);
 			Object3D::SetCamera(camera);
 		}
 		else {
@@ -186,7 +186,7 @@ void GameScene::Update()
 			camera = new NormalCamera();
 			camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
 			Player::SetCamera(camera);
-			Particle::SetCamera(camera);
+			Grass::SetCamera(camera);
 			Object3D::SetCamera(camera);
 		}
 	}

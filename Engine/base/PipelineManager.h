@@ -9,6 +9,7 @@ private:
 	std::vector<GPipeline*> obj2DPipeline;
 	std::vector<GPipeline*> postEffectPipeline;
 	std::vector<GPipeline*> particlePipeline;
+	std::vector<GPipeline*> grassPipeline;
 
 	PipelineManager() {};
 public:

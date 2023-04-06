@@ -19,10 +19,10 @@ PipelineManager::~PipelineManager()
 	{
 		delete particlePipeline[i];
 	}
-	modelPipeline.clear();
-	obj2DPipeline.clear();
-	postEffectPipeline.clear();
-	particlePipeline.clear();
+	for (int i = 0; i < grassPipeline.size(); i++)
+	{
+		delete grassPipeline[i];
+	}
 }
 
 PipelineManager* PipelineManager::GetInstance()
@@ -118,6 +118,23 @@ void PipelineManager::Initialize()
 		particlePipeline.emplace_back(particlepipe_);
 	}
 #pragma endregion
+
+#pragma region Grass
+	grassPipeline.reserve(blendMordNum);
+
+	Shader grassShader(L"Resources/shader/GrassParticleVS.hlsl", L"Resources/shader/GrassParticlePS.hlsl", "main", L"Resources/shader/GrassParticleGS.hlsl");
+
+	for (int i = 0; i < blendMordNum; i++)
+	{
+		GPipeline* particlepipe_ = new GPipeline();
+		particlepipe_->Init(grassShader, particleInputLayout, _countof(particleInputLayout), 3, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT
+			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+		particlepipe_->SetBlend(i);
+
+		//	pipeline’Ç‰Á
+		grassPipeline.emplace_back(particlepipe_);
+	}
+#pragma endregion
 }
 
 GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::BlendMord blend)
@@ -133,6 +150,9 @@ GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::Blen
 	}
 	else if (name == "Particle") {
 		return particlePipeline[blend];
+	}
+	else if (name == "GrassParticle") {
+		return grassPipeline[blend];
 	}
 	return nullptr;
 }

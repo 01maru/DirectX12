@@ -7,12 +7,13 @@
 #include "Sprite.h"
 #include "Object3D.h"
 #include "Object2D.h"
-#include "Particle.h"
+//#include "Particle.h"
 #include "TouchableObject.h"
 #include "VolumeLight.h"
 #include "Player.h"
 #include "ICamera.h"
 #include "Texture.h"
+#include "Grass.h"
 
 
 class CollisionManager;
@@ -37,7 +38,7 @@ private:
 #pragma region Sprite
 	std::unique_ptr<Sprite> sprite;
 
-	std::vector<Particle> grass;
+	std::vector<Grass> grass;
 #pragma endregion
 	int bgmSound = -1;
 #pragma region Texture
