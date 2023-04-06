@@ -17,6 +17,7 @@ public:
 	Vector2D& normalize();
 	Vector2D& operator/=(float s);
 	Vector2D& operator*=(float s);
+	bool operator!=(const Vector2D& vec);
 };
 
 const Vector2D operator-(const Vector2D& v1, const Vector2D& v2);

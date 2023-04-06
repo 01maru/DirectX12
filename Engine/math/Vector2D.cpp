@@ -59,6 +59,11 @@ Vector2D& Vector2D::operator*=(float s)
 	return *this;
 }
 
+bool Vector2D::operator!=(const Vector2D& vec)
+{
+	return (this->x != vec.x) || (this->y != vec.y);
+}
+
 const Vector2D operator-(const Vector2D& v1, const Vector2D& v2)
 {
 	Vector2D temp(v1);

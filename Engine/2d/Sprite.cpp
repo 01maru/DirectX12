@@ -142,6 +142,38 @@ void Sprite::MatUpdate()
 	mapMaterial->color = color;
 }
 
+void Sprite::SetTextureRect()
+{
+	ID3D12Resource* texBuff = handle.GetResourceBuff();
+
+	if (texBuff) {
+		D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
+
+		float tex_left = textureLeftTop.x / (float)resDesc_.Width;
+		float tex_right = (textureLeftTop.x + textureSize.x) / (float)resDesc_.Width;
+		float tex_top = textureLeftTop.y / (float)resDesc_.Height;
+		float tex_bottom = (textureLeftTop.y + textureSize.y) / (float)resDesc_.Height;
+
+		vertices[LB].uv = { tex_left,tex_bottom };
+		vertices[LT].uv = { tex_left,tex_top };
+		vertices[RB].uv = { tex_right,tex_bottom };
+		vertices[RT].uv = { tex_right,tex_top };
+
+		// 頂点バッファに送信
+		ScreenVertex* vertMap = nullptr;
+		HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+		assert(SUCCEEDED(result));
+		// 全頂点に対して
+		for (int i = 0; i < (int)vertices.size(); i++) {
+			vertMap[i] = vertices[i]; // 座標をコピー
+		}
+		// 繋がりを解除
+		vertBuff->Unmap(0, nullptr);
+	}
+
+	MatUpdate();
+}
+
 void Sprite::Draw()
 {
 	if (isInvisible) {
@@ -152,6 +184,36 @@ void Sprite::Draw()
 	//	テクスチャ
 	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
 	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
+
+	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);
+}
+
+void Sprite::DrawRect(const Vector2D& textureLeftTop_, const Vector2D& textureSize_)
+{
+	bool dirtyFlag = false;
+
+	if (this->textureLeftTop != textureLeftTop_) {
+		dirtyFlag = true;
+		this->textureLeftTop = textureLeftTop_;
+	}
+	if (this->textureSize != textureSize_) {
+		dirtyFlag = true;
+		this->textureSize = textureSize_;
+	}
+
+	if (dirtyFlag) {
+		SetTextureRect();
+	}
+
+	if (isInvisible) {
+		return;
+	}
+	common->Draw();
+	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
+	//	テクスチャ
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
+	//MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
 	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
 
 	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);

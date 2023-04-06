@@ -1,6 +1,6 @@
 #include "Framework.h"
 #include "ParticleManager.h"
-
+#include "DebugTextManager.h"
 void Framework::Run()
 {
 	Initialize();
@@ -37,6 +37,8 @@ void Framework::Initialize()
 
 	particleMan = ParticleManager::GetInstance();
 	particleMan->Initialize();
+
+	DebugTextManager::GetInstance()->Initialize();
 }
 
 void Framework::Update()
@@ -50,6 +52,7 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
+	DebugTextManager::DeleteInstance();
 	ParticleManager::DeleteInstance();
 	SpriteCommon::DeleteInstance();
 	InputJoypad::DeleteInstance();

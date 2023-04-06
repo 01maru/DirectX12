@@ -14,7 +14,7 @@ private:
 	Matrix matRot;
 	Matrix matTrans;
 
-	float rotAngle;
+	float rotAngle = 0.0f;
 	Vector2D trans;
 	Vector4D color;
 	Vector2D size = { 100.0f,100.0f };
@@ -53,11 +53,14 @@ private:
 	ComPtr<ID3D12Resource> material;
 	ConstBufferDataMaterial* mapMaterial = nullptr;
 public:
+	Sprite() {};
 	Sprite(Texture texture_);
 	void Initialize(Texture texture_);
+	void SetTextureRect();
 	void Update();
 	void MatUpdate();
 	void Draw();
+	void DrawRect(const Vector2D& textureLeftTop, const Vector2D& textureSize);
 
 	void SetPosition(const Vector2D& position) { trans = position; }
 	void SetSize(const Vector2D& size_) { size = size_; }

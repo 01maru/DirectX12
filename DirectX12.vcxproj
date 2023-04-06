@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\base\DebugTextManager.cpp" />
     <ClCompile Include="Engine\2d\ParticleManager.cpp" />
     <ClCompile Include="Engine\2d\ParticleStruct.cpp" />
     <ClCompile Include="Engine\3d\Object\Material.cpp" />
@@ -82,6 +83,7 @@
     <ClCompile Include="Engine\2d\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\base\DebugTextManager.h" />
     <ClInclude Include="Engine\2d\ParticleManager.h" />
     <ClInclude Include="Engine\2d\ParticleStruct.h" />
     <ClInclude Include="Engine\3d\Object\Material.h" />

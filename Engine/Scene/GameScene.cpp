@@ -13,6 +13,7 @@
 #include "ObjModel.h"
 #include "PipelineManager.h"
 #include "ParticleManager.h"
+#include "DebugTextManager.h"
 
 void GameScene::CollisionUpdate()
 {
@@ -207,6 +208,8 @@ void GameScene::Update()
 
 	sprite->Update();
 	ParticleManager::GetInstance()->Update();
+
+	DebugTextManager::GetInstance()->Print("test123401923allOK", { 0,Window::window_height/2.0f }, 5);
 #pragma endregion
 	MatUpdate();
 	CollisionUpdate();
@@ -292,4 +295,6 @@ void GameScene::Draw()
 	//}
 
 	//sprite->Draw();
+
+	DebugTextManager::GetInstance()->Draw();
 }

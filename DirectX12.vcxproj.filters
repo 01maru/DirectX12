@@ -351,6 +351,9 @@
     <ClCompile Include="Engine\2d\ParticleStruct.cpp">
       <Filter>ソース ファイル\lib\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\DebugTextManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\base\input\InputJoypad.h">
@@ -562,6 +565,9 @@
     </ClInclude>
     <ClInclude Include="Engine\2d\ParticleStruct.h">
       <Filter>ヘッダー ファイル\lib\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\DebugTextManager.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
