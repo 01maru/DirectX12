@@ -1,4 +1,5 @@
 #include "Framework.h"
+#include "ParticleManager.h"
 
 void Framework::Run()
 {
@@ -33,6 +34,9 @@ void Framework::Initialize()
 
 	joypad = InputJoypad::GetInstance();
 	input = Input::GetInstance();
+
+	particleMan = ParticleManager::GetInstance();
+	particleMan->Initialize();
 }
 
 void Framework::Update()
@@ -46,6 +50,7 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
+	ParticleManager::DeleteInstance();
 	SpriteCommon::DeleteInstance();
 	InputJoypad::DeleteInstance();
 	Input::DeleteInstance();

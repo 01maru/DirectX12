@@ -41,8 +41,10 @@ T Easing::EaseOutBack(const T startpos, const T endpos, T time, int num, double 
 template<typename T>
 T Easing::EaseIn(T start, T end, T time, int num)
 {
-	return lerp(start, end, pow(time, num));
+	return lerp(start, end, (T)pow(time, num));
 }
+template float Easing::EaseIn<float>(float, float, float, int);
+template double Easing::EaseIn<double>(double, double, double, int);
 
 template<typename T>
 T Easing::EaseOut(T start, T end, T time, int num)

@@ -12,6 +12,7 @@
 #include "FbxModel.h"
 #include "ObjModel.h"
 #include "PipelineManager.h"
+#include "ParticleManager.h"
 
 void GameScene::CollisionUpdate()
 {
@@ -21,6 +22,7 @@ void GameScene::CollisionUpdate()
 
 void GameScene::MatUpdate()
 {
+	ParticleManager::GetInstance()->MatUpdate();
 	ground->MatUpdate();
 	hill->MatUpdate();
 	skydome->MatUpdate();
@@ -71,6 +73,9 @@ void GameScene::Initialize()
 
 	Grass::SetPipeline(PipelineManager::GetInstance()->GetPipeline("GrassParticle", GPipeline::ALPHA_BLEND));
 	Grass::SetCamera(camera);
+	
+	Particle::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Particle", GPipeline::ALPHA_BLEND));
+	Particle::SetCamera(camera);
 
 	Object2D::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Obj2D", GPipeline::ADD_BLEND));
 	Object2D::SetCamera(camera);
@@ -194,11 +199,14 @@ void GameScene::Update()
 	if (input->GetTrigger(DIK_B)) {
 		SceneManager::GetInstance()->SetNextScene("TITLESCENE");
 	}
+	if (input->GetTrigger(DIK_O)) {
+		ParticleManager::GetInstance()->AddMoveParticle(Vector3D(), Vector3D(0.0f, 0.2f, 0.0f), 60, 10);
+	}
 
 	camera->Update();
 
 	sprite->Update();
-
+	ParticleManager::GetInstance()->Update();
 #pragma endregion
 	MatUpdate();
 	CollisionUpdate();
@@ -258,29 +266,30 @@ void GameScene::Update()
 
 void GameScene::Draw()
 {
-	//	’n–Ê
-	ground->Draw();
-	hill->Draw();
+	ParticleManager::GetInstance()->Draw();
+	////	’n–Ê
+	//ground->Draw();
+	//hill->Draw();
 	//	“V‹…
 	skydome->Draw();
-	//	–Ø
-	tree->Draw();
+	////	–Ø
+	//tree->Draw();
 
-	//player->Draw();
+	////player->Draw();
 
-	for (int i = 0; i < tree2.size(); i++)
-	{
-		tree2[i]->Draw();
-	}
-	
-	for (int i = 0; i < grass.size(); i++)
-	{
-		grass[i].Draw(grassG.GetHandle());
-	}
-	for (int i = 0; i < testVolLight.size(); i++)
-	{
-		testVolLight[i].Draw();
-	}
+	//for (int i = 0; i < tree2.size(); i++)
+	//{
+	//	tree2[i]->Draw();
+	//}
+	//
+	//for (int i = 0; i < grass.size(); i++)
+	//{
+	//	grass[i].Draw(grassG.GetHandle());
+	//}
+	//for (int i = 0; i < testVolLight.size(); i++)
+	//{
+	//	testVolLight[i].Draw();
+	//}
 
 	//sprite->Draw();
 }
