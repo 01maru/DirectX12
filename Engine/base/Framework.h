@@ -5,7 +5,6 @@
 #include "MyXAudio.h"
 #include "SpriteCommon.h"
 #include "Object3D.h"
-#include "ParticleCommon.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
 
@@ -16,7 +15,6 @@ protected:
 	InputJoypad* joypad = nullptr;
 	Window* win = nullptr;
 	MyDirectX* dx = nullptr;
-	ParticleCommon* particleCommon = nullptr;
 	TextureManager* textureMan = nullptr;
 	PipelineManager* pipelineMan = nullptr;
 

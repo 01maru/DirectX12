@@ -1,22 +1,21 @@
-#include "Particle.h"
+#include "Grass.h"
 #include "TextureManager.h"
-#include "PipelineManager.h"
 
-MyDirectX* Particle::dx = MyDirectX::GetInstance();
-ICamera* Particle::camera = nullptr;
-GPipeline* Particle::pipeline = nullptr;
+MyDirectX* Grass::dx = MyDirectX::GetInstance();
+ICamera* Grass::camera = nullptr;
+GPipeline* Grass::pipeline = nullptr;
 
-void Particle::SetCamera(ICamera* camera_)
+void Grass::SetCamera(ICamera* camera_)
 {
-	Particle::camera = camera_;
+	Grass::camera = camera_;
 }
 
-void Particle::SetPipeline(GPipeline* pipe)
+void Grass::SetPipeline(GPipeline* pipe)
 {
 	pipeline = pipe;
 }
 
-void Particle::Initialize()
+void Grass::Initialize()
 {
 	HRESULT result;
 	D3D12_HEAP_PROPERTIES cbHeapProp{};
@@ -63,25 +62,47 @@ void Particle::Initialize()
 	//	定数バッファのマッピング
 	result = material->Map(0, nullptr, (void**)&mapMaterial);	//	マッピング
 	assert(SUCCEEDED(result));
+
+	cbResourceDesc.Width = (sizeof(ConstBufferDataWind) + 0xFF) & ~0xFF;
+	//	生成
+	result = dev->CreateCommittedResource(
+		&cbHeapProp,	//	ヒープ設定
+		D3D12_HEAP_FLAG_NONE,
+		&cbResourceDesc,	//	リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&windRes));
+	assert(SUCCEEDED(result));
+
+	//	定数バッファのマッピング
+	result = windRes->Map(0, nullptr, (void**)&constMapWind);	//	マッピング
+	assert(SUCCEEDED(result));
 #pragma endregion
 	UINT sizePV = static_cast<UINT>(sizeof(vertex) * 1);
 
 	BuffInitialize(dev, sizePV, 1);
+
+	wind.Initialize();
 }
 
-Particle::Particle()
+Grass::Grass()
 {
 	Initialize();
 }
 
-Particle::Particle(const Vector3D& pos_)
+Grass::Grass(const Vector3D& pos_)
 {
 	vertex = pos_;
 	Initialize();
 }
 
-void Particle::MatUpdate()
+void Grass::MatUpdate()
 {
+	wind.Update();
+	constMapWind->windDir = wind.GetDir();
+	constMapWind->windForce = wind.GetForce();
+	constMapWind->elapsedTime = MyMath::ConvertToRad(wind.GetTime());
+
 	constMapTransform->matBillboard = Matrix();
 	if (isBillboardY) {
 		constMapTransform->matBillboard = camera->GetBillboardY();
@@ -96,7 +117,7 @@ void Particle::MatUpdate()
 	mapMaterial->color = color;
 }
 
-void Particle::Draw(int handle)
+void Grass::Draw(int handle)
 {
 	ID3D12GraphicsCommandList* cmdList = dx->GetCmdList();
 
@@ -108,28 +129,29 @@ void Particle::Draw(int handle)
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle));
 	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
 	cmdList->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(3, windRes->GetGPUVirtualAddress());
 
 	cmdList->DrawInstanced(1, 1, 0, 0);
 }
 
-void Particle::SetScale(float scale_)
+void Grass::SetScale(float scale_)
 {
 	scale = scale_;
 }
 
-void Particle::SetPosition(const Vector3D& pos)
+void Grass::SetPosition(const Vector3D& pos)
 {
 	vertex = pos;
 	SetVertices();
 }
 
-void Particle::Move(const Vector3D& spd)
+void Grass::Move(const Vector3D& spd)
 {
 	vertex += spd;
 	SetVertices();
 }
 
-void Particle::SetVertices()
+void Grass::SetVertices()
 {
 	// 頂点1つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(vertex);

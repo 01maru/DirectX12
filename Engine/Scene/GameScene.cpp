@@ -69,6 +69,9 @@ void GameScene::Initialize()
 	Object3D::SetCamera(camera);
 	LoadResources();
 
+	Particle::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Particle", GPipeline::ALPHA_BLEND));
+	Particle::SetCamera(camera);
+
 	Object2D::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Obj2D", GPipeline::ADD_BLEND));
 	Object2D::SetCamera(camera);
 	
@@ -79,7 +82,6 @@ void GameScene::Initialize()
 	player->SetScale({ size,size,size });
 	player->SetRotation({ 0.0f,MyMath::PI,0.0f });
 
-	Particle::SetCamera(camera);
 	grass.push_back(Particle());
 	float dis = 6.0f;
 	grass.push_back(Particle(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));

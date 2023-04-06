@@ -33,9 +33,6 @@ void Framework::Initialize()
 
 	joypad = InputJoypad::GetInstance();
 	input = Input::GetInstance();
-
-	particleCommon = ParticleCommon::GetInstance();
-	particleCommon->Initialize();
 }
 
 void Framework::Update()
@@ -49,7 +46,6 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
-	ParticleCommon::DeleteInstance();
 	SpriteCommon::DeleteInstance();
 	InputJoypad::DeleteInstance();
 	Input::DeleteInstance();

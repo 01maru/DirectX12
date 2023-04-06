@@ -15,9 +15,14 @@ PipelineManager::~PipelineManager()
 	{
 		delete postEffectPipeline[i];
 	}
+	for (int i = 0; i < particlePipeline.size(); i++)
+	{
+		delete particlePipeline[i];
+	}
 	modelPipeline.clear();
 	obj2DPipeline.clear();
 	postEffectPipeline.clear();
+	particlePipeline.clear();
 }
 
 PipelineManager* PipelineManager::GetInstance()
@@ -93,6 +98,26 @@ void PipelineManager::Initialize()
 		postEffectPipeline.emplace_back(postEffectpipe_);
 	}
 #pragma endregion
+
+#pragma region Particle
+	particlePipeline.reserve(blendMordNum);
+
+	D3D12_INPUT_ELEMENT_DESC particleInputLayout[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzÀ•W
+	};
+	Shader particleShader(L"Resources/shader/ParticleVS.hlsl", L"Resources/shader/ParticlePS.hlsl", "main", L"Resources/shader/ParticleGS.hlsl");
+
+	for (int i = 0; i < blendMordNum; i++)
+	{
+		GPipeline* particlepipe_ = new GPipeline();
+		particlepipe_->Init(particleShader, particleInputLayout, _countof(particleInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT
+			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+		particlepipe_->SetBlend(i);
+
+		//	pipeline’Ç‰Á
+		particlePipeline.emplace_back(particlepipe_);
+	}
+#pragma endregion
 }
 
 GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::BlendMord blend)
@@ -105,6 +130,9 @@ GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::Blen
 	}
 	else if (name == "PostEffect") {
 		return postEffectPipeline[blend];
+	}
+	else if (name == "Particle") {
+		return particlePipeline[blend];
 	}
 	return nullptr;
 }

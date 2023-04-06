@@ -11,6 +11,13 @@ cbuffer ConstBufferDataTransform:register(b1)
 	float scale;
 };
 
+cbuffer ConstBufferDataTransform:register(b2)
+{
+	float3 windDir;
+	float3 windForce;
+	float elapsedTime;
+};
+
 struct VSOutput
 {
 	//	セマンティック(SV_はSystem Value)
@@ -20,6 +27,7 @@ struct VSOutput
 struct GSOutput
 {
 	float4 svpos : SV_POSITION; // システム用頂点座標
+	float4 worldpos:	POSITION;
 	//float3 normal :NORMAL; // 法線ベクトル
 	float2 uv  :TEXCOORD; // uv値
 };

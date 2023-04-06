@@ -139,6 +139,9 @@
     <Filter Include="ヘッダー ファイル\Game\Scene">
       <UniqueIdentifier>{facce565-2f60-4dc8-b386-c1789ff0a2ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\ParticleShader\GrassShader">
+      <UniqueIdentifier>{2a242e27-92dc-4014-97cf-671e92e50af5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\math\Matrix.cpp">
@@ -258,9 +261,6 @@
     <ClCompile Include="Engine\Collider\MeshCollider.cpp">
       <Filter>ソース ファイル\lib\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2d\ParticleCommon.cpp">
-      <Filter>ソース ファイル\lib\Particle</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\2d\Particle.cpp">
       <Filter>ソース ファイル\lib\Particle</Filter>
     </ClCompile>
@@ -340,6 +340,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2d\Texture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2d\Grass.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -467,9 +470,6 @@
     <ClInclude Include="Engine\Collider\MeshCollider.h">
       <Filter>ヘッダー ファイル\lib\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2d\ParticleCommon.h">
-      <Filter>ヘッダー ファイル\lib\Particle</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\2d\Particle.h">
       <Filter>ヘッダー ファイル\lib\Particle</Filter>
     </ClInclude>
@@ -548,6 +548,9 @@
     <ClInclude Include="Engine\2d\Texture.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\2d\Grass.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\ObjHeader.hlsli">
@@ -561,6 +564,9 @@
     </None>
     <None Include="Resources\shader\Particle.hlsli">
       <Filter>リソース ファイル\ParticleShader</Filter>
+    </None>
+    <None Include="Resources\shader\GrassParticle.hlsli">
+      <Filter>リソース ファイル\ParticleShader\GrassShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -590,6 +596,15 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\ParticleVS.hlsl">
       <Filter>リソース ファイル\ParticleShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GrassParticleGS.hlsl">
+      <Filter>リソース ファイル\ParticleShader\GrassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GrassParticlePS.hlsl">
+      <Filter>リソース ファイル\ParticleShader\GrassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GrassParticleVS.hlsl">
+      <Filter>リソース ファイル\ParticleShader\GrassShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

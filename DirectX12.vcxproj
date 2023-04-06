@@ -47,7 +47,6 @@
     <ClCompile Include="Engine\base\MyGame.cpp" />
     <ClCompile Include="Engine\math\MyMath.cpp" />
     <ClCompile Include="Engine\Audio\MyXAudio.cpp" />
-    <ClCompile Include="Engine\2d\ParticleCommon.cpp" />
     <ClCompile Include="Engine\game\Player.cpp" />
     <ClCompile Include="Engine\3d\Light\PointLight.cpp" />
     <ClCompile Include="Engine\math\Quaternion.cpp" />
@@ -74,6 +73,7 @@
     <ClCompile Include="Engine\Scene\TitleScene.cpp" />
     <ClCompile Include="Engine\3d\Light\VolumeLight.cpp" />
     <ClCompile Include="Engine\3d\Object\FbxModel.cpp" />
+    <ClCompile Include="Engine\2d\Grass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\3d\Object\ObjModel.cpp" />
     <ClCompile Include="Engine\base\PipelineManager.cpp" />
@@ -116,7 +116,6 @@
     <ClInclude Include="Engine\base\MyGame.h" />
     <ClInclude Include="Engine\math\MyMath.h" />
     <ClInclude Include="Engine\Audio\MyXAudio.h" />
-    <ClInclude Include="Engine\2d\ParticleCommon.h" />
     <ClInclude Include="Engine\game\Player.h" />
     <ClInclude Include="Engine\3d\Light\PointLight.h" />
     <ClInclude Include="Engine\math\Quaternion.h" />
@@ -148,6 +147,7 @@
     <ClInclude Include="Engine\3d\Object\ObjModel.h" />
     <ClInclude Include="Engine\base\PipelineManager.h" />
     <ClInclude Include="Engine\2d\Texture.h" />
+    <ClInclude Include="Engine\2d\Grass.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -158,12 +158,31 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\shader\GrassParticle.hlsli" />
     <None Include="Resources\shader\Particle.hlsli" />
     <None Include="Resources\shader\ObjHeader.hlsli" />
     <None Include="Resources\shader\ScreenHeader.hlsli" />
     <None Include="Resources\shader\SpriteHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\shader\GrassParticleGS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GrassParticlePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\GrassParticleVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\shader\ParticleGS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
