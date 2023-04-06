@@ -1,30 +1,6 @@
 #include "PipelineManager.h"
 #include "Shader.h"
 
-PipelineManager::~PipelineManager()
-{
-	for (int i = 0; i < modelPipeline.size(); i++)
-	{
-		delete modelPipeline[i];
-	}
-	for (int i = 0; i < obj2DPipeline.size(); i++)
-	{
-		delete obj2DPipeline[i];
-	}
-	for (int i = 0; i < postEffectPipeline.size(); i++)
-	{
-		delete postEffectPipeline[i];
-	}
-	for (int i = 0; i < particlePipeline.size(); i++)
-	{
-		delete particlePipeline[i];
-	}
-	for (int i = 0; i < grassPipeline.size(); i++)
-	{
-		delete grassPipeline[i];
-	}
-}
-
 PipelineManager* PipelineManager::GetInstance()
 {
 	static PipelineManager* instance = new PipelineManager;
@@ -58,7 +34,7 @@ void PipelineManager::Initialize()
 		//	pipeline’Ç‰Á
 		modelPipeline.emplace_back(new GPipeline());
 		
-		GPipeline* modelpipeline_ = modelPipeline.back();
+		GPipeline* modelpipeline_ = modelPipeline.back().get();
 		modelpipeline_->Init(objShader, modelInputLayout, _countof(modelInputLayout), 4, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 		modelpipeline_->SetBlend(i);
 	}
@@ -140,19 +116,19 @@ void PipelineManager::Initialize()
 GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::BlendMord blend)
 {
 	if (name == "Model") {
-		return modelPipeline[blend];
+		return modelPipeline[blend].get();
 	}
 	else if (name == "Obj2D") {
-		return obj2DPipeline[blend];
+		return obj2DPipeline[blend].get();
 	}
 	else if (name == "PostEffect") {
-		return postEffectPipeline[blend];
+		return postEffectPipeline[blend].get();
 	}
 	else if (name == "Particle") {
-		return particlePipeline[blend];
+		return particlePipeline[blend].get();
 	}
 	else if (name == "GrassParticle") {
-		return grassPipeline[blend];
+		return grassPipeline[blend].get();
 	}
 	return nullptr;
 }

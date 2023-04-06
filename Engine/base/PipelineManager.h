@@ -5,16 +5,15 @@
 class PipelineManager
 {
 private:
-	std::vector<GPipeline*> modelPipeline;
-	std::vector<GPipeline*> obj2DPipeline;
-	std::vector<GPipeline*> postEffectPipeline;
-	std::vector<GPipeline*> particlePipeline;
-	std::vector<GPipeline*> grassPipeline;
+	std::vector<std::unique_ptr<GPipeline>> modelPipeline;
+	std::vector<std::unique_ptr<GPipeline>> obj2DPipeline;
+	std::vector<std::unique_ptr<GPipeline>> postEffectPipeline;
+	std::vector<std::unique_ptr<GPipeline>> particlePipeline;
+	std::vector<std::unique_ptr<GPipeline>> grassPipeline;
 
 	PipelineManager() {};
+	~PipelineManager() {};
 public:
-	~PipelineManager();
-
 	static PipelineManager* GetInstance();
 	static void DeleteInstance();
 	PipelineManager(const PipelineManager& obj) = delete;
