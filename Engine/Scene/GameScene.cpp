@@ -132,7 +132,7 @@ void GameScene::LoadResources()
 
 	modelSkydome = std::make_unique<ObjModel>("skydome");
 	modelHill = std::make_unique<ObjModel>("ground1");
-	modelGround = std::make_unique<ObjModel>("ground");
+	modelGround = std::make_unique<FbxModel>("objCube");
 	//	‹u
 	modelTree = std::make_unique<FbxModel>("tree4");
 	modelTree2 = std::make_unique<ObjModel>("tree2");
@@ -141,7 +141,7 @@ void GameScene::LoadResources()
 	skydome.reset(Object3D::Create(modelSkydome.get()));
 	//	’n–Ê
 	ground.reset(TouchableObject::Create(modelGround.get()));
-	ground->SetScale(Vector3D(1.0f, 1.0f, 0.1f));
+	//ground->SetScale(Vector3D(1.0f, 1.0f, 0.1f));
 	hill.reset(Object3D::Create(modelHill.get()));
 	float groundscale = 10.0f;
 	hill->SetScale(Vector3D(groundscale, 1.0f, 1.0f));
@@ -209,7 +209,7 @@ void GameScene::Update()
 	sprite->Update();
 	ParticleManager::GetInstance()->Update();
 
-	DebugTextManager::GetInstance()->Print("test123401923allOK", { 0,Window::window_height/2.0f }, 5);
+	//DebugTextManager::GetInstance()->Print("test", { 0,Window::window_height/2.0f }, 5);
 #pragma endregion
 	MatUpdate();
 	CollisionUpdate();
@@ -271,7 +271,7 @@ void GameScene::Draw()
 {
 	ParticleManager::GetInstance()->Draw();
 	////	’n–Ê
-	//ground->Draw();
+	ground->Draw();
 	//hill->Draw();
 	//	“V‹…
 	skydome->Draw();

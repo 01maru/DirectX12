@@ -99,6 +99,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
+			pos.x = -pos.x;
 
 			temp_poss.emplace_back(pos);
 		}

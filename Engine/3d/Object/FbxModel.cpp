@@ -248,13 +248,13 @@ void FbxModel::LoadMaterial(Mesh* dst, const aiMaterial* src, int index)
 	material->diffuse.y = difcolor.g;
 	material->diffuse.z = difcolor.b;
 	//	AMBIENT
-	aiColor3D amcolor(0.f, 0.f, 0.f);
+	aiColor3D amcolor(0.3f, 0.3f, 0.3f);
 	src->Get(AI_MATKEY_COLOR_AMBIENT, amcolor);
 	material->ambient.x = amcolor.r;
 	material->ambient.y = amcolor.g;
 	material->ambient.z = amcolor.b;
 	//	SPECULAR
-	aiColor3D specolor(0.f, 0.f, 0.f);
+	aiColor3D specolor(0.3f, 0.3f, 0.3f);
 	src->Get(AI_MATKEY_COLOR_SPECULAR, specolor);
 	material->specular.x = specolor.r;
 	material->specular.y = specolor.g;
@@ -282,7 +282,7 @@ void FbxModel::LoadMesh(Mesh& dst, const aiMesh* src)
 		uv->y = 1 - uv->y;
 
 		FBXVertex vertex = {};
-		vertex.pos = Vector3D(position->x, position->y, position->z);
+		vertex.pos = Vector3D(-position->x, position->y, position->z);
 		vertex.normal = Vector3D(normal->x, normal->y, normal->z);
 		vertex.uv = Vector2D(uv->x, uv->y);
 		vertex.boneIndex[0] = 31;				//	boneÅ‘å‹–—e”-1
