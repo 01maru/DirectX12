@@ -38,6 +38,16 @@ void PipelineManager::Initialize()
 		modelpipeline_->Init(objShader, modelInputLayout, _countof(modelInputLayout), 4, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 		modelpipeline_->SetBlend(i);
 	}
+
+	Shader shadowShader(L"Resources/shader/ObjShadowVS.hlsl", L"Resources/shader/ObjShadowPS.hlsl");
+
+	D3D12_INPUT_ELEMENT_DESC shadowInputLayout[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzç¿ïW
+	};
+
+	shadowPipeline = std::make_unique<GPipeline>();
+	shadowPipeline->Init(shadowShader, shadowInputLayout, _countof(shadowInputLayout), 3, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	shadowPipeline->SetBlend(GPipeline::ALPHA_BLEND);
 #pragma endregion
 
 #pragma region Obj2D
@@ -129,6 +139,9 @@ GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::Blen
 	}
 	else if (name == "GrassParticle") {
 		return grassPipeline[blend].get();
+	}
+	else if (name == "Shadow") {
+		return shadowPipeline.get();
 	}
 	return nullptr;
 }

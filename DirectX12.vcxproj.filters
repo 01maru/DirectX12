@@ -586,6 +586,9 @@
     <None Include="Resources\shader\GrassParticle.hlsli">
       <Filter>リソース ファイル\ParticleShader\GrassShader</Filter>
     </None>
+    <None Include="Resources\shader\ObjShadowHeader.hlsli">
+      <Filter>リソース ファイル\ObjShader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\ObjPS.hlsl">
@@ -623,6 +626,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\GrassParticleVS.hlsl">
       <Filter>リソース ファイル\ParticleShader\GrassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ObjShadowVS.hlsl">
+      <Filter>リソース ファイル\ObjShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ObjShadowPS.hlsl">
+      <Filter>リソース ファイル\ObjShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

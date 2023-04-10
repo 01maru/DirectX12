@@ -270,7 +270,7 @@ void GameScene::Update()
 
 void GameScene::DrawShadow()
 {
-	tree->Draw();
+	tree->DrawShadow();
 }
 
 void GameScene::Draw()

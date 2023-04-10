@@ -33,8 +33,6 @@ void TextureManager::Initialize()
 	texBuff.resize(kMaxSRVCount);
 	uploadBuff.resize(kMaxSRVCount);
 	texExist.resize(kMaxSRVCount);
-	texExist[0] = true;			//	スクリーン用
-	//texExist[1] = true;			//	スクリーン用
 }
 
 Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
@@ -94,7 +92,7 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	textureHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
 
-	int buffIndex = index - 1;
+	int buffIndex = index;
 	//	テクスチャバッファ生成
 	result = dx->GetDev()->CreateCommittedResource(
 		&textureHeapProp,

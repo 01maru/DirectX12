@@ -29,6 +29,7 @@ private:
 		//Vector3D color;
 	};
 	ComPtr<ID3D12Resource> transform;
+	ComPtr<ID3D12Resource> shadowtransform;
 
 	struct ConstBufferDataSkin
 	{
@@ -54,6 +55,7 @@ public:
 	virtual void ColliderUpdate();
 	void MatUpdate();
 	void PlayAnimation();
+	virtual void DrawShadow();
 	virtual void Draw();
 
 	static void SetLight(Light* light_);

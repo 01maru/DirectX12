@@ -10,7 +10,7 @@ private:
 	std::vector<std::unique_ptr<GPipeline>> postEffectPipeline;
 	std::vector<std::unique_ptr<GPipeline>> particlePipeline;
 	std::vector<std::unique_ptr<GPipeline>> grassPipeline;
-
+	std::unique_ptr<GPipeline> shadowPipeline;
 	PipelineManager() {};
 	~PipelineManager() {};
 public:
@@ -22,6 +22,6 @@ public:
 	void Initialize();
 
 	//	Getter
-	GPipeline* GetPipeline(const std::string& name, GPipeline::BlendMord blend);
+	GPipeline* GetPipeline(const std::string& name, GPipeline::BlendMord blend = GPipeline::NONE_BLEND);
 };
 
