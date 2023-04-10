@@ -1,4 +1,5 @@
 #include "VertIdxBuff.h"
+#include "DirectX.h"
 #include <wrl.h>
 #include <vector>
 

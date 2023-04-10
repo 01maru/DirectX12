@@ -25,6 +25,9 @@ void SceneManager::DeleteInstance()
 
 void SceneManager::Initialize()
 {
+	shadowEffect = std::make_unique<PostEffect>();
+	shadowEffect->Initialize();
+
 	scene = sceneFactry->CreateScene("GAMESCENE");
 	scene->Initialize();
 	endLoading = true;
@@ -55,7 +58,7 @@ void SceneManager::Update()
 				screenColor.z = color;
 
 				//	色設定
-				screen->SetColor(screenColor);
+				shadowEffect->SetColor(screenColor);
 
 				scene->MatUpdate();
 			}
@@ -76,7 +79,7 @@ void SceneManager::Update()
 				screenColor.z = color;
 
 				//	色設定
-				screen->SetColor(screenColor);
+				shadowEffect->SetColor(screenColor);
 			}
 
 			if (sceneChangeTimer >= SCENE_CHANGE_TIME) {
@@ -107,19 +110,19 @@ void SceneManager::Update()
 void SceneManager::Draw()
 {
 #pragma region DrawScreen
-	dx->PrevDrawScreen();
+	dx->PrevPostEffect(shadowEffect.get());
 
 	if (endLoading) {
 		scene->Draw();
 	}
 
-	dx->PostDrawScreen();
+	dx->PostEffectDraw(shadowEffect.get());
 #pragma endregion
 
 #pragma region MultiPath
 	dx->PrevDraw();
 
-	screen->Draw();
+	shadowEffect->Draw();
 	if (!endLoading) {
 		//	ロード画面
 		loadSprite->Draw();

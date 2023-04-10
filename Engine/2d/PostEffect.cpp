@@ -4,17 +4,6 @@
 #include "PipelineManager.h"
 #include "Input.h"
 
-PostEffect* PostEffect::GetInstance()
-{
-	static PostEffect* instance = new PostEffect;
-	return instance;
-}
-
-void PostEffect::DeleteInstance()
-{
-	delete PostEffect::GetInstance();
-}
-
 void PostEffect::Initialize()
 {
 	texture.resize(texNum);
@@ -67,6 +56,85 @@ void PostEffect::Initialize()
 	indices[5] = 3;
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * indexSize);
 	BuffInitialize(MyDirectX::GetInstance()->GetDev(), sizePV, sizeIB, indices, indexSize);
+
+	//	ビューポート
+	viewPort.Init(Window::window_width, Window::window_height, 0, 0, 0.0f, 1.0f, texNum);
+	// シザー矩形
+	scissorRect.Init(0, Window::window_width, 0, Window::window_height, texNum);
+
+	auto resDesc_ = MyDirectX::GetInstance()->GetBackBuffDesc();
+
+	D3D12_HEAP_PROPERTIES heapProp{};
+	heapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+	heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	heapProp.CreationNodeMask = 1;
+	heapProp.VisibleNodeMask = 1;
+
+	float clsClr[4] = { 0.5f,0.5f,0.5f,1.0f };
+	D3D12_CLEAR_VALUE clearValue{};
+	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	clearValue.DepthStencil.Depth = 0.5f;
+	for (size_t i = 0; i < 4; i++)
+	{
+		clearValue.Color[i] = clsClr[i];
+	}
+
+	for (int i = 0; i < texNum; i++)
+	{
+		result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
+			&heapProp,
+			D3D12_HEAP_FLAG_NONE,
+			&resDesc_,
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			&clearValue,
+			IID_PPV_ARGS(texture[i].GetResourceBuffAddress()));
+	}
+
+#pragma region RTV
+	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = MyDirectX::GetInstance()->GetRTVHeapDesc();
+	//	heap
+	heapDesc.NumDescriptors = texNum;
+	result = MyDirectX::GetInstance()->GetDev()->CreateDescriptorHeap(
+		&heapDesc,
+		IID_PPV_ARGS(rtvHeap.ReleaseAndGetAddressOf()));
+
+	D3D12_RENDER_TARGET_VIEW_DESC _rtvDesc = {};
+	_rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+	_rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+	//	RTV
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	for (int i = 0; i < texNum; i++)
+	{
+		rtvHandle_.ptr += MyDirectX::GetInstance()->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * i;
+		MyDirectX::GetInstance()->GetDev()->CreateRenderTargetView(
+			texture[i].GetResourceBuff(),
+			&_rtvDesc,
+			rtvHandle_);
+	}
+#pragma endregion
+
+#pragma region SRV
+	D3D12_SHADER_RESOURCE_VIEW_DESC _srvDesc = {};
+	_srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	_srvDesc.Format = _rtvDesc.Format;
+	_srvDesc.Texture2D.MipLevels = 1;
+	_srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	//	SRV
+	for (int i = 0; i < texNum; i++)
+	{
+		UINT incrementSize = MyDirectX::GetInstance()->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = MyDirectX::GetInstance()->GetSRVHeap()->GetCPUDescriptorHandleForHeapStart();
+		srvHandle.ptr += incrementSize * i;
+
+		MyDirectX::GetInstance()->GetDev()->CreateShaderResourceView(
+			texture[i].GetResourceBuff(),
+			&_srvDesc,
+			srvHandle);
+	}
+#pragma endregion
 }
 
 void PostEffect::Draw()
@@ -91,6 +159,13 @@ void PostEffect::SetColor(const Vector4D& color_)
 	mapMaterial->color = color_;
 	assert(SUCCEEDED(result));
 	material->Unmap(0, nullptr);
+}
+
+void PostEffect::Setting()
+{
+	viewPort.Update();
+
+	scissorRect.Update();
 }
 
 void PostEffect::SetVertices()

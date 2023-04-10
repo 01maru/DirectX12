@@ -294,7 +294,7 @@ void GameScene::Draw()
 	//	testVolLight[i].Draw();
 	//}
 
-	//sprite->Draw();
+	sprite->Draw();
 
 	DebugTextManager::GetInstance()->Draw();
 }

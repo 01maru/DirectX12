@@ -20,7 +20,7 @@ private:
 	AbstractSceneFactory* sceneFactry = new SceneFactory();
 	ImGuiManager* imguiMan = nullptr;
 
-	PostEffect* screen = PostEffect::GetInstance();
+	//PostEffect* screen = PostEffect::GetInstance();
 
 	Vector4D screenColor = { 1.0f,1.0f,1.0f,1.0f };
 
@@ -33,6 +33,8 @@ private:
 
 	Texture loadTex;
 	std::unique_ptr<Sprite> loadSprite;
+
+	std::unique_ptr<PostEffect> shadowEffect;
 #pragma endregion
 
 	SceneManager() {};
@@ -47,7 +49,7 @@ public:
 	void Update();
 	void Draw();
 
-	void ChangeScreenColor(const Vector4D& color) { screen->SetColor(color); }
+	void ChangeScreenColor(const Vector4D& color) { shadowEffect->SetColor(color); }
 	void SceneChange();
 	void SetNextScene(const std::string& sceneName);
 };

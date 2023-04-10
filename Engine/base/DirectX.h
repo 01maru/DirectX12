@@ -10,6 +10,7 @@
 #include <wrl.h>
 #include <chrono>
 #include <thread>
+#include "PostEffect.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -49,9 +50,6 @@ private:
 
 	ComPtr<ID3D12Resource> depthBuff;
 
-	// screenTexture
-	D3D12_RESOURCE_BARRIER screenBarrierDesc;
-	ComPtr<ID3D12DescriptorHeap> screenRTVHeap;
 	//	ˆê‚Â‚¾‚¯
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	
@@ -79,8 +77,8 @@ public:
 	void Initialize();
 	static void DeleteInstance();
 	void UpdateFPS();
-	void PrevDrawScreen();
-	void PostDrawScreen();
+	void PrevPostEffect(PostEffect* postEffect);
+	void PostEffectDraw(PostEffect* postEffect);
 	void PrevDraw(FLOAT* clearColor_ = nullptr);
 	void PostDraw();
 
@@ -88,8 +86,11 @@ public:
 	const D3D12_CPU_DESCRIPTOR_HANDLE GetCPUSRVHeapForHeapStart() { return srvHeap->GetCPUDescriptorHandleForHeapStart(); }
 	const D3D12_GPU_DESCRIPTOR_HANDLE GetGPUSRVHeapForHeapStart() { return srvHeap->GetGPUDescriptorHandleForHeapStart(); }
 
+	ID3D12DescriptorHeap* GetSRVHeap() { return srvHeap.Get(); }
 	ID3D12Device* GetDev() { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCmdList() { return cmdList.Get(); }
 	Matrix GetViewportMat() { return viewPort.Mat(); }
+	D3D12_RESOURCE_DESC GetBackBuffDesc() { return backBuffers[0]->GetDesc(); }
+	D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc() { return rtvHeap->GetDesc(); }
 };
 

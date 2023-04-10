@@ -19,7 +19,7 @@ struct FBXVertex
 	Vector3D pos;
 	Vector3D normal;
 	Vector2D uv;
-	UINT boneIndex[4];
+	unsigned int boneIndex[4];
 	float boneWeight[4];
 };
 

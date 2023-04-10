@@ -47,8 +47,8 @@ void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT 
 	pipelineDesc.PrimitiveTopologyType = topologyType;
 
 	// ‚»‚Ì‘¼‚Ìİ’è
-	pipelineDesc.NumRenderTargets = PostEffect::GetInstance()->GetTextureNum();		// •`‰æ‘ÎÛ‚Í1‚Â
-	for (int i = 0; i < PostEffect::GetInstance()->GetTextureNum(); i++)
+	pipelineDesc.NumRenderTargets = 2;		// •`‰æ‘ÎÛ‚Í1‚Â
+	for (int i = 0; i < 2; i++)
 	{
 		pipelineDesc.RTVFormats[i] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255w’è‚ÌRGBA
 	}
@@ -207,7 +207,7 @@ void GPipeline::SetBlend(int mord)
 	Blend(blenddesc, mord);
 	HRESULT result = dx->GetDev()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&state));
 	assert(SUCCEEDED(result));
-	for (int i = 0; i < PostEffect::GetInstance()->GetTextureNum() - 1; i++)
+	for (int i = 0; i < 2 - 1; i++)
 	{
 		pipelineDesc.BlendState.RenderTarget[i + 1] = pipelineDesc.BlendState.RenderTarget[i];
 	}

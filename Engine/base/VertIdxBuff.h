@@ -1,6 +1,13 @@
 #pragma once
-#include "DirectX.h"
 #include "VertexStruct.h"
+#include <wrl.h>
+#include <d3d12.h>
+#include <dxgi1_6.h>
+#include <iostream>
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib")
+
+class MyDirectX;
 
 class VertIdxBuff
 {
