@@ -25,7 +25,7 @@ private:
 
 	CollisionManager* collisionMan = nullptr;
 
-	bool isDebug = true;
+	bool isDebug = false;
 #pragma region Model
 	std::unique_ptr<IModel> modelSkydome;
 	std::unique_ptr<IModel> modelGround;

@@ -55,6 +55,8 @@ public:
 	void SetDirLightActive(int index, bool active);
 	void SetDirLightDir(int index, const Vector3D& lightdir_);
 	void SetDirLightColor(int index, const Vector3D& lightcolor_);
+	void SetDirLightShadow(int index, bool shadowflag);
+	ICamera* GetDirLightCamera(int index) { return dirLights[index].GetCamera(); }
 
 	void SetPointLightActive(int index, bool active);
 	void SetPointLightPos(int index, const Vector3D& lightpos);

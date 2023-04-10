@@ -140,6 +140,11 @@ void Light::SetDirLightColor(int index, const Vector3D& lightcolor_)
 	dirty = true;
 }
 
+void Light::SetDirLightShadow(int index, bool shadowflag)
+{
+	dirLights[index].SetShadow(shadowflag);
+}
+
 void Light::Update()
 {
 	if (dirty) {

@@ -85,6 +85,12 @@ Vector3D& Vector3D::operator*=(float s)
 	return *this;
 }
 
+const Vector3D operator+(const Vector3D& v1, const Vector3D& v2)
+{
+	Vector3D temp(v1);
+	return temp += v2;
+}
+
 const Vector3D operator-(const Vector3D& v1, const Vector3D& v2)
 {
 	Vector3D temp(v1);

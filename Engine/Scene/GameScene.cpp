@@ -30,7 +30,7 @@ void GameScene::MatUpdate()
 
 	player->MatUpdate();
 	tree->MatUpdate();
-	tree->PlayAnimation();
+	//tree->PlayAnimation();
 	for (int i = 0; i < tree2.size(); i++)
 	{
 		tree2[i]->MatUpdate();
@@ -54,7 +54,7 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-	delete camera;
+	//delete camera;
 	for (int i = 0; i < tree2.size(); i++)
 	{
 		delete tree2[i];
@@ -65,8 +65,9 @@ void GameScene::Initialize()
 {
 	collisionMan = CollisionManager::GetInstance();
 
-	camera = new MyDebugCamera();
-	camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
+	//camera = new MyDebugCamera();
+	//camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
+	camera = Light::GetInstance()->GetDirLightCamera(0);
 
 	Object3D::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Model", GPipeline::ALPHA_BLEND));
 	Object3D::SetCamera(camera);
@@ -132,9 +133,9 @@ void GameScene::LoadResources()
 
 	modelSkydome = std::make_unique<ObjModel>("skydome");
 	modelHill = std::make_unique<ObjModel>("ground1");
-	modelGround = std::make_unique<FbxModel>("objCube");
+	modelGround = std::make_unique<ObjModel>("ground");
 	//	‹u
-	modelTree = std::make_unique<FbxModel>("tree4");
+	modelTree = std::make_unique<ObjModel>("objCube");
 	modelTree2 = std::make_unique<ObjModel>("tree2");
 #pragma endregion
 	//	“V‹…
@@ -149,7 +150,7 @@ void GameScene::LoadResources()
 
 	tree.reset(Object3D::Create(modelTree.get()));
 	//float size = 0.01f;
-	//tree->SetScale({ size,size,size });
+	tree->SetPosition({ 0.0f,3.0f,0.0f});
 	tree2.push_back(Object3D::Create(modelTree2.get()));
 	tree2.push_back(Object3D::Create(modelTree2.get()));
 	tree2.push_back(Object3D::Create(modelTree2.get()));
@@ -180,7 +181,7 @@ void GameScene::Update()
 	if (input->GetTrigger(DIK_V)) {
 		isDebug = !isDebug;
 		if (isDebug) {
-			delete camera;
+			//delete camera;
 			camera = new MyDebugCamera();
 			camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 0.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
 			Player::SetCamera(camera);
@@ -189,8 +190,7 @@ void GameScene::Update()
 		}
 		else {
 			delete camera;
-			camera = new NormalCamera();
-			camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
+			camera = Light::GetInstance()->GetDirLightCamera(0);
 			Player::SetCamera(camera);
 			Grass::SetCamera(camera);
 			Object3D::SetCamera(camera);
@@ -275,8 +275,8 @@ void GameScene::Draw()
 	//hill->Draw();
 	//	“V‹…
 	skydome->Draw();
-	////	–Ø
-	//tree->Draw();
+	//	–Ø
+	tree->Draw();
 
 	////player->Draw();
 
