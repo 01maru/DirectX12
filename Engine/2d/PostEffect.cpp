@@ -127,7 +127,7 @@ void PostEffect::Initialize()
 	{
 		UINT incrementSize = MyDirectX::GetInstance()->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = MyDirectX::GetInstance()->GetSRVHeap()->GetCPUDescriptorHandleForHeapStart();
-		srvHandle.ptr += incrementSize * i;
+		srvHandle.ptr += incrementSize * texture[i].GetHandle();
 
 		MyDirectX::GetInstance()->GetDev()->CreateShaderResourceView(
 			texture[i].GetResourceBuff(),
@@ -146,7 +146,7 @@ void PostEffect::Draw()
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	BuffUpdate(cmdList);
 	//	テクスチャ
-	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(0));
+	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
 	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
 
 	cmdList->DrawIndexedInstanced(indexSize, 1, 0, 0, 0);

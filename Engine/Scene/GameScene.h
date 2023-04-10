@@ -70,6 +70,7 @@ public:
 	void Finalize() override;
 	void LoadResources() override;
 	void Update() override;
+	void DrawShadow() override;
 	void Draw() override;
 private:
 	MyDirectX* dx = MyDirectX::GetInstance();

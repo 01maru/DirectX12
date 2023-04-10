@@ -35,6 +35,7 @@ private:
 	std::unique_ptr<Sprite> loadSprite;
 
 	std::unique_ptr<PostEffect> shadowEffect;
+	std::unique_ptr<PostEffect> shadowEffect2;
 #pragma endregion
 
 	SceneManager() {};
@@ -52,5 +53,7 @@ public:
 	void ChangeScreenColor(const Vector4D& color) { shadowEffect->SetColor(color); }
 	void SceneChange();
 	void SetNextScene(const std::string& sceneName);
+
+	Texture GetShadowMap() { return shadowEffect2->GetTexture(); }
 };
 

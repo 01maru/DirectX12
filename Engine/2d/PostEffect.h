@@ -48,6 +48,7 @@ public:
 	int GetTextureNum() { return texNum; }
 	D3D12_RESOURCE_BARRIER& GetResouceBarrier() { return barrierDesc; }
 	ID3D12DescriptorHeap* GetRTVHeap() { return rtvHeap.Get(); }
+	Texture GetTexture() { return texture[0]; }
 private:
 	void SetVertices() override;
 };

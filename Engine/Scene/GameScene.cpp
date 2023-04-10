@@ -14,6 +14,7 @@
 #include "PipelineManager.h"
 #include "ParticleManager.h"
 #include "DebugTextManager.h"
+#include "SceneManager.h"
 
 void GameScene::CollisionUpdate()
 {
@@ -166,7 +167,7 @@ void GameScene::LoadResources()
 #pragma endregion
 
 #pragma region Sprite
-	sprite = std::make_unique<Sprite>(reimuG);
+	sprite = std::make_unique<Sprite>(SceneManager::GetInstance()->GetShadowMap());
 	sprite->SetSize(Vector2D(200.0f, 200.0f));
 	//sprite->SetTextureLeftTop(Vector2D(sprite->GetSize().x / 2.0f, sprite->GetSize().y / 2.0f));
 	//sprite->SetTextureSize(Vector2D(sprite->GetSize().x / 2.0f, sprite->GetSize().y / 2.0f));
@@ -267,6 +268,11 @@ void GameScene::Update()
 	Light::GetInstance()->SetCircleShadowAtten(0, { 0.2f,0.2f,0.0f });
 }
 
+void GameScene::DrawShadow()
+{
+	tree->Draw();
+}
+
 void GameScene::Draw()
 {
 	ParticleManager::GetInstance()->Draw();
@@ -274,7 +280,7 @@ void GameScene::Draw()
 	ground->Draw();
 	//hill->Draw();
 	//	“V‹…
-	skydome->Draw();
+	//skydome->Draw();
 	//	–Ø
 	tree->Draw();
 

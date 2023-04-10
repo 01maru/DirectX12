@@ -67,6 +67,11 @@ void TitleScene::Update()
 	MatUpdate();
 }
 
+void TitleScene::DrawShadow()
+{
+
+}
+
 void TitleScene::Draw()
 {
 	pressSprite->Draw();

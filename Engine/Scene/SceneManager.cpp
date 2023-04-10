@@ -27,6 +27,8 @@ void SceneManager::Initialize()
 {
 	shadowEffect = std::make_unique<PostEffect>();
 	shadowEffect->Initialize();
+	shadowEffect2 = std::make_unique<PostEffect>();
+	shadowEffect2->Initialize();
 
 	scene = sceneFactry->CreateScene("GAMESCENE");
 	scene->Initialize();
@@ -110,6 +112,14 @@ void SceneManager::Update()
 void SceneManager::Draw()
 {
 #pragma region DrawScreen
+	dx->PrevPostEffect(shadowEffect2.get());
+
+	if (endLoading) {
+		scene->DrawShadow();
+	}
+
+	dx->PostEffectDraw(shadowEffect2.get());
+
 	dx->PrevPostEffect(shadowEffect.get());
 
 	if (endLoading) {
