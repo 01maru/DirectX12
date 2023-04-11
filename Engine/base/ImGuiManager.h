@@ -19,9 +19,12 @@ public:
 	ImGuiManager& operator=(const ImGuiManager& obj) = delete;
 
 	void Initialize();
-
+	
+	//	更新前処理
 	void Begin();
+	//	更新後処理
 	void End();
+	//	描画処理
 	void Draw();
 };
 
