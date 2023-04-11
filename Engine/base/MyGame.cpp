@@ -1,12 +1,17 @@
 #include "MyGame.h"
+#include "SceneManager.h"
+#include "Light.h"
 #include "Object3D.h"
 
 void MyGame::Initialize()
 {
 	Framework::Initialize();
 
-	light = Light::GetInstance();
+	Light* light = Light::GetInstance();
+	//	ƒ‰ƒCƒg‚Ì‰Šú‰»
 	light->Initialize();
+
+#pragma region SetLight
 	light->SetDirLightActive(0, true);
 	light->SetDirLightShadow(0, true);
 	//Light::GetInstance()->SetSpotLightActive(0, true);
@@ -17,7 +22,6 @@ void MyGame::Initialize()
 	//light->SetDirLightDir(0, { 0,0,1 });
 	//light->SetDirLightColor(0, { 1,1,1 });
 	//light->SetCircleShadowActive(0, true);
-	Object3D::SetLight(light);
 
 	//light->SetCircleShadowDir(0, { 0.0f,1.0f,0.0f });
 	//light->SetCircleShadowFactorAngle(0, { 0.0f,0.5f });
@@ -42,21 +46,23 @@ void MyGame::Initialize()
 	//light->SetPointLightColor(2, { 0.0f,1.0f,1.0f });
 	//light->SetPointLightPos(2, { -3.0f,1.0f,-3.0f });
 
-	sceneMan = SceneManager::GetInstance();
-	sceneMan->Initialize();
+	Object3D::SetLight(light);
+#pragma endregion
+
+	SceneManager::GetInstance()->Initialize();
 }
 
 void MyGame::Update()
 {
 	Framework::Update();
 
-	light->Update();
-	sceneMan->Update();
+	SceneManager::GetInstance()->Update();
+	Light::GetInstance()->Update();
 }
 
 void MyGame::Draw()
 {
-	sceneMan->Draw();
+	SceneManager::GetInstance()->Draw();
 }
 
 void MyGame::Finalize()
