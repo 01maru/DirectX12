@@ -19,7 +19,6 @@ public:
 	ImGuiManager& operator=(const ImGuiManager& obj) = delete;
 
 	void Initialize();
-	void Finalize();
 
 	void Begin();
 	void End();

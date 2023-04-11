@@ -9,7 +9,6 @@ SceneManager::~SceneManager()
 {
 	scene->Finalize();
 	delete scene;
-	ImGuiManager::GetInstance()->Finalize();
 	ImGuiManager::DeleteInstance();
 }
 
