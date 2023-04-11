@@ -55,8 +55,8 @@ void MyDebugCamera::Update()
 		break;
 	case MyDebugCamera::TranslationMove:
 		if (input->Click(Input::WheelClick)) {
-			target += rightVec * (float)(moveCursor.x);
-			target += downVec * (float)(moveCursor.y);
+			target -= rightVec * (float)(moveCursor.x);
+			target -= downVec * (float)(moveCursor.y);
 		}
 		break;
 	case MyDebugCamera::RotationMove:
@@ -76,12 +76,7 @@ void MyDebugCamera::Update()
 	target += -frontVec * (float)(input->GetKey(DIK_Z) - input->GetKey(DIK_X)) * spd;
 
 #pragma region •ûŒüƒxƒNƒgƒ‹
-	frontVec = target - eye;
-	frontVec.normalize();
-	rightVec = Vector3D(0, 1, 0).cross(frontVec);
-	downVec = rightVec.cross(frontVec);
-	rightVec.normalize();
-	downVec.normalize();
+	CalcDirectionVec();
 #pragma endregion
 	
 	if (rotAngle.x >= MyMath::PIx2) rotAngle.x -= MyMath::PIx2;

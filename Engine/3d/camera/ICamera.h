@@ -19,6 +19,7 @@ protected:
 
 	//	ビルボード計算用
 	void CalcBillboard();
+	void CalcDirectionVec();
 public:
 	virtual ~ICamera() = default;
 	virtual void Initialize(Vector3D eye_, Vector3D target_, Vector3D up_) = 0;
