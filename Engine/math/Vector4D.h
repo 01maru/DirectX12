@@ -1,6 +1,10 @@
 #pragma once
-#include "Vector3D.h"
-#include "Matrix.h"
+
+#pragma region ‘O’uéŒ¾
+class Vector3D;
+class Matrix;
+#pragma endregion
+
 class Vector4D
 {
 public:
