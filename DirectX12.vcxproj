@@ -22,7 +22,6 @@
     <ClCompile Include="Engine\3d\Object\Object3D.cpp" />
     <ClCompile Include="Engine\3d\Object\TouchableObject.cpp" />
     <ClCompile Include="Engine\3d\Object\Wind.cpp" />
-    <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
     <ClCompile Include="Engine\3d\Light\CircleShadow.cpp" />
     <ClCompile Include="Engine\Collider\Collision.cpp" />
     <ClCompile Include="Engine\Collider\CollisionAttribute.cpp" />

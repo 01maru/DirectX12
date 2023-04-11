@@ -1,12 +1,10 @@
 #pragma once
 #include "IScene.h"
-#include "DirectX.h"
-#include "PostEffect.h"
 #include "SceneFactory.h"
-#include "ImGuiManager.h"
-#include "Sprite.h"
 #include <future>
+#include "Sprite.h"
 #include "Texture.h"
+#include "PostEffect.h"
 
 class SceneManager
 {
@@ -14,13 +12,9 @@ private:
 	//	フェードインアウトフレーム数
 	static const int SCENE_CHANGE_TIME;
 
-	MyDirectX* dx = MyDirectX::GetInstance();
 	IScene* scene = nullptr;
 	IScene* nextScene = nullptr;
-	AbstractSceneFactory* sceneFactry = new SceneFactory();
-	ImGuiManager* imguiMan = nullptr;
-
-	//PostEffect* screen = PostEffect::GetInstance();
+	std::unique_ptr<AbstractSceneFactory> sceneFactry;
 
 	Vector4D screenColor = { 1.0f,1.0f,1.0f,1.0f };
 
@@ -33,7 +27,9 @@ private:
 
 	Texture loadTex;
 	std::unique_ptr<Sprite> loadSprite;
+#pragma endregion
 
+#pragma region PostEffect
 	std::unique_ptr<PostEffect> shadowEffect;
 	std::unique_ptr<PostEffect> shadowEffect2;
 #pragma endregion

@@ -19,6 +19,5 @@ public:
 	virtual void Update();
 	virtual void Draw() = 0;
 	virtual void Finalize();
-	//virtual bool IsEndGameRoop() { return isEndRoopFlag; }
 };
 

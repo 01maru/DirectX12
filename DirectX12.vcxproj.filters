@@ -207,9 +207,6 @@
     <ClCompile Include="Engine\math\Vector4D.cpp">
       <Filter>ソース ファイル\lib\Math\Vector</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp">
-      <Filter>ソース ファイル\lib\Scene\Factry</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Scene\SceneFactory.cpp">
       <Filter>ソース ファイル\lib\Scene\Factry</Filter>
     </ClCompile>

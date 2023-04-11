@@ -3,6 +3,17 @@
 #include <imgui_impl_dx12.h>
 #include "Window.h"
 
+ImGuiManager* ImGuiManager::GetInstance()
+{
+	static ImGuiManager* instance = new ImGuiManager;
+	return instance;
+}
+
+void ImGuiManager::DeleteInstance()
+{
+	delete ImGuiManager::GetInstance();
+}
+
 void ImGuiManager::Initialize()
 {
 	ImGui::CreateContext();

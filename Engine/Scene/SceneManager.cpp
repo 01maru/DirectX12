@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include "Easing.h"
 #include "TextureManager.h"
+#include "ImGuiManager.h"
 
 const int SceneManager::SCENE_CHANGE_TIME = 60;
 
@@ -8,8 +9,8 @@ SceneManager::~SceneManager()
 {
 	scene->Finalize();
 	delete scene;
-	imguiMan->Finalize();
-	delete imguiMan;
+	ImGuiManager::GetInstance()->Finalize();
+	ImGuiManager::DeleteInstance();
 }
 
 SceneManager* SceneManager::GetInstance()
@@ -30,6 +31,7 @@ void SceneManager::Initialize()
 	shadowEffect2 = std::make_unique<PostEffect>();
 	shadowEffect2->Initialize();
 
+	sceneFactry = std::make_unique<SceneFactory>();
 	scene = sceneFactry->CreateScene("GAMESCENE");
 	scene->Initialize();
 	endLoading = true;
@@ -41,8 +43,7 @@ void SceneManager::Initialize()
 	loadSprite->SetSize(Vector2D{ 64,64 });
 	loadSprite->TransferVertex();
 
-	imguiMan = new ImGuiManager();
-	imguiMan->Initialize();
+	ImGuiManager::GetInstance()->Initialize();
 }
 
 void SceneManager::Update()
@@ -105,12 +106,14 @@ void SceneManager::Update()
 		loadSprite->MatUpdate();
 	}
 
-	imguiMan->Begin();
-	imguiMan->End();
+	ImGuiManager::GetInstance()->Begin();
+	ImGuiManager::GetInstance()->End();
 }
 
 void SceneManager::Draw()
 {
+	MyDirectX* dx = MyDirectX::GetInstance();
+
 #pragma region DrawScreen
 	dx->PrevPostEffect(shadowEffect2.get());
 
@@ -138,7 +141,7 @@ void SceneManager::Draw()
 		loadSprite->Draw();
 	}
 
-	imguiMan->Draw();
+	ImGuiManager::GetInstance()->Draw();
 	dx->PostDraw();
 #pragma endregion
 }
