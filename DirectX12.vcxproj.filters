@@ -121,14 +121,8 @@
     <Filter Include="ヘッダー ファイル\lib\Light">
       <UniqueIdentifier>{827694f0-1a1e-41d1-8bbf-033c98a3b40b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\lib\Engine\Framework">
-      <UniqueIdentifier>{126e197e-0262-46bb-842e-9429a262089e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\lib\Light">
       <UniqueIdentifier>{ca92afc7-ffe8-4ff6-a85a-0bc7ea545696}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Engine\Framework">
-      <UniqueIdentifier>{9df57532-5761-4f47-9c46-018f85c95d48}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Game">
       <UniqueIdentifier>{eef9b721-1021-4b16-a246-3dfc00872fd8}</UniqueIdentifier>
@@ -285,12 +279,6 @@
     <ClCompile Include="Engine\3d\Light\Light.cpp">
       <Filter>ソース ファイル\lib\Light</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\MyGame.cpp">
-      <Filter>ソース ファイル\lib\Engine\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\base\Framework.cpp">
-      <Filter>ソース ファイル\lib\Engine\Framework</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3d\Object\IModel.cpp">
       <Filter>ソース ファイル\lib\Obj\Model</Filter>
     </ClCompile>
@@ -353,6 +341,12 @@
     </ClCompile>
     <ClCompile Include="Engine\base\DebugTextManager.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\MyGame.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\base\Framework.cpp">
+      <Filter>ソース ファイル\lib\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -503,12 +497,6 @@
     <ClInclude Include="Engine\3d\Light\CircleShadow.h">
       <Filter>ヘッダー ファイル\lib\Light</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\base\MyGame.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\Framework.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3d\Object\Mesh.h">
       <Filter>ヘッダー ファイル\lib\Obj\Model</Filter>
     </ClInclude>
@@ -568,6 +556,12 @@
     </ClInclude>
     <ClInclude Include="Engine\base\DebugTextManager.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\MyGame.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\Framework.h">
+      <Filter>ヘッダー ファイル\lib\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

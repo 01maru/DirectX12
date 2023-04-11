@@ -1,5 +1,3 @@
-#include "Window.h"
-#include "Framework.h"
 #include "MyGame.h"
 #include <memory>
 
