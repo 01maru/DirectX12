@@ -4,16 +4,7 @@
 class GameCamera :public ICamera
 {
 private:
-	bool rockOn = false;
 
-	float disEyeTarget;
-
-	Vector2D cursorMoveVec;
-	Vector2D cursorSpd;
-
-	Vector2D rotAngle;
-	Vector2D prevRotAngle;
-	Vector2D endRotAngle;
 public:
 	GameCamera() {};
 	~GameCamera() override;

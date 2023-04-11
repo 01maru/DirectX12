@@ -136,6 +136,12 @@
     <Filter Include="リソース ファイル\ParticleShader\GrassShader">
       <UniqueIdentifier>{2a242e27-92dc-4014-97cf-671e92e50af5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Camera">
+      <UniqueIdentifier>{ee3253bf-e7cc-4da2-bf45-0f66cd39bae5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Camera">
+      <UniqueIdentifier>{5ce30352-5da8-4b57-a4b5-ed7690177906}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\math\Matrix.cpp">
@@ -173,9 +179,6 @@
     </ClCompile>
     <ClCompile Include="Engine\game\Player.cpp">
       <Filter>ソース ファイル\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3d\camera\GameCamera.cpp">
-      <Filter>ソース ファイル\lib\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Collider\CollisionInfo.cpp">
       <Filter>ソース ファイル\lib\Collider</Filter>
@@ -348,6 +351,9 @@
     <ClCompile Include="Engine\3d\camera\ICamera.cpp">
       <Filter>ソース ファイル\lib\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3d\camera\GameCamera.cpp">
+      <Filter>ソース ファイル\Game\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\base\input\InputJoypad.h">
@@ -388,9 +394,6 @@
     </ClInclude>
     <ClInclude Include="Engine\game\Player.h">
       <Filter>ヘッダー ファイル\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3d\camera\GameCamera.h">
-      <Filter>ヘッダー ファイル\lib\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Collider\CollisionInfo.h">
       <Filter>ヘッダー ファイル\lib\Collider</Filter>
@@ -562,6 +565,9 @@
     </ClInclude>
     <ClInclude Include="Engine\base\Framework.h">
       <Filter>ヘッダー ファイル\lib\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\camera\GameCamera.h">
+      <Filter>ヘッダー ファイル\Game\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
