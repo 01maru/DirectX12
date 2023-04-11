@@ -15,15 +15,19 @@ void MyDebugCamera::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
 
 	MatUpdate();
 
+	//	disEyeTraget初期化
 	frontVec = target - eye;
 	disEyeTarget = frontVec.length();
+
+	//	方向ベクトル
+	CalcDirectionVec();
 }
 
 void MyDebugCamera::Update()
 {
 	Input* input = Input::GetInstance();
 
-	moveCursor = input->GetCursor() - input->GetPrevCursor();
+	Vector2D moveCursor = input->GetCursor() - input->GetPrevCursor();
 	float cursorDisPrev = moveCursor.length();
 	moveCursor.normalize();
 
@@ -42,21 +46,25 @@ void MyDebugCamera::Update()
 #pragma endregion
 
 #pragma region SetDisEyeTarget
+	//	キー入力
 	disEyeTarget += -input->Wheel() * (disEyeTarget * 0.001f);
-	if (disEyeTarget < 10) {
-		disEyeTarget = 10;
-	}
+	//	範囲設定
+	float minDis_ = 10.0f;	//	最小値
+	disEyeTarget = MyMath::mMax(disEyeTarget, minDis_);
 #pragma endregion
 
-	//	move
+	//	注視点更新
+	float spd = 0.1f;
 	switch (mode)
 	{
 	case MyDebugCamera::NoMove:
 		break;
 	case MyDebugCamera::TranslationMove:
 		if (input->Click(Input::WheelClick)) {
-			target -= rightVec * (float)(moveCursor.x);
-			target -= downVec * (float)(moveCursor.y);
+			//	左右移動
+			target -= rightVec * (float)(moveCursor.x) * spd;
+			//	上下移動
+			target -= downVec * (float)(moveCursor.y) * spd;
 		}
 		break;
 	case MyDebugCamera::RotationMove:
@@ -66,33 +74,32 @@ void MyDebugCamera::Update()
 			if (up.y < 0) {
 				moveCursor.x = -moveCursor.x;
 			}
-			cursorSpd += moveCursor;
+			cursorPos += moveCursor;
 		}
 		break;
 	default:
 		break;
 	}
-	float spd = 0.1f;
+	//	前後移動
 	target += -frontVec * (float)(input->GetKey(DIK_Z) - input->GetKey(DIK_X)) * spd;
 
-#pragma region 方向ベクトル
+	//	範囲　0　>　cursorPos　>　PIx2　に設定
+	if (cursorPos.x >= MyMath::PIx2) cursorPos.x -= MyMath::PIx2;
+	if (cursorPos.x < 0) cursorPos.x += MyMath::PIx2;
+	if (cursorPos.y >= MyMath::PIx2) cursorPos.y -= MyMath::PIx2;
+	if (cursorPos.y < 0) cursorPos.y += MyMath::PIx2;
+
+	//	上方向ベクトルと視点座標更新
+	up.y = cosf(cursorPos.y);
+	eye.x = target.x - disEyeTarget * cosf(cursorPos.y) * sinf(cursorPos.x);
+	eye.y = target.y + disEyeTarget * sinf(cursorPos.y);
+	eye.z = target.z - disEyeTarget * cosf(cursorPos.y) * cosf(cursorPos.x);
+
+	//	方向ベクトル
 	CalcDirectionVec();
-#pragma endregion
-	
-	if (rotAngle.x >= MyMath::PIx2) rotAngle.x -= MyMath::PIx2;
-	if (rotAngle.x < 0) rotAngle.x += MyMath::PIx2;
-	if (rotAngle.y >= MyMath::PIx2) rotAngle.y -= MyMath::PIx2;
-	if (rotAngle.y < 0) rotAngle.y += MyMath::PIx2;
 
-	Vector2D angle = rotAngle;
-	angle += cursorSpd;
-#pragma region ビルボード
+	//	ビルボード
 	CalcBillboard();
-#pragma endregion
 
-	up.y = cosf(angle.y);
-	eye.x = target.x - disEyeTarget * cosf(angle.y) * sinf(angle.x);
-	eye.y = target.y + disEyeTarget * sinf(angle.y);
-	eye.z = target.z - disEyeTarget * cosf(angle.y) * cosf(angle.x);
 	MatUpdate();
 }

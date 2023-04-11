@@ -6,16 +6,11 @@
 #include <cmath>
 
 namespace MyMath {
-	struct float4
-	{
-		float x;
-		float y;
-		float z;
-		float w;
+	template<typename T>
+	T mMax(T a, T b);
 
-		float4();
-		float4(float x, float y, float z, float w);
-	};
+	template<typename T>
+	T mMin(T a, T b);
 
 const float PI = 3.14159265358979f;
 const float PIx2 = 6.2831853071f;

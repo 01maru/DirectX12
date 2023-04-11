@@ -7,12 +7,7 @@ class MyDebugCamera :public ICamera
 private:
 	float disEyeTarget = 0.0f;
 
-	Vector2D moveCursor;
-	Vector2D cursorSpd;
-
-	Vector2D rotAngle;
-	Vector2D prevRotAngle;
-	Vector2D endRotAngle;
+	Vector2D cursorPos;
 
 	enum MoveMode {
 		NoMove,

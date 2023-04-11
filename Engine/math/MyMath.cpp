@@ -2,6 +2,26 @@
 #include <cassert>
 #include <random>
 
+template<typename T>
+T MyMath::mMax(T a, T b)
+{
+	if (a > b) return a;
+	return b;
+}
+template float MyMath::mMax<float>(float, float);
+template int MyMath::mMax<int>(int, int);
+template double MyMath::mMax<double>(double, double);
+
+template<typename T>
+T MyMath::mMin(T a, T b)
+{
+	if (a > b) return b;
+	return a;
+}
+template float MyMath::mMin<float>(float, float);
+template int MyMath::mMin<int>(int, int);
+template double MyMath::mMin<double>(double, double);
+
 Matrix MyMath::LookAtLH(const Vector3D& eye, const Vector3D& target, const Vector3D& up)
 {
 	Vector3D baseX = up;
@@ -141,16 +161,6 @@ void MyMath::MatView::Init(Vector3D _eye, Vector3D _target, Vector3D _up)
 void MyMath::MatView::MatUpdate()
 {
 	mat = LookAtLH(eye, target, up);
-}
-
-MyMath::float4::float4() :
-	x(0.0f), y(0.0f), z(0.0f), w(0.0f)
-{
-}
-
-MyMath::float4::float4(float x, float y, float z, float w) :
-	x(x), y(y), z(z), w(w)
-{
 }
 
 void MyMath::ObjMatrix::SetMatScaling()
