@@ -1,9 +1,5 @@
 #include "MyDebugCamera.h"
-
-MyDebugCamera::MyDebugCamera()
-{
-	input = Input::GetInstance();
-}
+#include "Input.h"
 
 MyDebugCamera::~MyDebugCamera()
 {
@@ -11,6 +7,8 @@ MyDebugCamera::~MyDebugCamera()
 
 void MyDebugCamera::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
 {
+	SetProjectionMatrix(Window::window_width, Window::window_height, MyMath::ConvertToRad(90.0f));
+
 	eye = eye_;
 	target = target_;
 	up = up_;
@@ -23,31 +21,68 @@ void MyDebugCamera::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
 
 void MyDebugCamera::Update()
 {
+	Input* input = Input::GetInstance();
+
 	moveCursor = input->GetCursor() - input->GetPrevCursor();
 	float cursorDisPrev = moveCursor.length();
 	moveCursor.normalize();
 
-	if (input->Click(Input::LeftClick) && input->GetKey(DIK_LSHIFT)) {
-		moveCursor /= 1000;
-		moveCursor *= cursorDisPrev;
-		if (up.y < 0) {
-			moveCursor.x = -moveCursor.x;
+#pragma region SetMode
+	if (input->ClickTrigger(Input::WheelClick)) {
+		if (input->GetKey(DIK_LSHIFT) || input->GetKey(DIK_RSHIFT))	//	shiftが押されてたら
+		{
+			//	平行移動
+			mode = TranslationMove;
 		}
-		cursorSpd += moveCursor;
+		else {
+			//	注視点周りを回転移動
+			mode = RotationMove;
+		}
 	}
+#pragma endregion
+
+#pragma region SetDisEyeTarget
 	disEyeTarget += -input->Wheel() * (disEyeTarget * 0.001f);
 	if (disEyeTarget < 10) {
 		disEyeTarget = 10;
 	}
+#pragma endregion
+
+	//	move
+	switch (mode)
+	{
+	case MyDebugCamera::NoMove:
+		break;
+	case MyDebugCamera::TranslationMove:
+		if (input->Click(Input::WheelClick)) {
+			target += rightVec * (float)(moveCursor.x);
+			target += downVec * (float)(moveCursor.y);
+		}
+		break;
+	case MyDebugCamera::RotationMove:
+		if (input->Click(Input::WheelClick)) {
+			moveCursor /= 1000;
+			moveCursor *= cursorDisPrev;
+			if (up.y < 0) {
+				moveCursor.x = -moveCursor.x;
+			}
+			cursorSpd += moveCursor;
+		}
+		break;
+	default:
+		break;
+	}
 	float spd = 0.1f;
-	target += rightVec * (float)(input->GetKey(DIK_RIGHT) - input->GetKey(DIK_LEFT)) * spd;
-	target += downVec * (float)(input->GetKey(DIK_DOWN) - input->GetKey(DIK_UP)) * spd;
 	target += -frontVec * (float)(input->GetKey(DIK_Z) - input->GetKey(DIK_X)) * spd;
 
+#pragma region 方向ベクトル
 	frontVec = target - eye;
 	frontVec.normalize();
 	rightVec = Vector3D(0, 1, 0).cross(frontVec);
 	downVec = rightVec.cross(frontVec);
+	rightVec.normalize();
+	downVec.normalize();
+#pragma endregion
 	
 	if (rotAngle.x >= MyMath::PIx2) rotAngle.x -= MyMath::PIx2;
 	if (rotAngle.x < 0) rotAngle.x += MyMath::PIx2;
@@ -56,29 +91,8 @@ void MyDebugCamera::Update()
 
 	Vector2D angle = rotAngle;
 	angle += cursorSpd;
-
-	rightVec.normalize();
-	downVec.normalize();
 #pragma region ビルボード
-	billboard.Identity();
-	billboard.m[0][0] = rightVec.x;
-	billboard.m[0][1] = rightVec.y;
-	billboard.m[0][2] = rightVec.z;
-	billboard.m[1][0] = -downVec.x;
-	billboard.m[1][1] = -downVec.y;
-	billboard.m[1][2] = -downVec.z;
-	billboard.m[2][0] = frontVec.x;
-	billboard.m[2][1] = frontVec.y;
-	billboard.m[2][2] = frontVec.z;
-
-	billboardY.Identity();
-	billboardY.m[0][0] = rightVec.x;
-	billboardY.m[0][1] = rightVec.y;
-	billboardY.m[0][2] = rightVec.z;
-	Vector3D billYvecZ = rightVec.cross(up);
-	billboardY.m[2][0] = billYvecZ.x;
-	billboardY.m[2][1] = billYvecZ.y;
-	billboardY.m[2][2] = billYvecZ.z;
+	CalcBillboard();
 #pragma endregion
 
 	up.y = cosf(angle.y);

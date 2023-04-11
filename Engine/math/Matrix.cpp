@@ -35,6 +35,12 @@ Matrix& Matrix::operator*=(const Matrix& m2)
 	return *this;
 }
 
+const Matrix operator*(const Matrix& m1, const Matrix& m2)
+{
+    Matrix temp(m1);
+    return temp *= m2;
+}
+
 bool InverseMatrix(const Matrix& mat, Matrix& invMat)
 {
     float sweep[4][8];

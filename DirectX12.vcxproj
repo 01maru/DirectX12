@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\3d\camera\ICamera.cpp" />
     <ClCompile Include="Engine\base\DebugTextManager.cpp" />
     <ClCompile Include="Engine\2d\ParticleManager.cpp" />
     <ClCompile Include="Engine\2d\ParticleStruct.cpp" />
@@ -35,7 +36,6 @@
     <ClCompile Include="Engine\base\Framework.cpp" />
     <ClCompile Include="Engine\3d\camera\GameCamera.cpp" />
     <ClCompile Include="Engine\Scene\GameScene.cpp" />
-    <ClCompile Include="Engine\3d\camera\ICamera.cpp" />
     <ClCompile Include="Engine\Collider\BaseCollider.cpp" />
     <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Scene\IScene.cpp" />

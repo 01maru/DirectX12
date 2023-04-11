@@ -9,5 +9,7 @@ public:
 	Matrix& operator*=(const Matrix& m2);
 };
 
+const Matrix operator*(const Matrix& m1, const Matrix& m2);
+
 bool InverseMatrix(const Matrix& mat, Matrix& invMat);
 

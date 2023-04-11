@@ -4,8 +4,6 @@
 class GameCamera :public ICamera
 {
 private:
-	Input* input = nullptr;
-
 	bool rockOn = false;
 
 	float disEyeTarget;
@@ -17,7 +15,7 @@ private:
 	Vector2D prevRotAngle;
 	Vector2D endRotAngle;
 public:
-	GameCamera();
+	GameCamera() {};
 	~GameCamera() override;
 
 	void Initialize(Vector3D eye_, Vector3D target_, Vector3D up_) override;

@@ -47,7 +47,7 @@ public:
 	bool ReleaseKey(int _key);
 
 	bool Click(int type);
-	bool ClickTrriger(int type);
+	bool ClickTrigger(int type);
 
 	Vector2D GetCursor() { return cursor; }
 	Vector2D GetPrevCursor() { return prevCursor; }

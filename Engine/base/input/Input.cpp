@@ -122,7 +122,7 @@ bool Input::Click(int type)
 	
 }
 
-bool Input::ClickTrriger(int type)
+bool Input::ClickTrigger(int type)
 {
 	return (click.rgbButtons[type] & (0x80)) && !(prevclick.rgbButtons[type] & (0x80));
 }

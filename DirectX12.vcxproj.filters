@@ -171,9 +171,6 @@
     <ClCompile Include="Engine\math\Quaternion.cpp">
       <Filter>ソース ファイル\lib\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3d\camera\ICamera.cpp">
-      <Filter>ソース ファイル\lib\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\game\Player.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
@@ -347,6 +344,9 @@
     </ClCompile>
     <ClCompile Include="Engine\base\Framework.cpp">
       <Filter>ソース ファイル\lib\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\camera\ICamera.cpp">
+      <Filter>ソース ファイル\lib\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
