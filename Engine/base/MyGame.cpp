@@ -1,4 +1,5 @@
 #include "MyGame.h"
+#include "Object3D.h"
 
 void MyGame::Initialize()
 {

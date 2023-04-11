@@ -1,53 +1,59 @@
 #include "Framework.h"
 #include "ParticleManager.h"
 #include "DebugTextManager.h"
+#include "TextureManager.h"
+#include "PipelineManager.h"
+#include "ParticleManager.h"
+#include "MyXAudio.h"
+
 void Framework::Run()
 {
+	//	初期化
 	Initialize();
 	//	ゲームループ
-	while (true)
+	while (gameroopFlag)
 	{
+		//	更新
 		Update();
 
-		if (IsEndGameRoop()) { break; }
-
+		//	描画
 		Draw();
 	}
+	//	シングルトンクラスのdelete
 	Finalize();
 }
 
 void Framework::Initialize()
 {
-	win = Window::GetInstance();
-	win->Initialize();
+	//	winApi初期化
+	Window::GetInstance()->Initialize();
 
-	textureMan = TextureManager::GetInstance();
-	textureMan->Initialize();
+	TextureManager::GetInstance()->Initialize();
 
-	dx = MyDirectX::GetInstance();
-	dx->Initialize();
+	MyDirectX::GetInstance()->Initialize();
 
-	pipelineMan = PipelineManager::GetInstance();
-	pipelineMan->Initialize();
+	PipelineManager::GetInstance()->Initialize();
 
-	textureMan->SetWhiteTexHandle();
+	//	ロード失敗した際の白色テクスチャのロード
+	TextureManager::GetInstance()->SetWhiteTexHandle();
 
 	joypad = InputJoypad::GetInstance();
 	input = Input::GetInstance();
 
-	particleMan = ParticleManager::GetInstance();
-	particleMan->Initialize();
+	ParticleManager::GetInstance()->Initialize();
 
 	DebugTextManager::GetInstance()->Initialize();
 }
 
 void Framework::Update()
 {
-	isEndRoopFlag = win->MsgUpdate() || input->GetTrigger(DIK_ESCAPE);
+	gameroopFlag = !(Window::GetInstance()->MsgUpdate() || input->GetTrigger(DIK_ESCAPE));
 
 	input->Update();
 	joypad->Update();
-	dx->UpdateFPS();
+
+	//	60fps固定用
+	MyDirectX::GetInstance()->UpdateFPS();
 }
 
 void Framework::Finalize()
