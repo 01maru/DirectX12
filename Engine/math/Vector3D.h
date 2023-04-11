@@ -12,23 +12,24 @@ public:
 	float y;
 	float z;
 public:
+	//	コンストラクタ
 	Vector3D();
 	Vector3D(float x, float y, float z);
 	Vector3D(const Vector2D& vec, float z);
 
+	//	ベクトルの長さ
 	float length() const;
-
+	//	正規化
 	Vector3D& normalize();
+	//	内積
 	float dot(const Vector3D& v) const;
+	//	外積
 	Vector3D cross(const Vector3D& v) const;
 
 	Vector3D operator+() const;
-
 	Vector3D operator-() const;
-
 	Vector3D& operator+=(const Vector3D& v);
 	Vector3D& operator-=(const Vector3D& v);
-
 	Vector3D& operator/=(float s);
 	Vector3D& operator*=(float s);
 };

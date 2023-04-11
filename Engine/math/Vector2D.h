@@ -6,16 +6,18 @@ public:
 	float x;
 	float y;
 public:
+	//	コンストラクタ
 	Vector2D();
 	Vector2D(float x, float y);
+
+	//	ベクトルの長さ
+	float length() const;
+	//	正規化
+	Vector2D& normalize();
 
 	Vector2D operator+() const;
 	Vector2D& operator+=(const Vector2D& v);
 	Vector2D& operator-=(const Vector2D& v);
-
-	float length() const;
-
-	Vector2D& normalize();
 	Vector2D& operator/=(float s);
 	Vector2D& operator*=(float s);
 	bool operator!=(const Vector2D& vec);
