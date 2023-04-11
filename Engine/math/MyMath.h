@@ -6,58 +6,61 @@
 #include <cmath>
 
 namespace MyMath {
+	//	大きい値を返す
 	template<typename T>
 	T mMax(T a, T b);
-
+	//	小さい値を返す
 	template<typename T>
 	T mMin(T a, T b);
 
-const float PI = 3.14159265358979f;
-const float PIx2 = 6.2831853071f;
+#pragma region 円周率
+	const float PI = 3.14159265358979f;
+	const float PIx2 = 6.2831853071f;
+#pragma endregion
 
-//	視点座標、注視点座標、上方向ベクトル
-Matrix LookAtLH(const Vector3D& eye, const Vector3D& target, const Vector3D& up);
+	//	視点座標、注視点座標、上方向ベクトル
+	Matrix LookAtLH(const Vector3D& eye, const Vector3D& target, const Vector3D& up);
 
-Matrix PerspectiveFovLH(const int winwidth, const int winheight, float fovY, float nearZ, float farZ);
-Matrix OrthoLH(const int winwidth, const int winheight, float nearZ, float farZ);
+	Matrix PerspectiveFovLH(const int winwidth, const int winheight, float fovY, float nearZ, float farZ);
+	Matrix OrthoLH(const int winwidth, const int winheight, float nearZ, float farZ);
 
-float ConvertToRad(float angle);
+	float ConvertToRad(float angle);
 
-float GetRand(float min, float max);
+	float GetRand(float min, float max);
 
-bool CollisionCircleLay(Vector3D startL, Vector3D endL, Vector3D pos, float rad);
+	bool CollisionCircleLay(Vector3D startL, Vector3D endL, Vector3D pos, float rad);
 
-class MatView{
-public:
-	Matrix mat;
-	Vector3D eye;		//	視点座標
-	Vector3D target;	//	注視点座標
-	Vector3D up;		//	上方向ベクトル
-public:
-	MatView();
-	void Init(Vector3D _eye, Vector3D _target, Vector3D _up);
-	void MatUpdate();
-};
+	class MatView {
+	public:
+		Matrix mat;
+		Vector3D eye;		//	視点座標
+		Vector3D target;	//	注視点座標
+		Vector3D up;		//	上方向ベクトル
+	public:
+		MatView();
+		void Init(Vector3D _eye, Vector3D _target, Vector3D _up);
+		void MatUpdate();
+	};
 
-class ObjMatrix {
-public:
-	Matrix matWorld;
+	class ObjMatrix {
+	public:
+		Matrix matWorld;
 
-	Matrix matScale;
-	Vector3D scale;
+		Matrix matScale;
+		Vector3D scale;
 
-	Matrix matRot;
-	Vector3D rotAngle;
+		Matrix matRot;
+		Vector3D rotAngle;
 
-	Matrix matTrans;
-	Vector3D trans;
+		Matrix matTrans;
+		Vector3D trans;
 
-public:
-	void SetMatScaling();
-	void SetMatRotation();
-	void SetMatTransform();
-	void Initialize();
-	void Update();
-};
+	public:
+		void SetMatScaling();
+		void SetMatRotation();
+		void SetMatTransform();
+		void Initialize();
+		void Update();
+	};
 }
 
