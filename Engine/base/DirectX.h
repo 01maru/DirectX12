@@ -29,6 +29,11 @@ private:
 
 	ComPtr<ID3D12CommandQueue> cmdQueue;
 
+	ComPtr<ID3D12CommandAllocator> loadTexAllocator;
+	ComPtr<ID3D12GraphicsCommandList> loadTexCmdList;
+
+	ComPtr<ID3D12CommandQueue> loadTexQueue;
+
 	ComPtr<IDXGISwapChain4> swapChain;
 
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
@@ -40,6 +45,8 @@ private:
 
 	ComPtr<ID3D12Fence> fence;
 	UINT64 fenceVal = 0;
+	ComPtr<ID3D12Fence> uploadTexFence;
+	UINT64 uploadTexFenceVal = 0;
 
 	D3D12_RESOURCE_BARRIER barrierDesc{};
 
@@ -81,6 +88,7 @@ public:
 	void PostEffectDraw(PostEffect* postEffect);
 	void PrevDraw(FLOAT* clearColor_ = nullptr);
 	void PostDraw();
+	void UploadTexture();
 
 	//	Getter
 	const D3D12_CPU_DESCRIPTOR_HANDLE GetCPUSRVHeapForHeapStart() { return srvHeap->GetCPUDescriptorHandleForHeapStart(); }
@@ -89,6 +97,7 @@ public:
 	ID3D12DescriptorHeap* GetSRVHeap() { return srvHeap.Get(); }
 	ID3D12Device* GetDev() { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCmdList() { return cmdList.Get(); }
+	ID3D12GraphicsCommandList* GetLoadTexCmdList() { return loadTexCmdList.Get(); }
 	Matrix GetViewportMat() { return viewPort.Mat(); }
 	D3D12_RESOURCE_DESC GetBackBuffDesc() { return backBuffers[0]->GetDesc(); }
 	D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc() { return rtvHeap->GetDesc(); }

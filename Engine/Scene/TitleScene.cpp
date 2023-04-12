@@ -4,8 +4,11 @@
 #include "SceneManager.h"
 #include "NormalCamera.h"
 #include "TextureManager.h"
+#include "Easing.h"
 
 MyXAudio* TitleScene::xAudio = nullptr;
+Vector2D TitleScene::titleSize = Vector2D{ 640,360 };
+Vector2D TitleScene::pressSize = Vector2D{ 304,171 };
 
 TitleScene::TitleScene()
 {
@@ -24,14 +27,18 @@ void TitleScene::Initialize()
 
 	LoadResources();
 #pragma region Sprite
+	titleSprite = std::make_unique<Sprite>(titleG);
+	titleSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,200 });
+	titleSprite->SetSize(titleSize);
+	titleSprite->SetAnchorPoint(Vector2D{ 0.5,0.5 });
+	titleSprite->TransferVertex();
 	pressSprite = std::make_unique<Sprite>(pressG);
-	pressSprite->SetSize(Vector2D{ 300,32 });
+	pressSprite->SetSize(pressSize);
 	pressSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,620 });
 	pressSprite->SetAnchorPoint(Vector2D{ 0.5,0.5 });
+	pressSprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	pressSprite->TransferVertex();
 #pragma endregion
-
-	xAudio->SoundPlayLoopWave(bgmSound, 0.1f);
 }
 
 void TitleScene::Finalize()
@@ -42,11 +49,11 @@ void TitleScene::Finalize()
 void TitleScene::LoadResources()
 {
 #pragma region Sound
-	bgmSound = xAudio->SoundLoadWave("bgm.wav");
-	selectSound = xAudio->SoundLoadWave("select.wav");
+
 #pragma endregion
 
 #pragma region Texture
+	titleG = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/title.png");
 	pressG = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/press.png");
 #pragma endregion
 }
@@ -54,14 +61,30 @@ void TitleScene::LoadResources()
 void TitleScene::Update()
 {
 	timer++;
-	int wavespd = 40;
-	pressSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,620 + cosf(timer / (float)wavespd) * 10 });
-	pressSprite->TransferVertex();
-	
+	int scalespd = 30;
+	if (endScene) {
+		Vector2D size = pressSize;
+		int t = timer;
+		while (t > scalespd) t -= scalespd;
+		size *= (1.0f + (float)Easing::EaseOut(0.0f, 0.1f, t / (float)scalespd, 4));
+		pressSprite->SetSize(size);
+		pressSprite->TransferVertex();
 
-	if (Input::GetInstance()->GetTrigger(DIK_SPACE) || InputJoypad::GetInstance()->GetTriggerButton(XINPUT_GAMEPAD_A)) {
-		xAudio->SoundPlayWave(selectSound, 0.1f);
-		SceneManager::GetInstance()->SetNextScene("GAMESCENE");
+		if (timer >= 60) {
+			SceneManager::GetInstance()->SetNextScene("SELECTSCENE");
+		}
+	}
+	else {
+		Vector2D size = pressSize;
+		size *= (1.0f + cosf(timer / (float)scalespd) * 0.1f);
+		pressSprite->SetSize(size);
+		pressSprite->TransferVertex();
+
+		//	press
+		if (Input::GetInstance()->GetTrigger(DIK_SPACE)) {
+			endScene = true;
+			timer = 0;
+		}
 	}
 
 	MatUpdate();
@@ -74,10 +97,12 @@ void TitleScene::DrawShadow()
 
 void TitleScene::Draw()
 {
+	titleSprite->Draw();
 	pressSprite->Draw();
 }
 
 void TitleScene::MatUpdate()
 {
-	pressSprite->MatUpdate();
+	titleSprite->SetTextureRect();
+	pressSprite->SetTextureRect();
 }

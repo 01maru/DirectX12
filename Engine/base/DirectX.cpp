@@ -155,6 +155,18 @@ void MyDirectX::Initialize()
 		cmdAllocator.Get(), nullptr,
 		IID_PPV_ARGS(&cmdList));
 	assert(SUCCEEDED(result));
+
+	// コマンドアロケータを生成
+	result = device->CreateCommandAllocator(
+		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		IID_PPV_ARGS(&loadTexAllocator));
+	assert(SUCCEEDED(result));
+	// コマンドリストを生成
+	result = device->CreateCommandList(0,
+		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		loadTexAllocator.Get(), nullptr,
+		IID_PPV_ARGS(&loadTexCmdList));
+	assert(SUCCEEDED(result));
 #pragma endregion CmdList
 
 #pragma region CmdQueue
@@ -162,6 +174,10 @@ void MyDirectX::Initialize()
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	//コマンドキューを生成
 	result = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&cmdQueue));
+	assert(SUCCEEDED(result));
+
+	//コマンドキューを生成
+	result = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&loadTexQueue));
 	assert(SUCCEEDED(result));
 #pragma endregion CmdQueue
 
@@ -275,6 +291,9 @@ void MyDirectX::Initialize()
 #pragma region fence
 	// フェンスの生成
 	result = device->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+
+	// フェンスの生成
+	result = device->CreateFence(uploadTexFenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&uploadTexFence));
 #pragma endregion fence
 
 	InitializeFPS();
@@ -421,6 +440,38 @@ void MyDirectX::PostDraw()
 	assert(SUCCEEDED(result));
 	// 再びコマンドリストを貯める準備
 	result = cmdList->Reset(cmdAllocator.Get(), nullptr);
+	assert(SUCCEEDED(result));
+#pragma endregion ChangeScreen
+}
+
+void MyDirectX::UploadTexture()
+{
+	// 命令のクローズ
+#pragma region CmdClose
+	HRESULT result = loadTexCmdList->Close();
+	assert(SUCCEEDED(result));
+	// 溜めていたコマンドリストの実行(close必須)
+	ID3D12CommandList* commandLists[] = { loadTexCmdList.Get() };
+	loadTexQueue->ExecuteCommandLists(1, commandLists);
+#pragma endregion CmdClose
+
+#pragma region ChangeScreen
+	// コマンドの実行完了を待つ
+	loadTexQueue->Signal(uploadTexFence.Get(), ++uploadTexFenceVal);
+	if (uploadTexFence->GetCompletedValue() != uploadTexFenceVal)	//	GPUの処理が完了したか判定
+	{
+		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
+		uploadTexFence->SetEventOnCompletion(uploadTexFenceVal, event);
+		if (event != 0) {
+			WaitForSingleObject(event, INFINITE);
+			CloseHandle(event);
+		}
+	}
+	// キューをクリア
+	result = loadTexAllocator->Reset();
+	assert(SUCCEEDED(result));
+	// 再びコマンドリストを貯める準備
+	result = loadTexCmdList->Reset(loadTexAllocator.Get(), nullptr);
 	assert(SUCCEEDED(result));
 #pragma endregion ChangeScreen
 }

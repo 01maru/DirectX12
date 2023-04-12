@@ -162,7 +162,7 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 	src.PlacedFootprint = footprint;
 
 	//	ì¬
-	dx->GetCmdList()->CopyTextureRegion(&texCopyDest, 0, 0, 0, &src, nullptr);
+	dx->GetLoadTexCmdList()->CopyTextureRegion(&texCopyDest, 0, 0, 0, &src, nullptr);
 
 	//	resourceBarrier‘}“ü
 	D3D12_RESOURCE_BARRIER copyBarrier{};
@@ -172,7 +172,7 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 	copyBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	copyBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
 
-	dx->GetCmdList()->ResourceBarrier(1, &copyBarrier);
+	dx->GetLoadTexCmdList()->ResourceBarrier(1, &copyBarrier);
 
 #pragma region SetSRV
 	UINT incrementSize = dx->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);

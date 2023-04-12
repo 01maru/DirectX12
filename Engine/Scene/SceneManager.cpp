@@ -43,6 +43,9 @@ void SceneManager::Initialize()
 	loadSprite->TransferVertex();
 
 	ImGuiManager::GetInstance()->Initialize();
+
+	//	‰æ‘œ“]‘—
+	MyDirectX::GetInstance()->UploadTexture();
 }
 
 void SceneManager::Update()
@@ -155,6 +158,8 @@ void SceneManager::SceneChange()
 
 		scene = nextScene;
 		scene->Initialize();
+		//	‰æ‘œ“]‘—
+		MyDirectX::GetInstance()->UploadTexture();
 		sceneInitialized = true;
 		nextScene = nullptr;
 	}
