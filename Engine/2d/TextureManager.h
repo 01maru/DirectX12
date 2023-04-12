@@ -23,8 +23,7 @@ public:
 	Texture LoadTextureGraph(const wchar_t* textureName);
 	void CreateNoneGraphTexture(const std::string& texName, Texture& texture);
 	//	Getter
-	int GetWhiteTexHandle() { return whiteTexHandle.GetHandle(); }
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(int handle);
-	ID3D12Resource* GetTextureBuffer(uint32_t index) const { return texBuff[index - 1].Get(); }
+	const Texture& GetWhiteTexture() { return whiteTexHandle; }
 };
 

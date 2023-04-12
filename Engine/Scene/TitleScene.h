@@ -19,6 +19,7 @@ private:
 	static Vector2D pressSize;
 	std::unique_ptr<Sprite> titleSprite;
 	std::unique_ptr<Sprite> pressSprite;
+	std::unique_ptr<Sprite> backSprite;
 #pragma endregion
 
 #pragma region sound
