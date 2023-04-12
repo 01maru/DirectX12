@@ -157,6 +157,9 @@
     <Filter Include="リソース ファイル\ObjShader\Shadow">
       <UniqueIdentifier>{1dc8f669-4fbf-4b91-be50-39461a0149de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\ObjShader\ShadowReciever">
+      <UniqueIdentifier>{6fd680be-0d9a-425b-a586-ecafb87ec5cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\math\Matrix.cpp">
@@ -602,7 +605,7 @@
       <Filter>リソース ファイル\ObjShader\Shadow</Filter>
     </None>
     <None Include="Resources\shader\ShadowRecieverHeader.hlsli">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ObjShader\ShadowReciever</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -648,11 +651,11 @@
     <FxCompile Include="Resources\shader\ObjShadowVS.hlsl">
       <Filter>リソース ファイル\ObjShader\Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\ShadowRecieverVS.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shader\ShadowRecieverPS.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ObjShader\ShadowReciever</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ShadowRecieverVS.hlsl">
+      <Filter>リソース ファイル\ObjShader\ShadowReciever</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
