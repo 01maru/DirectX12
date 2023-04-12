@@ -121,7 +121,7 @@ void PostEffect::Initialize()
 	_srvDesc.Format = _rtvDesc.Format;
 	_srvDesc.Texture2D.MipLevels = 1;
 	_srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-
+	
 	//	SRV
 	for (int i = 0; i < texNum; i++)
 	{

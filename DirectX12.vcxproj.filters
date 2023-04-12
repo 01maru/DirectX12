@@ -601,6 +601,9 @@
     <None Include="Resources\shader\ObjShadowHeader.hlsli">
       <Filter>リソース ファイル\ObjShader\Shadow</Filter>
     </None>
+    <None Include="Resources\shader\ShadowRecieverHeader.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\ObjPS.hlsl">
@@ -644,6 +647,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\ObjShadowVS.hlsl">
       <Filter>リソース ファイル\ObjShader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ShadowRecieverVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ShadowRecieverPS.hlsl">
+      <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -168,6 +168,7 @@
     <None Include="Resources\shader\Particle.hlsli" />
     <None Include="Resources\shader\ObjHeader.hlsli" />
     <None Include="Resources\shader\ScreenHeader.hlsli" />
+    <None Include="Resources\shader\ShadowRecieverHeader.hlsli" />
     <None Include="Resources\shader\SpriteHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +224,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ShadowRecieverPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ShadowRecieverVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
@@ -308,7 +321,7 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d\camera;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Object;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\base\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\game;$(ProjectDir)Engine\math;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d\camera;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Object;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\base\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\game;$(ProjectDir)Engine\math;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -328,7 +341,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>Default</LanguageStandard>
       <Optimization>MinSpace</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d\camera;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Object;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\base\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\game;$(ProjectDir)Engine\math;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d\camera;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Object;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\base;$(ProjectDir)Engine\base\input;$(ProjectDir)Engine\Collider;$(ProjectDir)Engine\game;$(ProjectDir)Engine\math;$(ProjectDir)Engine\Scene;$(ProjectDir)Engine;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

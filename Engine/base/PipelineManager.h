@@ -11,6 +11,7 @@ private:
 	std::vector<std::unique_ptr<GPipeline>> particlePipeline;
 	std::vector<std::unique_ptr<GPipeline>> grassPipeline;
 	std::unique_ptr<GPipeline> shadowPipeline;
+	std::unique_ptr<GPipeline> shadowRecieverPipeline;
 	PipelineManager() {};
 	~PipelineManager() {};
 public:

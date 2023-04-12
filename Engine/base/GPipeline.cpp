@@ -17,7 +17,7 @@ void GPipeline::Setting()
 	dx->GetCmdList()->SetGraphicsRootSignature(rootSignature.Get());
 }
 
-void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, int constBuffNum, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord, D3D12_CULL_MODE cullmord, D3D12_DEPTH_WRITE_MASK depth_write_mask, bool isDeep)
+void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, int constBuffNum, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord, D3D12_CULL_MODE cullmord, D3D12_DEPTH_WRITE_MASK depth_write_mask, bool isDeep, int textureNum)
 {
 	HRESULT result;
 	// シェーダーの設定
@@ -66,7 +66,7 @@ void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT 
 	pipelineDesc.DepthStencilState.DepthWriteMask = depth_write_mask;		//	書き込み許可するかどうか
 	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;							//	深度フォーマット
 
-	SetRootSignature(constBuffNum);
+	SetRootSignature(constBuffNum, textureNum);
 
 	// パイプラインにルートシグネチャをセット
 	pipelineDesc.pRootSignature = rootSignature.Get();
@@ -133,23 +133,34 @@ void GPipeline::SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMET
 	rootParam.ShaderVisibility = shaderVisibility;
 }
 
-void GPipeline::SetRootSignature(UINT rootParamNum)
+void GPipeline::SetRootSignature(UINT rootParamNum, int textureNum)
 {
-	//デスクリプタレンジの設定
-	D3D12_DESCRIPTOR_RANGE descriptorRange{};
-	descriptorRange.NumDescriptors = 1;
-	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange.BaseShaderRegister = 0;
-	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 #pragma region	ルートパラメータ
 	//	ルートパラメータの設定
 	std::vector<D3D12_ROOT_PARAMETER> rootParams = {};
-	rootParams.resize(rootParamNum + 1);
-	SetRootParam(rootParams[0], D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, descriptorRange, 1);
+	rootParams.resize(rootParamNum + textureNum);
+	std::vector<D3D12_DESCRIPTOR_RANGE> descriptorRange{};
+	descriptorRange.resize(textureNum);
+	for (size_t i = 0; i < textureNum; i++)
+	{
+		//デスクリプタレンジの設定
+		descriptorRange[i].NumDescriptors = 1;
+		descriptorRange[i].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		descriptorRange[i].BaseShaderRegister = (UINT)i;
+		descriptorRange[i].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	}
+	for (size_t i = 0; i < textureNum; i++)
+	{
+		rootParams[i].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParams[i].DescriptorTable.pDescriptorRanges = &descriptorRange[i];
+		rootParams[i].DescriptorTable.NumDescriptorRanges = 1;
+		rootParams[i].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+		//SetRootParam(rootParams[i], D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, descriptorRange[i], 1);
+	}
 	for (size_t i = 0; i < rootParamNum; i++)
 	{
-		SetRootParam(rootParams[i + 1], D3D12_ROOT_PARAMETER_TYPE_CBV, (UINT)i, 0);
+		SetRootParam(rootParams[i + textureNum], D3D12_ROOT_PARAMETER_TYPE_CBV, (UINT)i, 0);
 	}
 #pragma endregion
 
@@ -172,7 +183,7 @@ void GPipeline::SetRootSignature(UINT rootParamNum)
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	rootSignatureDesc.pParameters = &rootParams.front();						//	先頭アドレス
-	rootSignatureDesc.NumParameters = (UINT)rootParams.size();						//	ルートパラメータ数
+	rootSignatureDesc.NumParameters = (UINT)rootParams.size();					//	ルートパラメータ数
 	rootSignatureDesc.pStaticSamplers = &samplerDesc;
 	rootSignatureDesc.NumStaticSamplers = 1;
 	// ルートシグネチャのシリアライズ

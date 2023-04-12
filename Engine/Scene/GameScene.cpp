@@ -277,7 +277,7 @@ void GameScene::Draw()
 {
 	ParticleManager::GetInstance()->Draw();
 	////	’n–Ê
-	ground->Draw();
+	//ground->Draw();
 	//hill->Draw();
 	//	“V‹…
 	//skydome->Draw();
@@ -300,7 +300,7 @@ void GameScene::Draw()
 	//	testVolLight[i].Draw();
 	//}
 
-	sprite->Draw();
+	//sprite->Draw();
 
 	DebugTextManager::GetInstance()->Draw();
 }

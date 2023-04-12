@@ -48,6 +48,18 @@ void PipelineManager::Initialize()
 	shadowPipeline = std::make_unique<GPipeline>();
 	shadowPipeline->Init(shadowShader, shadowInputLayout, _countof(shadowInputLayout), 3, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 	shadowPipeline->SetBlend(GPipeline::ALPHA_BLEND);
+
+	Shader shadowRecieverShader(L"Resources/shader/ShadowRecieverVS.hlsl", L"Resources/shader/ShadowRecieverPS.hlsl");
+
+	D3D12_INPUT_ELEMENT_DESC shadowRecieverInputLayout[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyz座標
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	法線ベクトル
+		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uv座標
+	};
+
+	shadowRecieverPipeline = std::make_unique<GPipeline>();
+	shadowRecieverPipeline->Init(shadowRecieverShader, shadowRecieverInputLayout, _countof(shadowRecieverInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE, D3D12_DEPTH_WRITE_MASK_ALL, true, 2);
+	shadowRecieverPipeline->SetBlend(GPipeline::ALPHA_BLEND);
 #pragma endregion
 
 #pragma region Obj2D
