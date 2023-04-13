@@ -36,12 +36,13 @@ void TitleScene::Initialize()
 	titleSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,200 });
 	titleSprite->SetSize(titleSize);
 	titleSprite->SetAnchorPoint(Vector2D{ 0.5,0.5 });
+	titleSprite->SetColor({ 1.0f,1.0f,1.0f,0.51f });
 	titleSprite->TransferVertex();
 	pressSprite = std::make_unique<Sprite>(pressG);
 	pressSprite->SetSize(pressSize);
 	pressSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,620 });
 	pressSprite->SetAnchorPoint(Vector2D{ 0.5,0.5 });
-	pressSprite->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+	pressSprite->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 	pressSprite->TransferVertex();
 #pragma endregion
 }
@@ -76,7 +77,7 @@ void TitleScene::Update()
 		pressSprite->TransferVertex();
 
 		if (timer >= 60) {
-			SceneManager::GetInstance()->SetNextScene("SELECTSCENE");
+			SceneManager::GetInstance()->SetNextScene("GAMESCENE");
 		}
 	}
 	else {

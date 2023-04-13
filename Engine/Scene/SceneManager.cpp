@@ -31,7 +31,7 @@ void SceneManager::Initialize()
 	shadowEffect2->Initialize();
 
 	sceneFactry = std::make_unique<SceneFactory>();
-	scene = sceneFactry->CreateScene("GAMESCENE");
+	scene = sceneFactry->CreateScene("TITLESCENE");
 	scene->Initialize();
 	endLoading = true;
 
