@@ -482,7 +482,8 @@ void MyDirectX::ScreenClear(FLOAT* clearColor_, D3D12_CPU_DESCRIPTOR_HANDLE rtvH
 }
 void MyDirectX::ScreenClear(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_)
 {
-	FLOAT clearColor_[] = { 0.1f,0.25f, 0.5f,0.0f };
+	//FLOAT clearColor_[] = { 0.1f,0.25f, 0.5f,0.0f };
+	FLOAT clearColor_[] = { 1.0f,1.0f,1.0f,1.0f };
 	cmdList->ClearRenderTargetView(rtvHandle_, clearColor_, 0, nullptr);
 }
 

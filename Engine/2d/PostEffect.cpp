@@ -71,10 +71,10 @@ void PostEffect::Initialize()
 	heapProp.CreationNodeMask = 1;
 	heapProp.VisibleNodeMask = 1;
 
-	float clsClr[4] = { 0.5f,0.5f,0.5f,1.0f };
+	float clsClr[4] = { 1.0f,1.0f,1.0f,1.0f };
 	D3D12_CLEAR_VALUE clearValue{};
 	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	clearValue.DepthStencil.Depth = 0.5f;
+	clearValue.DepthStencil.Depth = 1.0f;
 	for (size_t i = 0; i < 4; i++)
 	{
 		clearValue.Color[i] = clsClr[i];
