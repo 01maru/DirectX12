@@ -66,9 +66,9 @@ void GameScene::Initialize()
 {
 	collisionMan = CollisionManager::GetInstance();
 
-	//camera = new MyDebugCamera();
-	//camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
-	camera = Light::GetInstance()->GetDirLightCamera(0);
+	camera = new MyDebugCamera();
+	camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
+	//camera = Light::GetInstance()->GetDirLightCamera(0);
 
 	Object3D::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Model", GPipeline::ALPHA_BLEND));
 	Object3D::SetCamera(camera);
@@ -77,7 +77,7 @@ void GameScene::Initialize()
 	Grass::SetPipeline(PipelineManager::GetInstance()->GetPipeline("GrassParticle", GPipeline::ALPHA_BLEND));
 	Grass::SetCamera(camera);
 	
-	Particle::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Particle", GPipeline::ALPHA_BLEND));
+	Particle::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Particle", GPipeline::ADD_BLEND));
 	Particle::SetCamera(camera);
 
 	Object2D::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Obj2D", GPipeline::ADD_BLEND));
@@ -275,12 +275,11 @@ void GameScene::DrawShadow()
 
 void GameScene::Draw()
 {
-	ParticleManager::GetInstance()->Draw();
 	////	’n–Ê
 	//ground->Draw();
 	//hill->Draw();
 	//	“V‹…
-	//skydome->Draw();
+	skydome->Draw();
 	//	–Ø
 	tree->Draw();
 
@@ -302,5 +301,6 @@ void GameScene::Draw()
 
 	//sprite->Draw();
 
-	DebugTextManager::GetInstance()->Draw();
+	//DebugTextManager::GetInstance()->Draw();
+	ParticleManager::GetInstance()->Draw();
 }

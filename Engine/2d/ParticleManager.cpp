@@ -53,6 +53,7 @@ void ParticleManager::AddMoveParticle(const Vector3D& pos, const Vector3D& spd, 
 	particles.emplace_front();
 	MoveParticle& p = particles.front();
 	p.SetIsBillboard(true);
+	p.SetColor(Vector4D(1.0f, 1.0f, 1.0f, 0.3f));
 	p.Initialize(pos, spd, scale, time);
 }
 

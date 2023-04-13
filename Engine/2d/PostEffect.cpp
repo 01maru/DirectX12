@@ -139,7 +139,7 @@ void PostEffect::Initialize()
 
 void PostEffect::Draw()
 {
-	GPipeline* pipeline = PipelineManager::GetInstance()->GetPipeline("PostEffect", GPipeline::ALPHA_BLEND);
+	GPipeline* pipeline = PipelineManager::GetInstance()->GetPipeline("PostEffect", GPipeline::NONE_BLEND);
 
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
 	pipeline->Setting();

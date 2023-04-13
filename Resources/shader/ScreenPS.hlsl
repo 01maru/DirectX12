@@ -38,6 +38,10 @@ float4 main(VSOutput input) : SV_TARGET
 
 	//// 基準テクセルと近傍8テクセルの平均なので9で除算する
 	//output /= 9.0f;
+	output *= color;
+	//if (output.a == 0.0f) {
+	//	discard;
+	//}
 
-	return output * color;
+	return output;
 }

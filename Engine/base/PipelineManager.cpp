@@ -48,7 +48,7 @@ void PipelineManager::Initialize()
 
 	shadowPipeline = std::make_unique<GPipeline>();
 	shadowPipeline->Init(shadowShader, shadowInputLayout, _countof(shadowInputLayout), 3
-		, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+		, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
 	shadowPipeline->SetBlend(GPipeline::ALPHA_BLEND);
 
 	Shader shadowRecieverShader(L"Resources/shader/ShadowRecieverVS.hlsl", L"Resources/shader/ShadowRecieverPS.hlsl");
@@ -61,7 +61,7 @@ void PipelineManager::Initialize()
 
 	shadowRecieverPipeline = std::make_unique<GPipeline>();
 	shadowRecieverPipeline->Init(shadowRecieverShader, shadowRecieverInputLayout, _countof(shadowRecieverInputLayout)
-		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE, D3D12_DEPTH_WRITE_MASK_ALL, true, 2);
+		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, 2);
 	shadowRecieverPipeline->SetBlend(GPipeline::ALPHA_BLEND);
 #pragma endregion
 
@@ -93,7 +93,7 @@ void PipelineManager::Initialize()
 	{
 		GPipeline* postEffectpipe_ = new GPipeline();
 		postEffectpipe_->Init(postEffect, inputLayout2D, _countof(inputLayout2D), 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
+			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO);
 		postEffectpipe_->SetBlend(i);
 
 		//	pipeline’Ç‰Á
@@ -135,7 +135,7 @@ void PipelineManager::Initialize()
 	{
 		GPipeline* particlepipe_ = new GPipeline();
 		particlepipe_->Init(particleShader, particleInputLayout, _countof(particleInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT
-			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
+			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO);
 		particlepipe_->SetBlend(i);
 
 		//	pipeline’Ç‰Á
