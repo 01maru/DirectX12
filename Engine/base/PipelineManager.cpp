@@ -101,6 +101,28 @@ void PipelineManager::Initialize()
 	}
 #pragma endregion
 
+#pragma region Sprite
+	spritePipeline.reserve(blendMordNum);
+
+	D3D12_INPUT_ELEMENT_DESC spriteInputLayout[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzç¿ïW
+		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uvç¿ïW
+	};
+
+	Shader Spriteshader(L"Resources/shader/SpriteVS.hlsl", L"Resources/shader/SpritePS.hlsl");
+
+	for (int i = 0; i < blendMordNum; i++)
+	{
+		GPipeline* spritepipe_ = new GPipeline();
+		spritepipe_->Init(Spriteshader, spriteInputLayout, _countof(spriteInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
+			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
+		spritepipe_->SetBlend(i);
+
+		//	pipelineí«â¡
+		spritePipeline.emplace_back(spritepipe_);
+	}
+#pragma endregion
+
 #pragma region Particle
 	particlePipeline.reserve(blendMordNum);
 
@@ -149,6 +171,9 @@ GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::Blen
 	}
 	else if (name == "PostEffect") {
 		return postEffectPipeline[blend].get();
+	}
+	else if (name == "Sprite") {
+		return spritePipeline[blend].get();
 	}
 	else if (name == "Particle") {
 		return particlePipeline[blend].get();

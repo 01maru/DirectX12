@@ -8,8 +8,6 @@ class SpriteCommon
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	GPipeline pipeline;
-
 	Matrix mat2D;
 
 	SpriteCommon();

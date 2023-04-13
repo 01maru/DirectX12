@@ -47,7 +47,7 @@ void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT 
 	pipelineDesc.PrimitiveTopologyType = topologyType;
 
 	// ‚»‚Ì‘¼‚Ìİ’è
-	pipelineDesc.NumRenderTargets = 2;		// •`‰æ‘ÎÛ‚Í1‚Â
+	pipelineDesc.NumRenderTargets = 2;		// •`‰æ‘ÎÛ
 	for (int i = 0; i < 2; i++)
 	{
 		pipelineDesc.RTVFormats[i] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255w’è‚ÌRGBA
@@ -80,14 +80,10 @@ void GPipeline::Blend(D3D12_RENDER_TARGET_BLEND_DESC& blenddesc, const int mord)
 {
 	//	‹¤’Êİ’è
 	if (mord != NONE_BLEND) {
-		pipelineDesc.BlendState.AlphaToCoverageEnable = true;
 		blenddesc.BlendEnable = true;
 		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
 		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	}
-	else {
-		pipelineDesc.BlendState.AlphaToCoverageEnable = false;
 	}
 
 	switch (mord)
