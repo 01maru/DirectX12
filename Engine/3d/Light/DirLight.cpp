@@ -9,7 +9,7 @@ void DirLight::SetShadow(bool shadowflag)
 
 		if (shadowing) {
 			lightCamera = std::make_unique<NormalCamera>();
-			lightCamera->Initialize(center, center - lightdir, Vector3D{ 0.0f,1.0f,0.0f });
+			lightCamera->Initialize(center - lightdir * 50.0f , center, Vector3D{ 0.0f,1.0f,0.0f });
 		}
 		else {
 			lightCamera.release();

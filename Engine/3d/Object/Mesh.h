@@ -18,6 +18,7 @@ private:
 public:
     void CreateBuff();
     void Draw();
+    void DrawShadowReciever();
     void CalcSmoothedNormals();
 
     void SetMaterial(Material* material) { mtl = material; }

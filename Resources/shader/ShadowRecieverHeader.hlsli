@@ -1,9 +1,8 @@
 // モデル用の定数バッファー
 cbuffer ModelCb : register(b0)
 {
+    matrix mViewProj;
     matrix mWorld;
-    matrix mView;
-    matrix mProj;
 };
 
 // ライトビュープロジェクション行列の定数バッファーを定義

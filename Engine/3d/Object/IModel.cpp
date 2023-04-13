@@ -32,3 +32,10 @@ void IModel::Draw()
 		mesh->Draw();
 	}
 }
+
+void IModel::DrawShadowReciever()
+{
+	for (auto& mesh : meshes) {
+		mesh->DrawShadowReciever();
+	}
+}

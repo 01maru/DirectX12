@@ -122,7 +122,7 @@ void SceneManager::Draw()
 	if (endLoading) {
 		scene->DrawShadow();
 	}
-
+	
 	dx->PostEffectDraw(shadowEffect2.get());
 
 	dx->PrevPostEffect(shadowEffect.get());

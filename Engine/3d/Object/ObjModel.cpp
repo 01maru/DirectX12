@@ -99,7 +99,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			line_stream >> pos.x;
 			line_stream >> pos.y;
 			line_stream >> pos.z;
-			pos.x = -pos.x;
+			pos.z = -pos.z;
 
 			temp_poss.emplace_back(pos);
 		}
@@ -124,6 +124,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 
 		if (key == "f") {
 			int indexNum = 0;
+			std::vector<uint16_t> indices;
 
 			string index_string;
 			while (getline(line_stream, index_string, ' '))
@@ -148,16 +149,33 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 				}
 
 				if (indexNum >= 3) {
-					mesh->AddIndex((unsigned short)indexCount - 1);
-					mesh->AddIndex((unsigned short)indexCount);
-					mesh->AddIndex((unsigned short)indexCount - 3);
+					//mesh->AddIndex((unsigned short)indexCount - 1);
+					//mesh->AddIndex((unsigned short)indexCount);
+					//mesh->AddIndex((unsigned short)indexCount - 3);
+					indices.emplace_back((unsigned short)(indexCount - 1));
+					indices.emplace_back((unsigned short)indexCount);
+					indices.emplace_back((unsigned short)(indexCount - 3));
 				}
 				else
 				{
-					mesh->AddIndex((unsigned short)indexCount);
+					indices.emplace_back((unsigned short)indexCount);
 				}
 				indexNum++;
 				indexCount++;
+			}
+			if (indices.size() == 3)
+			{
+				mesh->AddIndex(indices[0]);
+				mesh->AddIndex(indices[2]);
+				mesh->AddIndex(indices[1]);
+			}
+			else {
+				mesh->AddIndex(indices[0]);
+				mesh->AddIndex(indices[2]);
+				mesh->AddIndex(indices[1]);
+				mesh->AddIndex(indices[3]);
+				mesh->AddIndex(indices[5]);
+				mesh->AddIndex(indices[4]);
 			}
 		}
 	}

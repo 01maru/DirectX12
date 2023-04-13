@@ -11,26 +11,26 @@ SkinOutput ComputeSkin(float4 pos : POSITION, float3 normal : NORMAL, uint4 bone
 	iBone = boneIndices.x;
 	weight = boneWeights.x;
 	m = matSkinning[iBone];
-	output.pos += weight * mul(m, pos);
-	output.normal += weight * mul((float3x3)m, normal);
+	output.pos += mul(m, pos) * weight;
+	output.normal += mul((float3x3)m, normal) * weight;
 
 	iBone = boneIndices.y;
 	weight = boneWeights.y;
 	m = matSkinning[iBone];
-	output.pos += weight * mul(m, pos);
-	output.normal += weight * mul((float3x3)m, normal);
+	output.pos += mul(m, pos) * weight;
+	output.normal += mul((float3x3)m, normal) * weight;
 
 	iBone = boneIndices.z;
 	weight = boneWeights.z;
 	m = matSkinning[iBone];
-	output.pos += weight * mul(m, pos);
-	output.normal += weight * mul((float3x3)m, normal);
+	output.pos += mul(m, pos) * weight;
+	output.normal += mul((float3x3)m, normal) * weight;
 
 	iBone = boneIndices.w;
 	weight = boneWeights.w;
 	m = matSkinning[iBone];
-	output.pos += weight * mul(m, pos);
-	output.normal += weight * mul((float3x3)m, normal);
+	output.pos += mul(m, pos) * weight;
+	output.normal += mul((float3x3)m, normal) * weight;
 
 	return output;
 }

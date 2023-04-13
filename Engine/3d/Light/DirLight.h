@@ -15,7 +15,7 @@ public:
 	};
 
 private:
-	Vector3D center = { 10.0f,15.0f,0.0f };
+	Vector3D center = { 0.0f, 1.0f, 0.0f };
 	Vector3D lightdir = { 1,1,0 };
 	Vector3D lightcolor = { 1,1,1 };
 	bool active = false;

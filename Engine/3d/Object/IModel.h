@@ -39,6 +39,7 @@ public:
 	//	ファイル名とスムージングするか
 	void Initialize(const char* filename, bool smoothing = false);
 	void Draw();
+	void DrawShadowReciever();
 
 	virtual void BoneTransform(float TimeInSeconds, std::vector<Matrix>& transforms) = 0;
 	void AddMaterial(Material* material) { materials.emplace(material->name, material); }

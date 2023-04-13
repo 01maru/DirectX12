@@ -5,6 +5,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "PipelineManager.h"
+#include "TextureManager.h"
+#include "SceneManager.h"
 
 Light* Object3D::light = nullptr;
 GPipeline* Object3D::pipeline = nullptr;
@@ -241,7 +243,19 @@ void Object3D::DrawShadow()
 	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	dx->GetCmdList()->SetGraphicsRootConstantBufferView(2, shadowtransform->GetGPUVirtualAddress());
-	dx->GetCmdList()->SetGraphicsRootConstantBufferView(3, constBuffSkin->GetGPUVirtualAddress());
 
 	model->Draw();
+}
+
+void Object3D::DrawShadowReciever()
+{
+	GPipeline* pipeline_= PipelineManager::GetInstance()->GetPipeline("ShadowReciever");
+	pipeline_->Setting();
+	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Texture shadowmap = SceneManager::GetInstance()->GetShadowMap();
+	dx->GetCmdList()->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(shadowmap.GetHandle()));
+	dx->GetCmdList()->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
+	dx->GetCmdList()->SetGraphicsRootConstantBufferView(3, shadowtransform->GetGPUVirtualAddress());
+
+	model->DrawShadowReciever();
 }

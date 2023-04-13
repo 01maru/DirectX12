@@ -56,6 +56,7 @@ public:
 	void MatUpdate();
 	void PlayAnimation();
 	virtual void DrawShadow();
+	void DrawShadowReciever();
 	virtual void Draw();
 
 	static void SetLight(Light* light_);

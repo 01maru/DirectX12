@@ -276,7 +276,7 @@ void GameScene::DrawShadow()
 void GameScene::Draw()
 {
 	////	’n–Ê
-	//ground->Draw();
+	ground->DrawShadowReciever();
 	//hill->Draw();
 	//	“V‹…
 	skydome->Draw();

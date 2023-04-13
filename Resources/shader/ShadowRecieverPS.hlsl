@@ -14,7 +14,9 @@ float4 main(VSOutput input) : SV_TARGET
     if (shadowMapUV.x > 0.0f && shadowMapUV.x < 1.0f
         && shadowMapUV.y > 0.0f && shadowMapUV.y < 1.0f)
     {
-        shadowMap = g_shadowMap.Sample(g_sampler, shadowMapUV);
+        if (g_shadowMap.Sample(g_sampler, shadowMapUV).a != 0.0f) {
+            shadowMap = g_shadowMap.Sample(g_sampler, shadowMapUV);
+        }
     }
 
     float4 color = g_albedo.Sample(g_sampler, input.uv);

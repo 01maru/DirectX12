@@ -22,6 +22,15 @@ void Mesh::Draw()
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }
 
+void Mesh::DrawShadowReciever()
+{
+	ID3D12GraphicsCommandList* cmdList = dx->GetCmdList();
+	BuffUpdate(cmdList);
+	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(mtl->GetTextureHandle()));
+
+	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
+}
+
 void Mesh::CalcSmoothedNormals()
 {
 	auto itr = smoothData.begin();

@@ -36,7 +36,7 @@ void PipelineManager::Initialize()
 		
 		GPipeline* modelpipeline_ = modelPipeline.back().get();
 		modelpipeline_->Init(objShader, modelInputLayout, _countof(modelInputLayout), 4
-			, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+			, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
 		modelpipeline_->SetBlend(i);
 	}
 
@@ -49,7 +49,7 @@ void PipelineManager::Initialize()
 	shadowPipeline = std::make_unique<GPipeline>();
 	shadowPipeline->Init(shadowShader, shadowInputLayout, _countof(shadowInputLayout), 3
 		, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
-	shadowPipeline->SetBlend(GPipeline::ALPHA_BLEND);
+	shadowPipeline->SetBlend(GPipeline::NONE_BLEND);
 
 	Shader shadowRecieverShader(L"Resources/shader/ShadowRecieverVS.hlsl", L"Resources/shader/ShadowRecieverPS.hlsl");
 
@@ -62,7 +62,7 @@ void PipelineManager::Initialize()
 	shadowRecieverPipeline = std::make_unique<GPipeline>();
 	shadowRecieverPipeline->Init(shadowRecieverShader, shadowRecieverInputLayout, _countof(shadowRecieverInputLayout)
 		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, 2);
-	shadowRecieverPipeline->SetBlend(GPipeline::ALPHA_BLEND);
+	shadowRecieverPipeline->SetBlend(GPipeline::NONE_BLEND);
 #pragma endregion
 
 #pragma region Obj2D
@@ -183,6 +183,9 @@ GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::Blen
 	}
 	else if (name == "Shadow") {
 		return shadowPipeline.get();
+	}
+	else if (name == "ShadowReciever") {
+		return shadowRecieverPipeline.get();
 	}
 	return nullptr;
 }
