@@ -13,6 +13,10 @@ void NormalCamera::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
 	MatUpdate();
 
 	CalcDirectionVec();
+
+	up = -downVec;
+
+	MatUpdate();
 }
 
 void NormalCamera::Update()

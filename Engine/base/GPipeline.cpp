@@ -17,7 +17,7 @@ void GPipeline::Setting()
 	dx->GetCmdList()->SetGraphicsRootSignature(rootSignature.Get());
 }
 
-void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, int constBuffNum, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord, D3D12_CULL_MODE cullmord, D3D12_DEPTH_WRITE_MASK depth_write_mask, bool isDeep, int textureNum)
+void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, int constBuffNum, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord, D3D12_CULL_MODE cullmord, D3D12_DEPTH_WRITE_MASK depth_write_mask, bool isDeep, DXGI_FORMAT format, int textureNum)
 {
 	HRESULT result;
 	// シェーダーの設定
@@ -50,7 +50,7 @@ void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT 
 	pipelineDesc.NumRenderTargets = 2;		// 描画対象
 	for (int i = 0; i < 2; i++)
 	{
-		pipelineDesc.RTVFormats[i] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
+		pipelineDesc.RTVFormats[i] = format; // 0~255指定のRGBA
 	}
 	pipelineDesc.SampleDesc.Count = 1;							  // 1ピクセルにつき1回サンプリング
 

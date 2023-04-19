@@ -24,8 +24,10 @@ namespace MyMath {
 	Matrix PerspectiveFovLH(const int winwidth, const int winheight, float fovY, float nearZ, float farZ);
 	Matrix OrthoLH(const int winwidth, const int winheight, float nearZ, float farZ);
 
+	//	ラジアン変換
 	float ConvertToRad(float angle);
 
+	//	乱数
 	float GetRand(float min, float max);
 
 	bool CollisionCircleLay(Vector3D startL, Vector3D endL, Vector3D pos, float rad);
@@ -47,13 +49,13 @@ namespace MyMath {
 		Matrix matWorld;
 
 		Matrix matScale;
-		Vector3D scale;
+		Vector3D scale;		//	スケール
 
 		Matrix matRot;
-		Vector3D rotAngle;
+		Vector3D rotAngle;	//	回転(単位はラジアン)
 
 		Matrix matTrans;
-		Vector3D trans;
+		Vector3D trans;		//	位置
 
 	public:
 		void SetMatScaling();

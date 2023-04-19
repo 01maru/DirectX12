@@ -4,7 +4,7 @@
 #include "PipelineManager.h"
 #include "Input.h"
 
-void PostEffect::Initialize()
+void PostEffect::Initialize(DXGI_FORMAT format)
 {
 	texture.resize(texNum);
 	for (int i = 0; i < texNum; i++)
@@ -63,7 +63,7 @@ void PostEffect::Initialize()
 	scissorRect.Init(0, Window::window_width, 0, Window::window_height, texNum);
 
 	auto resDesc_ = MyDirectX::GetInstance()->GetBackBuffDesc();
-
+	resDesc_.Format = format;
 	D3D12_HEAP_PROPERTIES heapProp{};
 	heapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
 	heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -73,7 +73,7 @@ void PostEffect::Initialize()
 
 	float clsClr[4] = { 1.0f,1.0f,1.0f,1.0f };
 	D3D12_CLEAR_VALUE clearValue{};
-	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	clearValue.Format = format;
 	clearValue.DepthStencil.Depth = 1.0f;
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -101,7 +101,12 @@ void PostEffect::Initialize()
 
 	D3D12_RENDER_TARGET_VIEW_DESC _rtvDesc = {};
 	_rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	_rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	if (format == DXGI_FORMAT_R8G8B8A8_UNORM) {
+		_rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	}
+	else {
+		_rtvDesc.Format = format;
+	}
 
 	//	RTV
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = rtvHeap->GetCPUDescriptorHandleForHeapStart();

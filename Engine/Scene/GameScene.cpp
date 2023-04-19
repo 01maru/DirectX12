@@ -140,7 +140,8 @@ void GameScene::LoadResources()
 	modelTree2 = std::make_unique<ObjModel>("tree2");
 #pragma endregion
 	//	天球
-	skydome.reset(Object3D::Create(modelSkydome.get()));
+	skydome.reset(Object3D::Create(modelGround.get()));
+	skydome->SetPosition({ 0.0f,10.0f,0.0f });
 	//	地面
 	ground.reset(TouchableObject::Create(modelGround.get()));
 	//ground->SetScale(Vector3D(1.0f, 1.0f, 0.1f));
@@ -275,13 +276,13 @@ void GameScene::DrawShadow()
 
 void GameScene::Draw()
 {
-	////	地面
-	ground->DrawShadowReciever();
 	//hill->Draw();
-	//	天球
-	skydome->Draw();
 	//	木
 	tree->Draw();
+	//	天球
+	skydome->DrawShadowReciever();
+	//	地面
+	ground->DrawShadowReciever();
 
 	////player->Draw();
 

@@ -1,6 +1,6 @@
 #include "ObjShadowHeader.hlsli"
 
-VSOutput main(float4 pos : POSITION) : SV_POSITION
+VSOutput main(float4 pos : POSITION)
 {
 	VSOutput output;
 	output.svpos = mul(matworld, pos);

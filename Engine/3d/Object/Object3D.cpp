@@ -179,11 +179,11 @@ void Object3D::MatUpdate()
 	//constMap->color = color;
 	transform->Unmap(0, nullptr);
 
-	const Matrix& matViewProjection_ = light->GetDirLightCamera(0)->GetViewProj();
+	const Matrix& matView_ = light->GetDirLightCamera(0)->GetViewProj();
 
 	ConstBufferDataTransform* constMap_ = nullptr;
 	result = shadowtransform->Map(0, nullptr, (void**)&constMap_);
-	constMap_->matview = matViewProjection_;
+	constMap_->matview = matView_;
 	if (model != nullptr) {
 		constMap_->matworld = model->GetModelTransform();
 		constMap_->matworld *= mat.matWorld;
