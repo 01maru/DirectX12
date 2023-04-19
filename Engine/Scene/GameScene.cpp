@@ -29,9 +29,8 @@ void GameScene::MatUpdate()
 	hill->MatUpdate();
 	skydome->MatUpdate();
 
-	player->MatUpdate();
 	tree->MatUpdate();
-	//tree->PlayAnimation();
+	tree->PlayAnimation();
 	for (int i = 0; i < tree2.size(); i++)
 	{
 		tree2[i]->MatUpdate();
@@ -85,10 +84,10 @@ void GameScene::Initialize()
 	
 	Player::SetCamera(camera);
 	player = std::make_unique<Player>();
-	player->PlayerInitialize(modelSword.get());
-	float size = 0.05f;
-	player->SetScale({ size,size,size });
-	player->SetRotation({ 0.0f,MyMath::PI,0.0f });
+	//player->PlayerInitialize(modelSword.get());
+	//float size = 0.05f;
+	//player->SetScale({ size,size,size });
+	//player->SetRotation({ 0.0f,MyMath::PI,0.0f });
 
 	grass.push_back(Grass());
 	float dis = 6.0f;
@@ -130,7 +129,7 @@ void GameScene::Finalize()
 void GameScene::LoadResources()
 {
 #pragma region Model
-	modelSword = std::make_unique<FbxModel>("human");
+	modelSword = std::make_unique<FbxModel>("moveCube");
 
 	modelSkydome = std::make_unique<ObjModel>("skydome");
 	modelHill = std::make_unique<ObjModel>("ground1");
@@ -140,8 +139,8 @@ void GameScene::LoadResources()
 	modelTree2 = std::make_unique<ObjModel>("tree2");
 #pragma endregion
 	//	天球
-	skydome.reset(Object3D::Create(modelGround.get()));
-	skydome->SetPosition({ 0.0f,10.0f,0.0f });
+	skydome.reset(Object3D::Create(modelSkydome.get()));
+	//skydome->SetPosition({ 0.0f,10.0f,0.0f });
 	//	地面
 	ground.reset(TouchableObject::Create(modelGround.get()));
 	//ground->SetScale(Vector3D(1.0f, 1.0f, 0.1f));
@@ -150,9 +149,9 @@ void GameScene::LoadResources()
 	hill->SetScale(Vector3D(groundscale, 1.0f, 1.0f));
 	hill->SetPosition(Vector3D(0.0f, 0.0f, 10.0f));
 
-	tree.reset(Object3D::Create(modelTree.get()));
+	tree.reset(Object3D::Create(modelSword.get()));
 	//float size = 0.01f;
-	tree->SetPosition({ 0.0f,3.0f,0.0f});
+	//tree->SetPosition({ 0.0f,3.0f,0.0f});
 	tree2.push_back(Object3D::Create(modelTree2.get()));
 	tree2.push_back(Object3D::Create(modelTree2.get()));
 	tree2.push_back(Object3D::Create(modelTree2.get()));
@@ -271,7 +270,7 @@ void GameScene::Update()
 
 void GameScene::DrawShadow()
 {
-	tree->DrawShadow();
+	//tree->DrawShadow();
 }
 
 void GameScene::Draw()
@@ -280,11 +279,11 @@ void GameScene::Draw()
 	//	木
 	tree->Draw();
 	//	天球
-	skydome->DrawShadowReciever();
+	skydome->Draw();
 	//	地面
 	ground->DrawShadowReciever();
 
-	////player->Draw();
+	//player->Draw();
 
 	//for (int i = 0; i < tree2.size(); i++)
 	//{

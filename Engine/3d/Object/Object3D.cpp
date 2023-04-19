@@ -210,7 +210,7 @@ void Object3D::PlayAnimation()
 {
 	std::vector<Matrix> Transforms;
 
-	animationTimer += 0.1f;
+	animationTimer += 0.01f;
 	model->BoneTransform(animationTimer, Transforms);
 
 	ConstBufferDataSkin* constMapSkin = nullptr;
