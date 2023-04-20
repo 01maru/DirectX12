@@ -30,7 +30,7 @@ void GameScene::MatUpdate()
 	skydome->MatUpdate();
 
 	tree->MatUpdate();
-	tree->PlayAnimation();
+	//tree->PlayAnimation();
 	for (int i = 0; i < tree2.size(); i++)
 	{
 		tree2[i]->MatUpdate();
@@ -89,33 +89,6 @@ void GameScene::Initialize()
 	//player->SetScale({ size,size,size });
 	//player->SetRotation({ 0.0f,MyMath::PI,0.0f });
 
-	grass.push_back(Grass());
-	float dis = 6.0f;
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 0.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f,dis), 0.0f, 0.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f,dis), 0.0f, 0.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f,dis), 0.0f, 0.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, 2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, 2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, 2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, 2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -2.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -3.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -3.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-dis, 0.0f), 0.0f, -3.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -3.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -3.0f)));
-	grass.push_back(Grass(Vector3D(MyMath::GetRand(-0.0f, dis), 0.0f, -3.0f)));
-
 	testVolLight.push_back(VolumeLightObj(Vector2D(5.0f, 25.0f), Vector3D(0.0f, 0.0f, -2.0f), 30.0f));
 
 	mord = Phong;
@@ -135,7 +108,7 @@ void GameScene::LoadResources()
 	modelHill = std::make_unique<ObjModel>("ground1");
 	modelGround = std::make_unique<ObjModel>("ground");
 	//	丘
-	modelTree = std::make_unique<ObjModel>("objCube");
+	modelTree = std::make_unique<ObjModel>("sphere");
 	modelTree2 = std::make_unique<ObjModel>("tree2");
 #pragma endregion
 	//	天球
@@ -144,14 +117,16 @@ void GameScene::LoadResources()
 	//	地面
 	ground.reset(TouchableObject::Create(modelGround.get()));
 	//ground->SetScale(Vector3D(1.0f, 1.0f, 0.1f));
-	hill.reset(Object3D::Create(modelHill.get()));
-	float groundscale = 10.0f;
-	hill->SetScale(Vector3D(groundscale, 1.0f, 1.0f));
-	hill->SetPosition(Vector3D(0.0f, 0.0f, 10.0f));
+	hill.reset(Object3D::Create(modelTree.get()));
+	//float groundscale = 10.0f;
+	//hill->SetScale(Vector3D(groundscale, 1.0f, 1.0f));
+	//hill->SetPosition(Vector3D(0.0f, 0.0f, 10.0f));
+	hill->SetScale(Vector3D(5.0f, 0.2f, 5.0f));
+	hill->SetPosition(Vector3D(0.0f, 1.0f, 0.0f));
 
-	tree.reset(Object3D::Create(modelSword.get()));
+	tree.reset(Object3D::Create(modelTree.get()));
 	//float size = 0.01f;
-	//tree->SetPosition({ 0.0f,3.0f,0.0f});
+	tree->SetPosition({ 0.0f,3.0f,0.0f});
 	tree2.push_back(Object3D::Create(modelTree2.get()));
 	tree2.push_back(Object3D::Create(modelTree2.get()));
 	tree2.push_back(Object3D::Create(modelTree2.get()));
@@ -270,14 +245,16 @@ void GameScene::Update()
 
 void GameScene::DrawShadow()
 {
-	//tree->DrawShadow();
+	tree->DrawShadow();
+	hill->DrawShadow();
 }
 
 void GameScene::Draw()
 {
 	//hill->Draw();
 	//	木
-	tree->Draw();
+	tree->DrawShadowReciever();
+	hill->DrawShadowReciever();
 	//	天球
 	skydome->Draw();
 	//	地面

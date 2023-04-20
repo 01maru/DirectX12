@@ -39,7 +39,9 @@ void ICamera::CalcDirectionVec()
 
 	//	右方向ベクトル
 	rightVec = Vector3D(0, 1, 0).cross(frontVec);
-
+	if (rightVec == Vector3D()) {
+		rightVec = Vector3D(1.0f, 0.0f, 0.0f);
+	}
 	//	下方向ベクトル
 	downVec = rightVec.cross(frontVec);
 

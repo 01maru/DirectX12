@@ -32,6 +32,7 @@ public:
 	Vector3D& operator-=(const Vector3D& v);
 	Vector3D& operator/=(float s);
 	Vector3D& operator*=(float s);
+	bool operator==(const Vector3D& vec);
 };
 
 const Vector3D operator+(const Vector3D& v1, const Vector3D& v2);
