@@ -26,9 +26,14 @@ void SceneManager::DeleteInstance()
 void SceneManager::Initialize()
 {
 	screen = std::make_unique<PostEffect>();
-	screen->Initialize();
-	shadowEffect2 = std::make_unique<PostEffect>();
-	shadowEffect2->Initialize(DXGI_FORMAT_R32_FLOAT);
+	screen->Initialize(Window::window_width, Window::window_height);
+	shadowEffect = std::make_unique<PostEffect>();
+	shadowEffect->Initialize(Window::window_width, Window::window_height, DXGI_FORMAT_R32_FLOAT);
+
+	xbulr = std::make_unique<PostEffect>();
+	xbulr->Initialize(Window::window_width / 2, Window::window_height);
+	ybulr = std::make_unique<PostEffect>();
+	ybulr->Initialize(Window::window_width / 2, Window::window_height / 2);
 
 	sceneFactry = std::make_unique<SceneFactory>();
 	scene = sceneFactry->CreateScene("GAMESCENE");
@@ -117,13 +122,13 @@ void SceneManager::Draw()
 	MyDirectX* dx = MyDirectX::GetInstance();
 
 #pragma region DrawScreen
-	dx->PrevPostEffect(shadowEffect2.get());
+	dx->PrevPostEffect(shadowEffect.get());
 
 	if (endLoading) {
 		scene->DrawShadow();
 	}
 	
-	dx->PostEffectDraw(shadowEffect2.get());
+	dx->PostEffectDraw(shadowEffect.get());
 
 	dx->PrevPostEffect(screen.get());
 
@@ -132,12 +137,24 @@ void SceneManager::Draw()
 	}
 
 	dx->PostEffectDraw(screen.get());
+
+	dx->PrevPostEffect(xbulr.get());
+
+	screen->Draw(false,false);
+
+	dx->PostEffectDraw(xbulr.get());
+
+	dx->PrevPostEffect(ybulr.get());
+
+	xbulr->Draw(true,false);
+
+	dx->PostEffectDraw(ybulr.get());
 #pragma endregion
 
 #pragma region MultiPath
 	dx->PrevDraw();
 
-	screen->Draw();
+	ybulr->Draw(true, false);
 	if (!endLoading) {
 		//	ƒ[ƒh‰æ–Ê
 		loadSprite->Draw();

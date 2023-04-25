@@ -160,6 +160,9 @@
     <Filter Include="リソース ファイル\ObjShader\ShadowReciever">
       <UniqueIdentifier>{6fd680be-0d9a-425b-a586-ecafb87ec5cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\BlurShader">
+      <UniqueIdentifier>{e644b231-63d3-433c-8186-68fa566b9a63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\math\Matrix.cpp">
@@ -607,6 +610,9 @@
     <None Include="Resources\shader\ShadowRecieverHeader.hlsli">
       <Filter>リソース ファイル\ObjShader\ShadowReciever</Filter>
     </None>
+    <None Include="Resources\shader\BlurHeader.hlsli">
+      <Filter>リソース ファイル\BlurShader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\ObjPS.hlsl">
@@ -656,6 +662,15 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\ShadowRecieverVS.hlsl">
       <Filter>リソース ファイル\ObjShader\ShadowReciever</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\YBlurVS.hlsl">
+      <Filter>リソース ファイル\BlurShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\BlurPS.hlsl">
+      <Filter>リソース ファイル\BlurShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\XBlurVS.hlsl">
+      <Filter>リソース ファイル\BlurShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

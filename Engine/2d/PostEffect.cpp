@@ -36,6 +36,30 @@ void PostEffect::Initialize(int width, int height, DXGI_FORMAT format)
 		IID_PPV_ARGS(&material));
 	assert(SUCCEEDED(result));
 
+	cbResourceDesc.Width = (sizeof(ConstBufferWeight) + 0xFF) & ~0xFF;
+	//	生成
+	result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
+		&cbHeapProp,	//	ヒープ設定
+		D3D12_HEAP_FLAG_NONE,
+		&cbResourceDesc,	//	リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&weightMaterial));
+	assert(SUCCEEDED(result));
+
+	MyMath::CalcGaussianWeightsTable(
+		weights,        // 重みの格納先
+		NUM_WEIGHTS,    // 重みテーブルのサイズ
+		8.0f            // ボケ具合。この数値が大きくなるとボケが強くなる
+	);
+
+	ConstBufferWeight* mapWeight = nullptr;
+	result = weightMaterial->Map(0, nullptr, (void**)&mapWeight);	//	マッピング
+	mapWeight->weight[0] = Vector4D(weights[0], weights[1], weights[2], weights[3]);
+	mapWeight->weight[1] = Vector4D(weights[4], weights[5], weights[6], weights[7]);
+	assert(SUCCEEDED(result));
+	weightMaterial->Unmap(0, nullptr);
+
 	//	定数バッファのマッピング
 	SetColor(color);
 #pragma endregion
@@ -58,9 +82,9 @@ void PostEffect::Initialize(int width, int height, DXGI_FORMAT format)
 	BuffInitialize(MyDirectX::GetInstance()->GetDev(), sizePV, sizeIB, indices, indexSize);
 
 	//	ビューポート
-	viewPort.Init(Window::window_width, Window::window_height, 0, 0, 0.0f, 1.0f, texNum);
+	viewPort.Init(width, height, 0, 0, 0.0f, 1.0f, texNum);
 	// シザー矩形
-	scissorRect.Init(0, Window::window_width, 0, Window::window_height, texNum);
+	scissorRect.Init(0, width, 0, height, texNum);
 
 	auto resDesc_ = MyDirectX::GetInstance()->GetBackBuffDesc();
 	resDesc_.Format = format;
@@ -183,10 +207,15 @@ void PostEffect::Initialize(int width, int height, DXGI_FORMAT format)
 #pragma endregion
 }
 
-void PostEffect::Draw()
+void PostEffect::Draw(bool xBlur, bool yBlur)
 {
 	GPipeline* pipeline = PipelineManager::GetInstance()->GetPipeline("PostEffect", GPipeline::NONE_BLEND);
-
+	if (xBlur) {
+		pipeline = PipelineManager::GetInstance()->GetPipeline("xBlur", GPipeline::NONE_BLEND);
+	}
+	if (yBlur) {
+		pipeline = PipelineManager::GetInstance()->GetPipeline("yBlur", GPipeline::NONE_BLEND);
+	}
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -194,6 +223,7 @@ void PostEffect::Draw()
 	//	テクスチャ
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
 	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
+	if (xBlur || yBlur) { cmdList->SetGraphicsRootConstantBufferView(2, weightMaterial->GetGPUVirtualAddress()); }
 
 	cmdList->DrawIndexedInstanced(indexSize, 1, 0, 0, 0);
 }

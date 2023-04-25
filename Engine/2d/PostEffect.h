@@ -20,6 +20,13 @@ private:
 		Vector4D color;	//	RGBA
 	};
 	ComPtr<ID3D12Resource> material;
+	struct ConstBufferWeight {
+		Vector4D weight[2];
+	};
+	ComPtr<ID3D12Resource> weightMaterial;
+	
+	const int NUM_WEIGHTS = 8;
+	float weights[8];
 
 	std::vector<ScreenVertex> vertices;
 	UINT indexSize = 6;
@@ -34,13 +41,17 @@ private:
 	ViewPort viewPort;
 	// シザー矩形
 	ScissorRect scissorRect;
+
+	ComPtr<ID3D12DescriptorHeap> dsvHeap;
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
+	ComPtr<ID3D12Resource> depthBuff;
 public:
 	PostEffect() {};
 	~PostEffect() {};
 	void Initialize(int width, int height, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	void Setting();
-	void Draw();
+	void Draw(bool xBlur, bool yBlur);
 	void SetColor(const Vector4D& color_);
 
 	ID3D12Resource* GetTextureBuff(int index = 0) { return texture[index].GetResourceBuff(); }

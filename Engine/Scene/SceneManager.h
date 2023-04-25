@@ -31,7 +31,9 @@ private:
 
 #pragma region PostEffect
 	std::unique_ptr<PostEffect> screen;
-	std::unique_ptr<PostEffect> shadowEffect2;
+	std::unique_ptr<PostEffect> shadowEffect;
+	std::unique_ptr<PostEffect> xbulr;
+	std::unique_ptr<PostEffect> ybulr;
 #pragma endregion
 
 	SceneManager() {};
@@ -46,10 +48,10 @@ public:
 	void Update();
 	void Draw();
 
-	void ChangeScreenColor(const Vector4D& color) { shadowEffect->SetColor(color); }
+	void ChangeScreenColor(const Vector4D& color) { screen->SetColor(color); }
 	void SceneChange();
 	void SetNextScene(const std::string& sceneName);
 
-	Texture GetShadowMap() { return shadowEffect2->GetTexture(); }
+	Texture GetShadowMap() { return shadowEffect->GetTexture(); }
 };
 
