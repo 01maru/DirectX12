@@ -37,7 +37,7 @@ private:
 public:
 	PostEffect() {};
 	~PostEffect() {};
-	void Initialize(DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
+	void Initialize(int width, int height, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	void Setting();
 	void Draw();
@@ -48,6 +48,7 @@ public:
 	int GetTextureNum() { return texNum; }
 	D3D12_RESOURCE_BARRIER& GetResouceBarrier() { return barrierDesc; }
 	ID3D12DescriptorHeap* GetRTVHeap() { return rtvHeap.Get(); }
+	ID3D12DescriptorHeap* GetDSVHeap() { return dsvHeap.Get(); }
 	Texture GetTexture() { return texture[0]; }
 private:
 	void SetVertices() override;

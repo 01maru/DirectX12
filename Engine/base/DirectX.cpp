@@ -339,7 +339,7 @@ void MyDirectX::CmdListDrawAble(D3D12_RESOURCE_BARRIER& desc, ID3D12Resource* pR
 void MyDirectX::PrevPostEffect(PostEffect* postEffect)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = postEffect->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart();
-	dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+	dsvHandle = postEffect->GetDSVHeap()->GetCPUDescriptorHandleForHeapStart();
 
 	int num = postEffect->GetTextureNum();
 	for (int i = 0; i < num; i++)

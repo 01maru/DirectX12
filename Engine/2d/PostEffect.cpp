@@ -4,7 +4,7 @@
 #include "PipelineManager.h"
 #include "Input.h"
 
-void PostEffect::Initialize(DXGI_FORMAT format)
+void PostEffect::Initialize(int width, int height, DXGI_FORMAT format)
 {
 	texture.resize(texNum);
 	for (int i = 0; i < texNum; i++)
@@ -64,6 +64,8 @@ void PostEffect::Initialize(DXGI_FORMAT format)
 
 	auto resDesc_ = MyDirectX::GetInstance()->GetBackBuffDesc();
 	resDesc_.Format = format;
+	resDesc_.Width = width;
+	resDesc_.Height = height;
 	D3D12_HEAP_PROPERTIES heapProp{};
 	heapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
 	heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -139,6 +141,45 @@ void PostEffect::Initialize(DXGI_FORMAT format)
 			&_srvDesc,
 			srvHandle);
 	}
+#pragma endregion
+
+#pragma region 深度バッファ
+	D3D12_RESOURCE_DESC depthResourceDesc{};
+	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResourceDesc.Width = width;
+	depthResourceDesc.Height = height;
+	depthResourceDesc.DepthOrArraySize = 1;
+	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthResourceDesc.SampleDesc.Count = 1;
+	depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+	//	深度地用ヒーププロパティ
+	D3D12_HEAP_PROPERTIES depthHeapProp{};
+	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+	//	深度地のクリア設定
+	D3D12_CLEAR_VALUE depthClearValue{};
+	depthClearValue.DepthStencil.Depth = 1.0f;
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	//	Resource生成
+	result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
+		&depthHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&depthResourceDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&depthClearValue,
+		IID_PPV_ARGS(&depthBuff));
+	//	デスクリプタヒープ
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
+	dsvHeapDesc.NumDescriptors = 1;
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	result = MyDirectX::GetInstance()->GetDev()->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+	//	view
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	MyDirectX::GetInstance()->GetDev()->CreateDepthStencilView(
+		depthBuff.Get(),
+		&dsvDesc,
+		dsvHeap->GetCPUDescriptorHandleForHeapStart());
 #pragma endregion
 }
 

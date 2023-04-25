@@ -30,7 +30,7 @@ private:
 #pragma endregion
 
 #pragma region PostEffect
-	std::unique_ptr<PostEffect> shadowEffect;
+	std::unique_ptr<PostEffect> screen;
 	std::unique_ptr<PostEffect> shadowEffect2;
 #pragma endregion
 
