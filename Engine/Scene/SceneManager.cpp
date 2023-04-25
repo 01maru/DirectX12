@@ -28,7 +28,7 @@ void SceneManager::Initialize()
 	shadowEffect = std::make_unique<PostEffect>();
 	shadowEffect->Initialize();
 	shadowEffect2 = std::make_unique<PostEffect>();
-	shadowEffect2->Initialize(DXGI_FORMAT_R32_FLOAT);
+	shadowEffect2->Initialize(DXGI_FORMAT_R32G32_FLOAT);
 
 	sceneFactry = std::make_unique<SceneFactory>();
 	scene = sceneFactry->CreateScene("GAMESCENE");

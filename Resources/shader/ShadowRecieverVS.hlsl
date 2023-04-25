@@ -10,5 +10,6 @@ VSOutput main( float4 pos : POSITION, float3 normal : NORMAL, float2 uv : TEXCOO
 
     output.posInLVP = mul(mLVP, worldPos);
 
+    output.posInLVP.z = length(worldPos.xyz - lightPos) / 1000.0f;
     return output;
 }

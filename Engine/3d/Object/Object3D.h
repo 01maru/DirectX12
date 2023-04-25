@@ -28,8 +28,13 @@ private:
 		//float pad1;
 		//Vector3D color;
 	};
+	struct ConstBufferLight {
+		Matrix mLVP;
+		Vector3D cameraPos;
+	};
 	ComPtr<ID3D12Resource> transform;
 	ComPtr<ID3D12Resource> shadowtransform;
+	ComPtr<ID3D12Resource> lightTransform;
 
 	struct ConstBufferDataSkin
 	{

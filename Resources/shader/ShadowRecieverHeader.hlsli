@@ -9,6 +9,7 @@ cbuffer ModelCb : register(b0)
 cbuffer ShadowCb : register(b1)
 {
     matrix mLVP;
+    float3 lightPos;    // ƒ‰ƒCƒg‚ÌÀ•W
 };
 
 struct VSOutput

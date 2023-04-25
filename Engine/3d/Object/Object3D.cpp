@@ -110,6 +110,17 @@ void Object3D::Initialize()
 		IID_PPV_ARGS(&shadowtransform));
 	assert(SUCCEEDED(result));
 
+	cbResourceDesc.Width = (sizeof(ConstBufferLight) + 0xFF) & ~0xFF;
+	//	生成
+	result = dx->GetDev()->CreateCommittedResource(
+		&cbHeapProp,	//	ヒープ設定
+		D3D12_HEAP_FLAG_NONE,
+		&cbResourceDesc,	//	リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&lightTransform));
+	assert(SUCCEEDED(result));
+
 	mat.Initialize();
 
 	cbResourceDesc.Width = (sizeof(ConstBufferDataSkin) + 0xFF) & ~0xFF;
@@ -192,6 +203,12 @@ void Object3D::MatUpdate()
 		constMap_->matworld = mat.matWorld;
 	}
 	shadowtransform->Unmap(0, nullptr);
+
+	ConstBufferLight* constMapLight = nullptr;
+	result = lightTransform->Map(0, nullptr, (void**)&constMapLight);
+	constMapLight->mLVP = matView_;
+	constMapLight->cameraPos = light->GetDirLightCamera(0)->GetEye();
+	lightTransform->Unmap(0, nullptr);
 }
 
 void Object3D::Draw()
@@ -224,25 +241,12 @@ void Object3D::PlayAnimation()
 
 void Object3D::DrawShadow()
 {
-	const Matrix& matViewProjection = light->GetDirLightCamera(0)->GetViewProj();
-
-	ConstBufferDataTransform* constMap = nullptr;
-	shadowtransform->Map(0, nullptr, (void**)&constMap);
-	constMap->matview = matViewProjection;
-	if (model != nullptr) {
-		constMap->matworld = model->GetModelTransform();
-		constMap->matworld *= mat.matWorld;
-	}
-	else {
-		constMap->matworld = mat.matWorld;
-	}
-	shadowtransform->Unmap(0, nullptr);
-
 	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Shadow");
 	pipeline_->Setting();
 	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	dx->GetCmdList()->SetGraphicsRootConstantBufferView(2, shadowtransform->GetGPUVirtualAddress());
+	dx->GetCmdList()->SetGraphicsRootConstantBufferView(3, lightTransform->GetGPUVirtualAddress());
 
 	model->Draw();
 }
@@ -255,7 +259,7 @@ void Object3D::DrawShadowReciever()
 	Texture shadowmap = SceneManager::GetInstance()->GetShadowMap();
 	dx->GetCmdList()->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(shadowmap.GetHandle()));
 	dx->GetCmdList()->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
-	dx->GetCmdList()->SetGraphicsRootConstantBufferView(3, shadowtransform->GetGPUVirtualAddress());
+	dx->GetCmdList()->SetGraphicsRootConstantBufferView(3, lightTransform->GetGPUVirtualAddress());
 
 	model->DrawShadowReciever();
 }
