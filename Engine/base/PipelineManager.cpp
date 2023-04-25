@@ -99,6 +99,21 @@ void PipelineManager::Initialize()
 		//	pipeline’Ç‰Á
 		postEffectPipeline.emplace_back(postEffectpipe_);
 	}
+
+
+#pragma region Blur
+	Shader xblur(L"Resources/shader/XBlurVS.hlsl", L"Resources/shader/BlurPS.hlsl");
+
+	xBlurPipeline = std::make_unique<GPipeline>();
+	xBlurPipeline->Init(xblur, inputLayout2D, _countof(inputLayout2D)
+		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
+
+	Shader yblur(L"Resources/shader/YBlurVS.hlsl", L"Resources/shader/BlurPS.hlsl");
+
+	yBlurPipeline = std::make_unique<GPipeline>();
+	yBlurPipeline->Init(yblur, inputLayout2D, _countof(inputLayout2D)
+		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
+#pragma endregion
 #pragma endregion
 
 #pragma region Sprite
@@ -186,6 +201,12 @@ GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::Blen
 	}
 	else if (name == "ShadowReciever") {
 		return shadowRecieverPipeline.get();
+	}
+	else if (name == "xBlur") {
+		return xBlurPipeline.get();
+	}
+	else if (name == "yBlur") {
+		return yBlurPipeline.get();
 	}
 	return nullptr;
 }

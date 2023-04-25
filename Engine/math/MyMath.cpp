@@ -22,6 +22,26 @@ template float MyMath::mMin<float>(float, float);
 template int MyMath::mMin<int>(int, int);
 template double MyMath::mMin<double>(double, double);
 
+void MyMath::CalcGaussianWeightsTable(float* weights, int numWeights, float sigma)
+{
+	// 重みの合計を記録する変数を定義する
+	float total = 0;
+
+	// ここからガウス関数を用いて重みを計算している
+	// ループ変数のxが基準テクセルからの距離
+	for (int x = 0; x < numWeights; x++)
+	{
+		weights[x] = expf(-0.5f * (float)(x * x) / sigma);
+		total += 2.0f * weights[x];
+	}
+
+	// 重みの合計で除算することで、重みの合計を1にしている
+	for (int i = 0; i < numWeights; i++)
+	{
+		weights[i] /= total;
+	}
+}
+
 Matrix MyMath::LookAtLH(const Vector3D& eye, const Vector3D& target, const Vector3D& up)
 {
 	Vector3D baseX = up;
