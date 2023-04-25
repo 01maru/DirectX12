@@ -43,15 +43,7 @@ float4 main(VSOutput input) : SV_TARGET
             // 光が当たる確率を使って通常カラーとシャドウカラーを線形補完
             texcolor.xyz = lerp(shadowColor, texcolor.xyz, lit_factor);
         }
-
-        //// step-3 シャドウマップに描き込まれているZ値と比較する
-        //// 計算したUV座標を使って、シャドウマップから深度値をサンプリング
-        //float zInShadowMap = g_shadowMap.Sample(g_sampler, shadowMapUV).r;
-        //if (zInLVP > zInShadowMap)
-        //{
-        //    // 遮蔽されている
-        //    texcolor.xyz *= 0.5f;
-        //}
     }
+
     return texcolor;
 }
