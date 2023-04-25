@@ -245,7 +245,7 @@ void GameScene::Update()
 
 void GameScene::DrawShadow()
 {
-	tree->DrawShadow();
+	//tree->DrawShadow();
 	hill->DrawShadow();
 }
 
@@ -253,7 +253,7 @@ void GameScene::Draw()
 {
 	//hill->Draw();
 	//	–Ø
-	tree->DrawShadowReciever();
+	//tree->DrawShadowReciever();
 	hill->DrawShadowReciever();
 	//	“V‹…
 	skydome->Draw();

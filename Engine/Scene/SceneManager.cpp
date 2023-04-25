@@ -130,6 +130,18 @@ void SceneManager::Draw()
 	
 	dx->PostEffectDraw(shadowEffect.get());
 
+	dx->PrevPostEffect(xbulr.get());
+
+	shadowEffect->Draw(false, false);
+
+	dx->PostEffectDraw(xbulr.get());
+
+	dx->PrevPostEffect(ybulr.get());
+
+	xbulr->Draw(true, false);
+
+	dx->PostEffectDraw(ybulr.get());
+	
 	dx->PrevPostEffect(screen.get());
 
 	if (endLoading) {
@@ -137,24 +149,12 @@ void SceneManager::Draw()
 	}
 
 	dx->PostEffectDraw(screen.get());
-
-	dx->PrevPostEffect(xbulr.get());
-
-	screen->Draw(false,false);
-
-	dx->PostEffectDraw(xbulr.get());
-
-	dx->PrevPostEffect(ybulr.get());
-
-	xbulr->Draw(true,false);
-
-	dx->PostEffectDraw(ybulr.get());
 #pragma endregion
 
 #pragma region MultiPath
 	dx->PrevDraw();
 
-	ybulr->Draw(true, false);
+	screen->Draw(false, false);
 	if (!endLoading) {
 		//	ƒ[ƒh‰æ–Ê
 		loadSprite->Draw();

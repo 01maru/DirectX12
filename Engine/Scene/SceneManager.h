@@ -52,6 +52,6 @@ public:
 	void SceneChange();
 	void SetNextScene(const std::string& sceneName);
 
-	Texture GetShadowMap() { return shadowEffect->GetTexture(); }
+	Texture GetShadowMap() { return ybulr->GetTexture(); }
 };
 
