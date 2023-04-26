@@ -106,13 +106,13 @@ void PipelineManager::Initialize()
 
 	xBlurPipeline = std::make_unique<GPipeline>();
 	xBlurPipeline->Init(xblur, inputLayout2D, _countof(inputLayout2D)
-		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
+		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R32G32_FLOAT);
 
 	Shader yblur(L"Resources/shader/YBlurVS.hlsl", L"Resources/shader/BlurPS.hlsl");
 
 	yBlurPipeline = std::make_unique<GPipeline>();
 	yBlurPipeline->Init(yblur, inputLayout2D, _countof(inputLayout2D)
-		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
+		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R32G32_FLOAT);
 #pragma endregion
 #pragma endregion
 

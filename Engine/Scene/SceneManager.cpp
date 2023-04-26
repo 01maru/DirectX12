@@ -31,9 +31,9 @@ void SceneManager::Initialize()
 	shadowEffect->Initialize(Window::window_width, Window::window_height, DXGI_FORMAT_R32G32_FLOAT);
 
 	xbulr = std::make_unique<PostEffect>();
-	xbulr->Initialize(Window::window_width / 2, Window::window_height);
+	xbulr->Initialize(Window::window_width / 2, Window::window_height, DXGI_FORMAT_R32G32_FLOAT);
 	ybulr = std::make_unique<PostEffect>();
-	ybulr->Initialize(Window::window_width / 2, Window::window_height / 2);
+	ybulr->Initialize(Window::window_width / 2, Window::window_height / 2, DXGI_FORMAT_R32G32_FLOAT);
 
 	sceneFactry = std::make_unique<SceneFactory>();
 	scene = sceneFactry->CreateScene("GAMESCENE");
@@ -132,13 +132,13 @@ void SceneManager::Draw()
 
 	dx->PrevPostEffect(xbulr.get());
 
-	shadowEffect->Draw(false, false);
+	shadowEffect->Draw(true, false);
 
 	dx->PostEffectDraw(xbulr.get());
 
 	dx->PrevPostEffect(ybulr.get());
 
-	xbulr->Draw(true, false);
+	xbulr->Draw(false, true);
 
 	dx->PostEffectDraw(ybulr.get());
 	
@@ -154,6 +154,7 @@ void SceneManager::Draw()
 #pragma region MultiPath
 	dx->PrevDraw();
 
+	//ybulr->Draw(false, false);
 	screen->Draw(false, false);
 	if (!endLoading) {
 		//	ÉçÅ[ÉhâÊñ 

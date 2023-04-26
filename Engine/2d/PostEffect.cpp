@@ -50,7 +50,7 @@ void PostEffect::Initialize(int width, int height, DXGI_FORMAT format)
 	MyMath::CalcGaussianWeightsTable(
 		weights,        // 重みの格納先
 		NUM_WEIGHTS,    // 重みテーブルのサイズ
-		8.0f            // ボケ具合。この数値が大きくなるとボケが強くなる
+		1.0f            // ボケ具合。この数値が大きくなるとボケが強くなる
 	);
 
 	ConstBufferWeight* mapWeight = nullptr;
