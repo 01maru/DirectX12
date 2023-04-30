@@ -29,7 +29,7 @@ void SceneManager::Initialize()
 	screen->Initialize(Window::window_width, Window::window_height);
 	shadowEffect = std::make_unique<PostEffect>();
 	shadowEffect->Initialize(Window::window_width, Window::window_height, DXGI_FORMAT_R32G32_FLOAT);
-
+	
 	xbulr = std::make_unique<PostEffect>();
 	xbulr->Initialize(Window::window_width / 2, Window::window_height, DXGI_FORMAT_R32G32_FLOAT);
 	ybulr = std::make_unique<PostEffect>();

@@ -45,7 +45,7 @@ float4 main(VSOutput input) : SV_TARGET
             float3 shadowColor = texcolor.xyz * 0.5f;
 
             // 光が当たる確率を使って通常カラーとシャドウカラーを線形補完
-            texcolor.xyz = lerp(shadowColor, texcolor.xyz, lit_factor);
+            texcolor.xyz = lerp(shadowColor, texcolor.xyz, 0.04);
         }
     }
 

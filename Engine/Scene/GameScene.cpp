@@ -108,7 +108,7 @@ void GameScene::LoadResources()
 	modelHill = std::make_unique<ObjModel>("ground1");
 	modelGround = std::make_unique<ObjModel>("ground");
 	//	‹u
-	modelTree = std::make_unique<ObjModel>("sphere");
+	modelTree = std::make_unique<ObjModel>("player");
 	modelTree2 = std::make_unique<ObjModel>("tree2");
 #pragma endregion
 	//	“V‹…
