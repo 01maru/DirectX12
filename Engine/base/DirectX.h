@@ -84,7 +84,7 @@ public:
 	void Initialize();
 	static void DeleteInstance();
 	void UpdateFPS();
-	void PrevPostEffect(PostEffect* postEffect);
+	void PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor_ = nullptr);
 	void PostEffectDraw(PostEffect* postEffect);
 	void PrevDraw(FLOAT* clearColor_ = nullptr);
 	void PostDraw();

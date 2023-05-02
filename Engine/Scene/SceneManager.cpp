@@ -25,15 +25,22 @@ void SceneManager::DeleteInstance()
 
 void SceneManager::Initialize()
 {
-	screen = std::make_unique<PostEffect>();
-	screen->Initialize(Window::window_width, Window::window_height);
+	mainScene = std::make_unique<PostEffect>();
+	mainScene->Initialize(Window::window_width, Window::window_height, 1.0f, DXGI_FORMAT_R11G11B10_FLOAT);
+	luminnce = std::make_unique<PostEffect>();
+	luminnce->Initialize(Window::window_width, Window::window_height, 5.0f, DXGI_FORMAT_R11G11B10_FLOAT);
+	xbulrluminnce = std::make_unique<PostEffect>();
+	xbulrluminnce->Initialize(Window::window_width / 2, Window::window_height, 5.0f, DXGI_FORMAT_R11G11B10_FLOAT);
+	ybulrluminnce = std::make_unique<PostEffect>();
+	ybulrluminnce->Initialize(Window::window_width / 2, Window::window_height / 2, 5.0f, DXGI_FORMAT_R11G11B10_FLOAT);
+
 	shadowEffect = std::make_unique<PostEffect>();
-	shadowEffect->Initialize(Window::window_width, Window::window_height, DXGI_FORMAT_R32G32_FLOAT);
+	shadowEffect->Initialize(Window::window_width, Window::window_height, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
 	
 	xbulr = std::make_unique<PostEffect>();
-	xbulr->Initialize(Window::window_width / 2, Window::window_height, DXGI_FORMAT_R32G32_FLOAT);
+	xbulr->Initialize(Window::window_width / 2, Window::window_height, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
 	ybulr = std::make_unique<PostEffect>();
-	ybulr->Initialize(Window::window_width / 2, Window::window_height / 2, DXGI_FORMAT_R32G32_FLOAT);
+	ybulr->Initialize(Window::window_width / 2, Window::window_height / 2, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
 
 	sceneFactry = std::make_unique<SceneFactory>();
 	scene = sceneFactry->CreateScene("GAMESCENE");
@@ -68,7 +75,7 @@ void SceneManager::Update()
 				screenColor.z = color;
 
 				//	色設定
-				screen->SetColor(screenColor);
+				mainScene->SetColor(screenColor);
 
 				scene->MatUpdate();
 			}
@@ -89,7 +96,7 @@ void SceneManager::Update()
 				screenColor.z = color;
 
 				//	色設定
-				screen->SetColor(screenColor);
+				mainScene->SetColor(screenColor);
 			}
 
 			if (sceneChangeTimer >= SCENE_CHANGE_TIME) {
@@ -132,30 +139,51 @@ void SceneManager::Draw()
 
 	dx->PrevPostEffect(xbulr.get());
 
-	shadowEffect->Draw(true, false);
+	shadowEffect->Draw(true, false, true);
 
 	dx->PostEffectDraw(xbulr.get());
 
 	dx->PrevPostEffect(ybulr.get());
 
-	xbulr->Draw(false, true);
+	xbulr->Draw(false, true, true);
 
 	dx->PostEffectDraw(ybulr.get());
 	
-	dx->PrevPostEffect(screen.get());
+	dx->PrevPostEffect(mainScene.get());
 
 	if (endLoading) {
 		scene->Draw();
 	}
 
-	dx->PostEffectDraw(screen.get());
+	dx->PostEffectDraw(mainScene.get());
+
+
+	FLOAT luminnceClearColor_[] = { 0.0f,0.0f,0.0f,1.0f };
+	dx->PrevPostEffect(luminnce.get(), luminnceClearColor_);
+
+	mainScene->DrawLuminnce();
+
+	dx->PostEffectDraw(luminnce.get());
+
+
+	dx->PrevPostEffect(xbulrluminnce.get());
+
+	luminnce->Draw(true, false, false);
+
+	dx->PostEffectDraw(xbulrluminnce.get());
+
+	dx->PrevPostEffect(ybulrluminnce.get());
+
+	xbulrluminnce->Draw(false, true, false);
+
+	dx->PostEffectDraw(ybulrluminnce.get());
 #pragma endregion
 
 #pragma region MultiPath
 	dx->PrevDraw();
 
 	//ybulr->Draw(false, false);
-	screen->Draw(false, false);
+	mainScene->Draw(false, false, false, ybulrluminnce->GetTexture().GetHandle());
 	if (!endLoading) {
 		//	ロード画面
 		loadSprite->Draw();

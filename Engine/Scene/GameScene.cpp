@@ -90,8 +90,6 @@ void GameScene::Initialize()
 	//player->SetRotation({ 0.0f,MyMath::PI,0.0f });
 
 	testVolLight.push_back(VolumeLightObj(Vector2D(5.0f, 25.0f), Vector3D(0.0f, 0.0f, -2.0f), 30.0f));
-
-	mord = Phong;
 }
 
 void GameScene::Finalize()
@@ -190,75 +188,28 @@ void GameScene::Update()
 	MatUpdate();
 	CollisionUpdate();
 
-	Light::GetInstance()->SetFogActive(input->GetKey(DIK_SPACE));
-
-	if (input->GetTrigger(DIK_1)) {
-		mord = Phong;
-
-		Light::GetInstance()->SetCircleShadowActive(0, false);
-		Light::GetInstance()->SetSpotLightActive(0, true);
-		Light::GetInstance()->SetSpotLightActive(1, true);
-		Light::GetInstance()->SetSpotLightActive(2, true);
-		Light::GetInstance()->SetDirLightActive(0, false);
-		Light::GetInstance()->SetPointLightActive(0, false);
-		Light::GetInstance()->SetPointLightActive(1, false);
-		Light::GetInstance()->SetPointLightActive(2, false);
-	}
-	else if (input->GetTrigger(DIK_2)) {
-		mord = PointLight;
-
-		Light::GetInstance()->SetCircleShadowActive(0, false);
-		Light::GetInstance()->SetSpotLightActive(0, false);
-		Light::GetInstance()->SetDirLightActive(0, false);
-		Light::GetInstance()->SetPointLightActive(0, true);
-		Light::GetInstance()->SetPointLightActive(1, true);
-		Light::GetInstance()->SetPointLightActive(2, true);
-	}
-	else if (input->GetTrigger(DIK_3)) {
-		mord = SpotLight;
-
-		Light::GetInstance()->SetCircleShadowActive(0, false);
-		Light::GetInstance()->SetSpotLightActive(0, true);
-		Light::GetInstance()->SetDirLightActive(0, false);
-		Light::GetInstance()->SetPointLightActive(0, false);
-		Light::GetInstance()->SetPointLightActive(1, false);
-		Light::GetInstance()->SetPointLightActive(2, false);
-	}
-	else if (input->GetTrigger(DIK_4)) {
-		mord = CircleShadow;
-
-		Light::GetInstance()->SetSpotLightActive(0, false);
-		Light::GetInstance()->SetCircleShadowActive(0, true);
-		Light::GetInstance()->SetDirLightActive(0, true);
-		Light::GetInstance()->SetPointLightActive(0, false);
-		Light::GetInstance()->SetPointLightActive(1, false);
-		Light::GetInstance()->SetPointLightActive(2, false);
-	}
-
-	//Vector3D playerGroundPos = player->GetPosition();
-	//playerGroundPos.y += 0.1f;
-	//Light::GetInstance()->SetCircleShadowCasterPos(0, playerGroundPos);
-	Light::GetInstance()->SetCircleShadowDir(0, { 0.0f,1.0f,0.0f });
-	Light::GetInstance()->SetCircleShadowFactorAngle(0, { 0.0f,0.5f });
-	Light::GetInstance()->SetCircleShadowAtten(0, { 0.2f,0.2f,0.0f });
+	int dikkey = input->GetKey(DIK_UP) - input->GetKey(DIK_DOWN);
+	lightColor += dikkey * 0.01f;
+	if (lightColor < 0.0f) lightColor = 0.0f;
+	Light::GetInstance()->SetDirLightColor(0, Vector3D(lightColor, lightColor, lightColor));
 }
 
 void GameScene::DrawShadow()
 {
 	tree->DrawShadow();
-	hill->DrawShadow();
+	//hill->DrawShadow();
 }
 
 void GameScene::Draw()
 {
 	//hill->Draw();
 	//	–Ø
-	tree->DrawShadowReciever();
-	hill->DrawShadowReciever();
+	tree->Draw();
+	//hill->DrawShadowReciever();
 	//	“V‹…
 	skydome->Draw();
 	//	’n–Ê
-	ground->DrawShadowReciever();
+	ground->Draw();
 
 	//player->Draw();
 

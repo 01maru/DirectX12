@@ -336,7 +336,7 @@ void MyDirectX::CmdListDrawAble(D3D12_RESOURCE_BARRIER& desc, ID3D12Resource* pR
 #pragma endregion
 }
 
-void MyDirectX::PrevPostEffect(PostEffect* postEffect)
+void MyDirectX::PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor_)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = postEffect->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart();
 	dsvHandle = postEffect->GetDSVHeap()->GetCPUDescriptorHandleForHeapStart();
@@ -362,7 +362,12 @@ void MyDirectX::PrevPostEffect(PostEffect* postEffect)
 	{
 		rtvHandle_.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * i;
 
-		ScreenClear(rtvHandle_);
+		if (clearColor_ != nullptr) {
+			ScreenClear(clearColor_, rtvHandle_);
+		}
+		else {
+			ScreenClear(rtvHandle_);
+		}
 	}
 	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion

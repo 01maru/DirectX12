@@ -4,7 +4,7 @@
 #include "PipelineManager.h"
 #include "Input.h"
 
-void PostEffect::Initialize(int width, int height, DXGI_FORMAT format)
+void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT format)
 {
 	texture.resize(texNum);
 	for (int i = 0; i < texNum; i++)
@@ -50,7 +50,7 @@ void PostEffect::Initialize(int width, int height, DXGI_FORMAT format)
 	MyMath::CalcGaussianWeightsTable(
 		weights,        // 重みの格納先
 		NUM_WEIGHTS,    // 重みテーブルのサイズ
-		1.0f            // ボケ具合。この数値が大きくなるとボケが強くなる
+		weight            // ボケ具合。この数値が大きくなるとボケが強くなる
 	);
 
 	ConstBufferWeight* mapWeight = nullptr;
@@ -207,23 +207,52 @@ void PostEffect::Initialize(int width, int height, DXGI_FORMAT format)
 #pragma endregion
 }
 
-void PostEffect::Draw(bool xBlur, bool yBlur)
+void PostEffect::Draw(bool xBlur, bool yBlur, bool shadow, int handle1)
 {
-	GPipeline* pipeline = PipelineManager::GetInstance()->GetPipeline("PostEffect", GPipeline::NONE_BLEND);
-	if (xBlur) {
-		pipeline = PipelineManager::GetInstance()->GetPipeline("xBlur", GPipeline::NONE_BLEND);
+	GPipeline* pipeline = nullptr;
+	if (shadow) {
+		pipeline = PipelineManager::GetInstance()->GetPipeline("PostEffectShadow", GPipeline::NONE_BLEND);
+		if (xBlur) {
+			pipeline = PipelineManager::GetInstance()->GetPipeline("xBlur", GPipeline::NONE_BLEND);
+		}
+		if (yBlur) {
+			pipeline = PipelineManager::GetInstance()->GetPipeline("yBlur", GPipeline::NONE_BLEND);
+		}
 	}
-	if (yBlur) {
-		pipeline = PipelineManager::GetInstance()->GetPipeline("yBlur", GPipeline::NONE_BLEND);
+	else {
+		pipeline = PipelineManager::GetInstance()->GetPipeline("PostEffect", GPipeline::NONE_BLEND);
+		if (xBlur) {
+			pipeline = PipelineManager::GetInstance()->GetPipeline("luminncexBlur", GPipeline::NONE_BLEND);
+		}
+		if (yBlur) {
+			pipeline = PipelineManager::GetInstance()->GetPipeline("luminnceyBlur", GPipeline::NONE_BLEND);
+		}
 	}
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	BuffUpdate(cmdList);
-	//	テクスチャ
-	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
-	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
-	if (xBlur || yBlur) { cmdList->SetGraphicsRootConstantBufferView(2, weightMaterial->GetGPUVirtualAddress()); }
+
+	if (xBlur == false && yBlur == false && shadow == false) {
+		//	テクスチャ
+		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
+		if (handle1 != -1) {
+			cmdList->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(handle1));
+		}
+		else {
+			cmdList->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
+		}
+		cmdList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
+		cmdList->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
+		cmdList->SetGraphicsRootConstantBufferView(4, material->GetGPUVirtualAddress());
+		if (xBlur || yBlur) { cmdList->SetGraphicsRootConstantBufferView(5, weightMaterial->GetGPUVirtualAddress()); }
+	}
+	else {
+		//	テクスチャ
+		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
+		cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
+		if (xBlur || yBlur) { cmdList->SetGraphicsRootConstantBufferView(2, weightMaterial->GetGPUVirtualAddress()); }
+	}
 
 	cmdList->DrawIndexedInstanced(indexSize, 1, 0, 0, 0);
 }
@@ -242,6 +271,21 @@ void PostEffect::Setting()
 	viewPort.Update();
 
 	scissorRect.Update();
+}
+
+void PostEffect::DrawLuminnce()
+{
+	GPipeline* pipeline = PipelineManager::GetInstance()->GetPipeline("Luminnce", GPipeline::NONE_BLEND);
+
+	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
+	pipeline->Setting();
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	BuffUpdate(cmdList);
+	//	テクスチャ
+	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
+	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
+
+	cmdList->DrawIndexedInstanced(indexSize, 1, 0, 0, 0);
 }
 
 void PostEffect::SetVertices()

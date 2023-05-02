@@ -672,5 +672,11 @@
     <FxCompile Include="Resources\shader\XBlurVS.hlsl">
       <Filter>リソース ファイル\BlurShader</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\LuminncePS.hlsl">
+      <Filter>リソース ファイル\ScreenShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ScreenShadowPS.hlsl">
+      <Filter>リソース ファイル\ScreenShader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

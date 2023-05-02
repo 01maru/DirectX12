@@ -48,10 +48,11 @@ private:
 public:
 	PostEffect() {};
 	~PostEffect() {};
-	void Initialize(int width, int height, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
+	void Initialize(int width, int height, float weight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	void Setting();
-	void Draw(bool xBlur, bool yBlur);
+	void DrawLuminnce();
+	void Draw(bool xBlur, bool yBlur, bool shadow, int handle1 = -1);
 	void SetColor(const Vector4D& color_);
 
 	ID3D12Resource* GetTextureBuff(int index = 0) { return texture[index].GetResourceBuff(); }

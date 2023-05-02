@@ -53,8 +53,7 @@ private:
 	std::unique_ptr<Player> player;
 	std::vector<VolumeLightObj> testVolLight;
 
-	int mord = 0;
-
+	float lightColor = 1.0f;
 public:
 	enum TaskMord
 	{

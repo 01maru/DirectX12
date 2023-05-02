@@ -30,7 +30,10 @@ private:
 #pragma endregion
 
 #pragma region PostEffect
-	std::unique_ptr<PostEffect> screen;
+	std::unique_ptr<PostEffect> mainScene;
+	std::unique_ptr<PostEffect> luminnce;
+	std::unique_ptr<PostEffect> xbulrluminnce;
+	std::unique_ptr<PostEffect> ybulrluminnce;
 	std::unique_ptr<PostEffect> shadowEffect;
 	std::unique_ptr<PostEffect> xbulr;
 	std::unique_ptr<PostEffect> ybulr;
@@ -48,7 +51,7 @@ public:
 	void Update();
 	void Draw();
 
-	void ChangeScreenColor(const Vector4D& color) { screen->SetColor(color); }
+	void ChangeScreenColor(const Vector4D& color) { mainScene->SetColor(color); }
 	void SceneChange();
 	void SetNextScene(const std::string& sceneName);
 
