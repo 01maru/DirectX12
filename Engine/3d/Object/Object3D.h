@@ -25,8 +25,9 @@ private:
 		Matrix matview;
 		Matrix matworld;
 		Vector3D cameraPos;
-		//float pad1;
-		//Vector3D color;
+		bool toon;
+		Vector3D color;
+		bool activerimLight;
 	};
 	struct ConstBufferLight {
 		Matrix mLVP;
@@ -49,7 +50,8 @@ protected:
 	MyMath::ObjMatrix mat;
 	Vector3D color = { 1.0f,1.0f,1.0f };
 	BaseCollider* collider = nullptr;
-	
+	bool isToon = false;
+	bool activeRimLight = false;
 public:
 	Object3D() = default;
 	virtual ~Object3D();
@@ -72,6 +74,8 @@ public:
 	BaseCollider* GetCollider() { return collider; }
 	void SetAttribute(unsigned short attribute);
 
+	void SetRimLight(bool flag) { activeRimLight = flag; }
+	void SetToon(bool flag) { isToon = flag; }
 	void SetColor(const Vector3D& color_) { color = color_; }
 	const Vector3D& GetColor() { return color; }
 

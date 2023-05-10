@@ -29,40 +29,23 @@ private:
 #pragma region Model
 	std::unique_ptr<IModel> modelSkydome;
 	std::unique_ptr<IModel> modelGround;
-	std::unique_ptr<IModel> modelHill;
+	std::unique_ptr<IModel> modelSphere;
 	std::unique_ptr<IModel> modelSword;
-	std::unique_ptr<IModel> modelTree;
-	std::unique_ptr<IModel> modelTree2;
 #pragma endregion
 
 #pragma region Sprite
-	std::unique_ptr<Sprite> sprite;
-
-	std::vector<Grass> grass;
-#pragma endregion
-	int bgmSound = -1;
-#pragma region Texture
-	Texture reimuG;
-	Texture grassG;
-#pragma endregion
-	std::unique_ptr<Object3D> skydome;
-	std::unique_ptr<TouchableObject> ground;
-	std::unique_ptr<Object3D> hill;
-	std::unique_ptr<Object3D> tree;
-	std::vector<Object3D*> tree2;
-	std::unique_ptr<Player> player;
-	std::vector<VolumeLightObj> testVolLight;
-
-	float lightColor = 1.0f;
-public:
-	enum TaskMord
-	{
-		Phong,
-		PointLight,
-		SpotLight,
-		CircleShadow,
-	};
 	
+#pragma endregion
+
+#pragma region Texture
+
+#pragma endregion
+
+	std::unique_ptr<Object3D> skydome;
+	std::unique_ptr<Object3D> ground;
+	std::unique_ptr<Object3D> sphere;
+	std::unique_ptr<Object3D> player;
+public:	
 	GameScene();
 	~GameScene() override;
 	void Initialize() override;

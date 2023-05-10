@@ -187,7 +187,9 @@ void Object3D::MatUpdate()
 		constMap->matworld = mat.matWorld;
 	}
 	constMap->cameraPos = cameraPos;
-	//constMap->color = color;
+	constMap->toon = isToon;
+	constMap->activerimLight = activeRimLight;
+	constMap->color = color;
 	transform->Unmap(0, nullptr);
 
 	const Matrix& matView_ = light->GetDirLightCamera(0)->GetViewProj();

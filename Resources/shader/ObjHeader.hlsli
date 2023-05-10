@@ -63,6 +63,9 @@ cbuffer ConstBufferDataTransform:register(b1)
 	matrix matview;
 	matrix matworld;
 	float3 cameraPos;
+	bool isToon;
+	float3 color;
+	bool isRim;
 };
 
 cbuffer ConstBufferLightData:register(b2)
