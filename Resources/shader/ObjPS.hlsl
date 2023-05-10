@@ -20,8 +20,8 @@ PSOutput main(VSOutput input)
 
 
 			float3 ambient = m_ambient;
-			float3 diffuse = dolightnormal * m_diffuse * float3(0.0f, 0.0f, 1.0f);
-			float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular * float3(1.0f, 0.0f, 0.0f);
+			float3 diffuse = dolightnormal * m_diffuse;
+			float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
 			if (isToon) {
 				float toonColor = 0.1;
 				diffuse = smoothstep(toonColor, toonColor + 0.05, diffuse);
