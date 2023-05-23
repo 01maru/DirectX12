@@ -24,6 +24,8 @@ void GameScene::CollisionUpdate()
 
 void GameScene::MatUpdate()
 {
+	objData->MatUpdate();
+
 	ParticleManager::GetInstance()->MatUpdate();
 	ground->MatUpdate();
 	hill->MatUpdate();
@@ -99,6 +101,9 @@ void GameScene::Finalize()
 
 void GameScene::LoadResources()
 {
+	objData = std::make_unique<JSONLoader>();
+	objData->LoadJSON("gamescene");
+
 #pragma region Model
 	modelSword = std::make_unique<FbxModel>("moveCube");
 
@@ -204,12 +209,14 @@ void GameScene::Draw()
 {
 	//hill->Draw();
 	//	木
-	tree->Draw();
-	//hill->DrawShadowReciever();
-	//	天球
-	skydome->Draw();
-	//	地面
-	ground->Draw();
+	//tree->Draw();
+	////hill->DrawShadowReciever();
+	////	天球
+	//skydome->Draw();
+	////	地面
+	//ground->Draw();
+
+	objData->Draw();
 
 	//player->Draw();
 
@@ -230,5 +237,5 @@ void GameScene::Draw()
 	//sprite->Draw();
 
 	//DebugTextManager::GetInstance()->Draw();
-	ParticleManager::GetInstance()->Draw();
+	//ParticleManager::GetInstance()->Draw();
 }

@@ -15,6 +15,7 @@
 #include "Texture.h"
 #include "Grass.h"
 
+#include "JSONLoader.h"
 
 class CollisionManager;
 
@@ -24,6 +25,8 @@ private:
 	ICamera* camera = nullptr;
 
 	CollisionManager* collisionMan = nullptr;
+
+	std::unique_ptr<JSONLoader> objData;
 
 	bool isDebug = true;
 #pragma region Model
