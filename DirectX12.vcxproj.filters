@@ -372,6 +372,9 @@
     <ClCompile Include="Engine\2d\Grass.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
+    <ClCompile Include="JSONLoader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\base\input\InputJoypad.h">
@@ -586,6 +589,9 @@
     </ClInclude>
     <ClInclude Include="Engine\2d\Grass.h">
       <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="JSONLoader.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

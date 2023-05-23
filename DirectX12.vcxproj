@@ -76,6 +76,7 @@
     <ClCompile Include="Engine\3d\Light\VolumeLight.cpp" />
     <ClCompile Include="Engine\3d\Object\FbxModel.cpp" />
     <ClCompile Include="Engine\2d\Grass.cpp" />
+    <ClCompile Include="JSONLoader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\3d\Object\ObjModel.cpp" />
     <ClCompile Include="Engine\base\PipelineManager.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Engine\base\PipelineManager.h" />
     <ClInclude Include="Engine\2d\Texture.h" />
     <ClInclude Include="Engine\2d\Grass.h" />
+    <ClInclude Include="JSONLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -332,14 +334,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)External\assimp\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui</IncludePath>
+    <IncludePath>$(ProjectDir)External\assimp\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(SolutionDir)External</IncludePath>
     <LibraryPath>$(ProjectDir)External\assimp\lib;$(LibraryPath);</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)External\assimp\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui</IncludePath>
+    <IncludePath>$(ProjectDir)External\assimp\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(SolutionDir)External</IncludePath>
     <LibraryPath>$(ProjectDir)External\assimp\lib;$(LibraryPath);</LibraryPath>
     <OutDir>$(SolutionDir)Generated\Outputs\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
