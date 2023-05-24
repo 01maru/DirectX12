@@ -1,13 +1,56 @@
 #include "JSONLoader.h"
 #include <fstream>
 #include <assert.h>
-#include <json.hpp>
 
 #include "ObjModel.h"
 
 #include <map>
 
 using namespace std;
+
+void JSONLoader::LoadObjectData(nlohmann::json_abi_v3_11_2::detail::iter_impl<nlohmann::json_abi_v3_11_2::json>& itr, ObjectData* parent)
+{
+	//	種別取得
+	string type = itr.value()["type"].get<string>();
+
+	ObjectData* objectData = nullptr;
+	//	種類ごとに処理
+	//	MESHだったら
+	if (type.compare("MESH") == 0) {
+		levelData->objects.emplace_back(ObjectData{});
+		objectData = &levelData->objects.back();
+
+		if (itr.value().contains("file_name")) {
+			//	ファイル名
+			objectData->fileName = itr.value()["file_name"];
+		}
+
+		//	トランスフォームのパラメータ読み込み
+		nlohmann::json& transform = itr.value()["transform"];
+		//	平行移動
+		objectData->translation.x = (float)transform["translation"][1];
+		objectData->translation.y = (float)transform["translation"][2];
+		objectData->translation.z = -(float)transform["translation"][0];
+		//	回転角
+		objectData->rotation.x = -(float)transform["rotation"][1];
+		objectData->rotation.y = -(float)transform["rotation"][2];
+		objectData->rotation.z = (float)transform["rotation"][0];
+		//	スケーリング
+		objectData->scaling.x = (float)transform["scaling"][1];
+		objectData->scaling.y = (float)transform["scaling"][2];
+		objectData->scaling.z = (float)transform["scaling"][0];
+
+		objectData->parent = parent;
+	}
+	
+	//	再帰処理
+	if (itr.value().contains("children")) {
+		for (auto& itr_cild = itr.value()["children"].begin(); itr_cild < itr.value()["children"].end(); ++itr_cild)
+		{
+			LoadObjectData(itr_cild, objectData);
+		}
+	}
+}
 
 void JSONLoader::LoadJSON(std::string jsonname)
 {
@@ -39,45 +82,16 @@ void JSONLoader::LoadJSON(std::string jsonname)
 	levelData = new LevelData();
 
 	// "objects"の全オブジェクト走査
-	for (nlohmann::json& object : deserialized["objects"]) {
-		assert(object.contains("type"));
+	for (auto& itr = deserialized["objects"].begin(); itr < deserialized["objects"].end(); ++itr)
+	{
+		assert(itr.value().contains("type"));
 
-		//	種別取得
-		string type = object["type"].get<string>();
-		
-		//	種類ごとに処理
-		//	MESHだったら
-		if (type.compare("MESH") == 0) {
-			levelData->objects.emplace_back(ObjectData{});
-
-			ObjectData& objectData = levelData->objects.back();
-
-			if (object.contains("file_name")) {
-				//	ファイル名
-				objectData.fileName = object["file_name"];
-			}
-
-			//	トランスフォームのパラメータ読み込み
-			nlohmann::json& transform = object["transform"];
-			//	平行移動
-			objectData.translation.x = (float)transform["translation"][1];
-			objectData.translation.y = (float)transform["translation"][2];
-			objectData.translation.z = -(float)transform["translation"][0];
-			//	回転角
-			objectData.rotation.x = -(float)transform["rotation"][1];
-			objectData.rotation.y = -(float)transform["rotation"][2];
-			objectData.rotation.z = (float)transform["rotation"][0];
-			//	スケーリング
-			objectData.scaling.x = (float)transform["scaling"][1];
-			objectData.scaling.y = (float)transform["scaling"][2];
-			objectData.scaling.z = (float)transform["scaling"][0];
-		}
-
-		//	再帰処理
-		if (object.contains("children")) {
-			
-		}
+		LoadObjectData(itr, nullptr);
 	}
+	//for (nlohmann::json& object : ) {
+	//	
+	//	LoadObjectData(object, nullptr);
+	//}
 
 	LoadModel();
 
