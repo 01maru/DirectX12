@@ -88,10 +88,6 @@ void JSONLoader::LoadJSON(std::string jsonname)
 
 		LoadObjectData(itr, nullptr);
 	}
-	//for (nlohmann::json& object : ) {
-	//	
-	//	LoadObjectData(object, nullptr);
-	//}
 
 	LoadModel();
 
