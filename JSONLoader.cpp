@@ -45,7 +45,7 @@ void JSONLoader::LoadObjectData(nlohmann::json_abi_v3_11_2::detail::iter_impl<nl
 	
 	//	再帰処理
 	if (itr.value().contains("children")) {
-		for (auto& itr_cild = itr.value()["children"].begin(); itr_cild < itr.value()["children"].end(); ++itr_cild)
+		for (auto itr_cild = itr.value()["children"].begin(); itr_cild < itr.value()["children"].end(); ++itr_cild)
 		{
 			LoadObjectData(itr_cild, objectData);
 		}
@@ -82,7 +82,7 @@ void JSONLoader::LoadJSON(std::string jsonname)
 	levelData = new LevelData();
 
 	// "objects"の全オブジェクト走査
-	for (auto& itr = deserialized["objects"].begin(); itr < deserialized["objects"].end(); ++itr)
+	for (auto itr = deserialized["objects"].begin(); itr < deserialized["objects"].end(); ++itr)
 	{
 		assert(itr.value().contains("type"));
 
