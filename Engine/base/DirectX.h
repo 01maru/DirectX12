@@ -1,4 +1,5 @@
 #pragma once
+#define NOMINMAX
 #include "ViewPort.h"
 
 #include <d3d12.h>
