@@ -1,5 +1,6 @@
 #include "MyDebugCamera.h"
 #include "Input.h"
+#include <cmath>
 
 MyDebugCamera::~MyDebugCamera()
 {

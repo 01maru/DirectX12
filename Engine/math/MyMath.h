@@ -3,7 +3,6 @@
 #include "Vector3D.h"
 #include "Vector4D.h"
 #include "Matrix.h"
-#include <cmath>
 
 namespace MyMath {
 	//	大きい値を返す
@@ -32,10 +31,10 @@ namespace MyMath {
 	//	乱数
 	float GetRand(float min, float max);
 
-	bool CollisionCircleLay(Vector3D startL, Vector3D endL, Vector3D pos, float rad);
+	bool CollisionCircleLay(const Vector3D& startL, const Vector3D& endL, const Vector3D& pos, float rad);
 
 	//頂点ABCで作られたポリゴンから法線を計算する。
-	//Vector3D& CreatePolygonNormal(const Vector3D& a, const Vector3D& b, const Vector3D& c);
+	Vector3D CreatePolygonNormal(const Vector3D& a, const Vector3D& b, const Vector3D& c);
 
 	class MatView {
 	public:
@@ -45,7 +44,7 @@ namespace MyMath {
 		Vector3D up;		//	上方向ベクトル
 	public:
 		MatView();
-		void Init(Vector3D _eye, Vector3D _target, Vector3D _up);
+		void Init(const Vector3D& _eye, const Vector3D& _target, const Vector3D& _up);
 		void MatUpdate();
 	};
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "MyMath.h"
+#include <cmath>
 
 class SpotLight
 {

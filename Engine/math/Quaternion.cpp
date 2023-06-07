@@ -1,4 +1,6 @@
 #include "Quaternion.h"
+#include "Matrix.h"
+#include "Vector3D.h"
 #include <math.h>
 
 Quaternion SetQuaternion(const Vector3D& v, float angle)
@@ -17,7 +19,9 @@ Quaternion SetQuaternion(const Vector3D& v, float angle)
     return ans;
 }
 
-Quaternion Quaternion::SetQuaternion(Vector3D v)
+Quaternion::Quaternion(float w, const Vector3D& vec) :w(w), x(vec.x), y(vec.y), z(vec.z) {}
+
+Quaternion Quaternion::SetQuaternion(const Vector3D& v)
 {
     Quaternion r;
     r.x = v.x;
@@ -30,6 +34,11 @@ Quaternion Quaternion::SetQuaternion(Vector3D v)
     r = CalcProduct(r, q.GetConjugation());
 
     return r;
+}
+
+Vector3D Quaternion::GetVector3()
+{
+    return Vector3D(x, y, z);;
 }
 
 void Quaternion::SetVec(const Vector3D& vec)
@@ -258,7 +267,7 @@ Vector3D RotateVector(const Vector3D& vec, const Quaternion& quaternion)
     vecQ = Multiply(q, vecQ);
     vecQ = Multiply(vecQ, qConjugate);
 
-    return vecQ.GetVec();
+    return vecQ.GetVector3();
 }
 
 Matrix MakeRotateMatrix(const Quaternion& quaternion)

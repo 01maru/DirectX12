@@ -90,7 +90,7 @@ float MyMath::GetRand(float min, float max)
 	return distr(eng);
 }
 
-bool MyMath::CollisionCircleLay(Vector3D startL, Vector3D endL, Vector3D pos, float rad)
+bool MyMath::CollisionCircleLay(const Vector3D& startL, const Vector3D& endL, const Vector3D& pos, float rad)
 {
 	Vector3D start_to_center = Vector3D(pos.x - startL.x, pos.y - startL.y, pos.z - startL.z);
 	Vector3D end_to_center = Vector3D(pos.x - endL.x, pos.y - endL.y, pos.z - endL.z);
@@ -123,17 +123,17 @@ bool MyMath::CollisionCircleLay(Vector3D startL, Vector3D endL, Vector3D pos, fl
 	return false;
 }
 
-//Vector3D& MyMath::CreatePolygonNormal(const Vector3D& a, const Vector3D& b, const Vector3D& c)
-//{
-//	Vector3D AB(b - a);
-//	Vector3D BC(c - b);
-//
-//	Vector3D normal = AB;
-//	normal.cross(BC);
-//	normal.Normalize();
-//
-//	return normal;
-//}
+Vector3D MyMath::CreatePolygonNormal(const Vector3D& a, const Vector3D& b, const Vector3D& c)
+{
+	Vector3D AB(b - a);
+	Vector3D BC(c - b);
+
+	Vector3D normal = AB;
+	normal.cross(BC);
+	normal.Normalize();
+
+	return normal;
+}
 
 Matrix MyMath::PerspectiveFovLH(const int winwidth, const int winheight, float fovY, float nearZ, float farZ)
 {
@@ -181,7 +181,7 @@ MyMath::MatView::MatView()
 	Init(Vector3D(0.0f, 0.0f, -100.0f), Vector3D(0.0f, 0.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
 }
 
-void MyMath::MatView::Init(Vector3D _eye, Vector3D _target, Vector3D _up)
+void MyMath::MatView::Init(const Vector3D& _eye, const Vector3D& _target, const Vector3D& _up)
 {
 	eye = _eye;
 	target = _target;

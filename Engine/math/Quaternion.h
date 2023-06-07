@@ -1,6 +1,7 @@
 #pragma once
-#include "Matrix.h"
-#include "Vector3D.h"
+
+class Vector3D;
+class Matrix;
 
 class Quaternion
 {
@@ -12,10 +13,10 @@ public:
 public:
 	Quaternion() {};
 	Quaternion(float w, float x, float y, float z) :w(w), x(x), y(y), z(z) {};
-	Quaternion(float w, const Vector3D& vec) :w(w), x(vec.x), y(vec.y), z(vec.z) {};
-	Quaternion SetQuaternion(Vector3D v);
+	Quaternion(float w, const Vector3D& vec);
+	Quaternion SetQuaternion(const Vector3D& v);
 
-	Vector3D GetVec() { return Vector3D(x, y, z); }
+	Vector3D GetVector3();
 	void SetVec(const Vector3D& vec);
 
 	Quaternion CalcProduct(const Quaternion& q, const Quaternion& r);
