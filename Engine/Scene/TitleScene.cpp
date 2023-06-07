@@ -21,11 +21,11 @@ void TitleScene::Initialize()
 
 	LoadResources();
 #pragma region Sprite
-	backSprite = std::make_unique<Sprite>(TextureManager::GetInstance()->GetWhiteTexture());
-	backSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
-	backSprite->SetSize(Vector2D{ Window::window_width,Window::window_height });
-	backSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-	backSprite->TransferVertex();
+	//backSprite = std::make_unique<Sprite>(TextureManager::GetInstance()->GetWhiteTexture());
+	//backSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
+	//backSprite->SetSize(Vector2D{ Window::window_width,Window::window_height });
+	//backSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
+	//backSprite->TransferVertex();
 	//titleSprite = std::make_unique<Sprite>(titleG);
 	//titleSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,200.0f });
 	//titleSprite->SetSize(titleSize);

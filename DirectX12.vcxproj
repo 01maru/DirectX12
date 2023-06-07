@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="Engine\base\ConstBuffStruct.h" />
     <ClInclude Include="Engine\base\DebugTextManager.h" />
     <ClInclude Include="Engine\2d\ParticleManager.h" />
     <ClInclude Include="Engine\2d\ParticleStruct.h" />

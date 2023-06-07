@@ -70,8 +70,9 @@ void GameScene::LoadResources()
 #pragma endregion
 
 #pragma region Sprite
-	sprite = std::make_unique<Sprite>(reimuG);
+	sprite = std::make_unique<Sprite>();
 	sprite->SetSize(Vector2D(200.0f, 200.0f));
+	sprite->Initialize(reimuG);
 #pragma endregion
 }
 

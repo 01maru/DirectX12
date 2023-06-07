@@ -35,11 +35,11 @@ void SceneManager::Initialize()
 	endLoading = true;
 
 	loadTex = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/loading.png");
-	loadSprite = std::make_unique<Sprite>(loadTex);
-	loadSprite->SetPosition(Vector2D{ Window::window_width - 96,Window::window_height - 98 });
-	loadSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-	loadSprite->SetSize(Vector2D{ 64,64 });
-	loadSprite->TransferVertex();
+	//loadSprite = std::make_unique<Sprite>(loadTex);
+	//loadSprite->SetPosition(Vector2D{ Window::window_width - 96,Window::window_height - 98 });
+	//loadSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
+	//loadSprite->SetSize(Vector2D{ 64,64 });
+	//loadSprite->TransferVertex();
 
 	ImGuiManager::GetInstance()->Initialize();
 

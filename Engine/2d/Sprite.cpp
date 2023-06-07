@@ -22,88 +22,34 @@ void Sprite::Initialize(Texture texture_)
 	//if (handle_ != UINT32_MAX) {
 		handle = texture_;
 		AdjustTextureSize();
-		size = textureSize;
 	//}
 
-	float left = (0.0f - anchorPoint.x) * size.x;
-	float right = (1.0f - anchorPoint.x) * size.x;
-	float top = (0.0f - anchorPoint.y) * size.y;
-	float bottom = (1.0f - anchorPoint.y) * size.y;
+#pragma region VertBuff
 
-	if (isFlipX) {
-		left = -left;
-		right = -right;
-	}
-	if (isFlipY) {
-		top = -top;
-		bottom = -bottom;
-	}
 	vertices.resize(4);
-	vertices[LB].pos = { left,bottom,0.0f };
-	vertices[LT].pos = { left,top,0.0f };
-	vertices[RB].pos = { right,bottom,0.0f };
-	vertices[RT].pos = { right,top,0.0f };
-	vertices[LB].uv = { 0.0f,1.0f };
-	vertices[LT].uv = { 0.0f,0.0f };
-	vertices[RB].uv = { 1.0f,1.0f };
-	vertices[RT].uv = { 1.0f,0.0f };
+
+	SetVerticesPos();
+	SetVerticesUV();
+
 	UINT sizePV = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
 	BuffInitialize(MyDirectX::GetInstance()->GetDev(), sizePV, (int)vertices.size());
 
-#pragma region  ConstBuffer
-	//	ヒープ設定
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//	GPU転送用
+#pragma endregion
 
-	//	リソース設定
-	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xFF) & ~0xFF;
-	cbResourceDesc.Height = 1;
-	cbResourceDesc.DepthOrArraySize = 1;
-	cbResourceDesc.MipLevels = 1;
-	cbResourceDesc.SampleDesc.Count = 1;
-	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+#pragma region ConstBuffer
 
-	//	生成
-	result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
-		&cbHeapProp,	//	ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,	//	リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&transform));
-	assert(SUCCEEDED(result));
-
+	transform.Initialize((sizeof(CBuff::CBuffSpriteTransform) + 0xFF) & ~0xFF);
 	//	定数バッファのマッピング
-	result = transform->Map(0, nullptr, (void**)&constMapTransform);	//	マッピング
+	result = transform.GetResource()->Map(0, nullptr, (void**)&constMapTransform);	//	マッピング
 	assert(SUCCEEDED(result));
 
-	//	ヒープ設定
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//	GPU転送用
 
-	//	リソース設定
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resourceDesc.Height = 1;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.MipLevels = 1;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	resourceDesc.Width = (sizeof(ConstBufferDataMaterial) + 0xFF) & ~0xFF;
-	//	生成
-	result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
-		&heapProp,	//	ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&resourceDesc,	//	リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&material));
-	assert(SUCCEEDED(result));
-
+	colorMaterial.Initialize((sizeof(CBuff::CBuffColorMaterial) + 0xFF) & ~0xFF);
 	//	定数バッファのマッピング
-	result = material->Map(0, nullptr, (void**)&mapMaterial);	//	マッピング
+	result = colorMaterial.GetResource()->Map(0, nullptr, (void**)&mapMaterial);	//	マッピング
 	assert(SUCCEEDED(result));
 
-	color = { 1.0f,1.0f,1.0f,1.0f };
+#pragma endregion
 }
 
 void Sprite::Update()
@@ -126,11 +72,6 @@ void Sprite::Update()
 	}
 
 	MatUpdate();
-}
-
-Sprite::Sprite(Texture texture_)
-{
-	Initialize(texture_);
 }
 
 void Sprite::MatUpdate()
@@ -175,60 +116,26 @@ void Sprite::SetTextureRect()
 	MatUpdate();
 }
 
-void Sprite::Draw()
+void Sprite::SetVerticesUV()
 {
-	if (isInvisible) {
-		return;
+	ID3D12Resource* texBuff = handle.GetResourceBuff();
+
+	if (texBuff) {
+		D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
+
+		float tex_left = textureLeftTop.x / (float)resDesc_.Width;
+		float tex_right = (textureLeftTop.x + textureSize.x) / (float)resDesc_.Width;
+		float tex_top = textureLeftTop.y / (float)resDesc_.Height;
+		float tex_bottom = (textureLeftTop.y + textureSize.y) / (float)resDesc_.Height;
+
+		vertices[LB].uv = { tex_left,tex_bottom };
+		vertices[LT].uv = { tex_left,tex_top };
+		vertices[RB].uv = { tex_right,tex_bottom };
+		vertices[RT].uv = { tex_right,tex_top };
 	}
-
-	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
-	pipeline_->Setting();
-	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
-	//	テクスチャ
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
-
-	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);
 }
 
-void Sprite::DrawRect(const Vector2D& textureLeftTop_, const Vector2D& textureSize_)
-{
-	bool dirtyFlag = false;
-
-	if (this->textureLeftTop != textureLeftTop_) {
-		dirtyFlag = true;
-		this->textureLeftTop = textureLeftTop_;
-	}
-	if (this->textureSize != textureSize_) {
-		dirtyFlag = true;
-		this->textureSize = textureSize_;
-	}
-
-	if (dirtyFlag) {
-		SetTextureRect();
-	}
-
-	if (isInvisible) {
-		return;
-	}
-
-	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
-	pipeline_->Setting();
-	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
-	//	テクスチャ
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
-	//MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
-
-	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);
-}
-
-void Sprite::TransferVertex()
+void Sprite::SetVerticesPos()
 {
 	float left = (0.0f - anchorPoint.x) * size.x;
 	float right = (1.0f - anchorPoint.x) * size.x;
@@ -248,6 +155,10 @@ void Sprite::TransferVertex()
 	vertices[LT].pos = { left,top,0.0f };
 	vertices[RB].pos = { right,bottom,0.0f };
 	vertices[RT].pos = { right,top,0.0f };
+}
+
+void Sprite::TransferVertex()
+{
 
 	//	GPUメモリの値書き換えよう
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
@@ -287,4 +198,59 @@ void Sprite::AdjustTextureSize()
 	D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
 	textureSize.x = static_cast<float>(resDesc_.Width);
 	textureSize.y = static_cast<float>(resDesc_.Height);
+}
+
+void Sprite::Draw()
+{
+	if (isInvisible) {
+		return;
+	}
+
+	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
+	pipeline_->Setting();
+	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
+	//	テクスチャ
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
+
+	colorMaterial.SetGraphicsRootCBuffView(1);
+	transform.SetGraphicsRootCBuffView(2);
+
+	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);
+}
+
+void Sprite::DrawRect(const Vector2D& textureLeftTop_, const Vector2D& textureSize_)
+{
+	bool dirtyFlag = false;
+
+	if (this->textureLeftTop != textureLeftTop_) {
+		dirtyFlag = true;
+		this->textureLeftTop = textureLeftTop_;
+	}
+	if (this->textureSize != textureSize_) {
+		dirtyFlag = true;
+		this->textureSize = textureSize_;
+	}
+
+	if (dirtyFlag) {
+		SetTextureRect();
+	}
+
+	if (isInvisible) {
+		return;
+	}
+
+	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
+	pipeline_->Setting();
+	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
+	//	テクスチャ
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
+	//MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
+	//MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
+	transform.SetGraphicsRootCBuffView(2);
+
+	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);
 }

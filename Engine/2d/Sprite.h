@@ -1,5 +1,8 @@
 #pragma once
 #include "VertIdxBuff.h"
+#include "ConstBuff.h"
+#include "ConstBuffStruct.h"
+
 #include "Texture.h"
 #include "MyMath.h"
 #include <vector>
@@ -11,19 +14,20 @@ private:
 
 	static Matrix mat2D;
 	
+	//	画像を張り付けるポリゴンの設定
 	MyMath::SpriteMatrix mat;
-
-	Vector4D color;
 	Vector2D size = { 100.0f,100.0f };
 	Vector2D anchorPoint;
 
+	//	表示する画像の設定
 	Vector2D textureLeftTop;
 	Vector2D textureSize = { 100.0f,100.0f };
+	Vector4D color = { 1.0f,1.0f,1.0f,1.0f };
+	bool isFlipX = false;
+	bool isFlipY = false;
 
 	Texture handle;
 
-	bool isFlipX = false;
-	bool isFlipY = false;
 	bool isInvisible = false;
 
 	std::vector<ScreenVertex> vertices;
@@ -34,26 +38,19 @@ private:
 		RB,
 		RT,
 	};
-	struct ConstBufferDataTransform {
-		Matrix mat;
-	};
-	ComPtr<ID3D12Resource> transform;
-	ConstBufferDataTransform* constMapTransform = nullptr;
-	D3D12_HEAP_PROPERTIES cbHeapProp{};
-	D3D12_RESOURCE_DESC cbResourceDesc{};
 
-	D3D12_HEAP_PROPERTIES heapProp{};
-	D3D12_RESOURCE_DESC resourceDesc{};
-	struct ConstBufferDataMaterial {
-		Vector4D color;	//	RGBA
-	};
-	ComPtr<ID3D12Resource> material;
-	ConstBufferDataMaterial* mapMaterial = nullptr;
+#pragma region CBuff
+	//	行列
+	ConstBuff transform;
+	CBuff::CBuffSpriteTransform* constMapTransform = nullptr;
+	//	色
+	ConstBuff colorMaterial;
+	CBuff::CBuffColorMaterial* mapMaterial = nullptr;
+#pragma endregion
+
 public:
 	static void StaticInitialize();
 
-	Sprite() {};
-	Sprite(Texture texture_);
 	void Initialize(Texture texture_);
 	void SetTextureRect();
 	void Update();
@@ -83,6 +80,12 @@ public:
 private:
 	void SetVertices() override;
 
+	//	verticesの座標設定
+	void SetVerticesPos();
+
+	void SetVerticesUV();
+
+	//	画像サイズを取得する
 	void AdjustTextureSize();
 };
 
