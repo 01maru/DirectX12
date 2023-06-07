@@ -26,16 +26,6 @@ Window* Window::GetInstance()
 	return &instance;
 }
 
-Window::Window()
-{
-}
-
-Window::~Window()
-{
-	// ウィンドウクラスを登録解除
-	UnregisterClass(w.lpszClassName, w.hInstance);
-}
-
 void Window::Initialize()
 {
 	w.cbSize = sizeof(WNDCLASSEX);
@@ -67,6 +57,12 @@ void Window::Initialize()
 	ShowWindow(hwnd, SW_SHOW);
 
 	timeBeginPeriod(1);
+}
+
+void Window::Finalize()
+{
+	// ウィンドウクラスを登録解除
+	UnregisterClass(w.lpszClassName, w.hInstance);
 }
 
 bool Window::MsgUpdate()

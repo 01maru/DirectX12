@@ -16,8 +16,8 @@ private:
 	// メッセージ
 	MSG msg{};
 
-	Window();
-	~Window();
+	Window() {};
+	~Window() {};
 public:
 	// ウィンドウプロシージャ
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
@@ -27,11 +27,12 @@ public:
 	Window& operator=(const Window& obj) = delete;
 
 	void Initialize();
+	void Finalize();
 	bool MsgUpdate();
 	bool EndLoop();
 
 	//	getter
-	HWND GetHwnd() const { return hwnd; }
-	WNDCLASSEX GetWND() const { return w;}
+	const HWND& GetHwnd() const { return hwnd; }
+	const WNDCLASSEX& GetWND() const { return w;}
 };
 

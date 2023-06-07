@@ -60,4 +60,5 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
+	Window::GetInstance()->Finalize();
 }
