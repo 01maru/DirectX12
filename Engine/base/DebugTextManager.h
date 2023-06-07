@@ -18,7 +18,6 @@ private:
 	~DebugTextManager() {};
 public:
 	static DebugTextManager* GetInstance();
-	static void DeleteInstance();
 
 	DebugTextManager(const DebugTextManager& obj) = delete;
 	DebugTextManager& operator=(const DebugTextManager& obj) = delete;

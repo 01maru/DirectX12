@@ -12,13 +12,8 @@ void TextureManager::SetWhiteTexHandle()
 
 TextureManager* TextureManager::GetInstance()
 {
-	static TextureManager* instance = new TextureManager;
-	return instance;
-}
-
-void TextureManager::DeleteInstance()
-{
-	delete TextureManager::GetInstance();
+	static TextureManager instance;
+	return &instance;
 }
 
 TextureManager::TextureManager()

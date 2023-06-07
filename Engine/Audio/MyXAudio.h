@@ -38,7 +38,6 @@ public:
 	ComPtr<IXAudio2> xAudio2;
 
 	static MyXAudio* GetInstance();
-	static void DeleteInstance();
 	MyXAudio(const MyXAudio& obj) = delete;
 	MyXAudio& operator=(const MyXAudio& obj) = delete;
 

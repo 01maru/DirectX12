@@ -3,13 +3,8 @@
 
 ParticleManager* ParticleManager::GetInstance()
 {
-	static ParticleManager* instance = new ParticleManager;
-	return instance;
-}
-
-void ParticleManager::DeleteInstance()
-{
-	delete ParticleManager::GetInstance();
+	static ParticleManager instance;
+	return &instance;
 }
 
 void ParticleManager::Initialize()

@@ -43,7 +43,6 @@ private:
 	~SceneManager();
 public:
 	static SceneManager* GetInstance();
-	static void DeleteInstance();
 	SceneManager(const SceneManager& obj) = delete;
 	SceneManager& operator=(const SceneManager& obj) = delete;
 

@@ -15,7 +15,6 @@ private:
 public:
 	void SetWhiteTexHandle();		//	読み込み失敗用白色画像のセット
 	static TextureManager* GetInstance();
-	static void DeleteInstance();
 	TextureManager();
 	~TextureManager() {};
 	void Initialize();

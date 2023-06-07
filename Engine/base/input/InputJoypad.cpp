@@ -14,13 +14,8 @@ InputJoypad::~InputJoypad()
 
 InputJoypad* InputJoypad::GetInstance()
 {
-    static InputJoypad* instance = new InputJoypad;
-    return instance;
-}
-
-void InputJoypad::DeleteInstance()
-{
-    delete InputJoypad::GetInstance();
+    static InputJoypad instance;
+    return &instance;
 }
 
 void InputJoypad::Update()

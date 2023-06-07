@@ -58,14 +58,4 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
-	DebugTextManager::DeleteInstance();
-	ParticleManager::DeleteInstance();
-	SpriteCommon::DeleteInstance();
-	InputJoypad::DeleteInstance();
-	Input::DeleteInstance();
-	MyXAudio::DeleteInstance();
-	PipelineManager::DeleteInstance();
-	MyDirectX::DeleteInstance();
-	TextureManager::DeleteInstance();
-	Window::DeleteInstance();
 }

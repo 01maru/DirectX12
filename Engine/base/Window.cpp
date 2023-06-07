@@ -22,13 +22,8 @@ LRESULT Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 Window* Window::GetInstance()
 {
-	static Window* instance = new Window;
-	return instance;
-}
-
-void Window::DeleteInstance()
-{
-	delete Window::GetInstance();
+	static Window instance;
+	return &instance;
 }
 
 Window::Window()

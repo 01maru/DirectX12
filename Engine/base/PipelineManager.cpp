@@ -3,13 +3,8 @@
 
 PipelineManager* PipelineManager::GetInstance()
 {
-	static PipelineManager* instance = new PipelineManager;
-	return instance;
-}
-
-void PipelineManager::DeleteInstance()
-{
-	delete PipelineManager::GetInstance();
+	static PipelineManager instance;
+	return &instance;
 }
 
 void PipelineManager::Initialize()

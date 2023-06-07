@@ -5,16 +5,8 @@
 
 ImGuiManager* ImGuiManager::GetInstance()
 {
-	static ImGuiManager* instance = new ImGuiManager;
-	return instance;
-}
-
-void ImGuiManager::DeleteInstance()
-{
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-	delete ImGuiManager::GetInstance();
+	static ImGuiManager instance;
+	return &instance;
 }
 
 void ImGuiManager::Initialize()
@@ -37,6 +29,13 @@ void ImGuiManager::Initialize()
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontDefault();
+}
+
+void ImGuiManager::Finalize()
+{
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void ImGuiManager::Begin()

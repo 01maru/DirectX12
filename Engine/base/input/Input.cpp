@@ -8,13 +8,8 @@ Input::Input()
 
 Input* Input::GetInstance()
 {
-	static Input* instance = new Input;
-	return instance;
-}
-
-void Input::DeleteInstance()
-{
-	delete Input::GetInstance();
+	static Input instance;
+	return &instance;
 }
 
 void Input::Initialize()

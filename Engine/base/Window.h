@@ -15,14 +15,17 @@ private:
 	HWND hwnd;
 	// メッセージ
 	MSG msg{};
+
+	Window();
+	~Window();
 public:
 	// ウィンドウプロシージャ
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 	static Window* GetInstance();
-	static void DeleteInstance();
-	Window();
-	~Window();
+	Window(const Window& obj) = delete;
+	Window& operator=(const Window& obj) = delete;
+
 	void Initialize();
 	bool MsgUpdate();
 	bool EndLoop();

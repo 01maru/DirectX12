@@ -9,18 +9,13 @@ SceneManager::~SceneManager()
 {
 	scene->Finalize();
 	delete scene;
-	ImGuiManager::DeleteInstance();
+	ImGuiManager::GetInstance()->Finalize();
 }
 
 SceneManager* SceneManager::GetInstance()
 {
-	static SceneManager* instance = new SceneManager;
-	return instance;
-}
-
-void SceneManager::DeleteInstance()
-{
-	delete SceneManager::GetInstance();
+	static SceneManager instance;
+	return &instance;
 }
 
 void SceneManager::Initialize()

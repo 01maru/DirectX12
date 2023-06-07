@@ -25,13 +25,8 @@ MyXAudio::~MyXAudio()
 
 MyXAudio* MyXAudio::GetInstance()
 {
-	static MyXAudio* instance = new MyXAudio;
-	return instance;
-}
-
-void MyXAudio::DeleteInstance()
-{
-	delete MyXAudio::GetInstance();
+	static MyXAudio instance;
+	return &instance;
 }
 
 int MyXAudio::SoundLoadWave(const char* filename)

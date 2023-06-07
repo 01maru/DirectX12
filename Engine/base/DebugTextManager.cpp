@@ -9,13 +9,8 @@ int DebugTextManager::fontLineCharNum = 14;
 
 DebugTextManager* DebugTextManager::GetInstance()
 {
-	static DebugTextManager* instance = new DebugTextManager;
-	return instance;
-}
-
-void DebugTextManager::DeleteInstance()
-{
-	delete DebugTextManager::GetInstance();
+	static DebugTextManager instance;
+	return &instance;
 }
 
 void DebugTextManager::Initialize()

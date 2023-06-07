@@ -15,13 +15,8 @@ D3D_FEATURE_LEVEL levels[] = {
 
 MyDirectX* MyDirectX::GetInstance()
 {
-	static MyDirectX* instance = new MyDirectX;
-	return instance;
-}
-
-void MyDirectX::DeleteInstance()
-{
-	delete MyDirectX::GetInstance();
+	static MyDirectX instance;
+	return &instance;
 }
 
 void MyDirectX::DebugLayer()

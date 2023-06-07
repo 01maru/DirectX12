@@ -19,7 +19,6 @@ private:
     ~InputJoypad();
 public:
     static InputJoypad* GetInstance();
-    static void DeleteInstance();
     InputJoypad(const InputJoypad& obj) = delete;
     InputJoypad& operator=(const InputJoypad& obj) = delete;
 

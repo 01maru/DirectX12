@@ -2,13 +2,8 @@
 
 Light* Light::GetInstance()
 {
-	static Light* instance = new Light;
-	return instance;
-}
-
-void Light::DeleteInstance()
-{
-	delete Light::GetInstance();
+	static Light instance;
+	return &instance;
 }
 
 void Light::TransferConstBuffer()

@@ -9,13 +9,8 @@ SpriteCommon::SpriteCommon()
 
 SpriteCommon* SpriteCommon::GetInstance()
 {
-	static SpriteCommon* instance = new SpriteCommon;
-	return instance;
-}
-
-void SpriteCommon::DeleteInstance()
-{
-	delete SpriteCommon::GetInstance();
+	static SpriteCommon instance;
+	return &instance;
 }
 
 void SpriteCommon::Initialize()

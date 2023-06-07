@@ -43,7 +43,6 @@ private:
 	~Light() {};
 public:
 	static Light* GetInstance();
-	static void DeleteInstance();
 	Light(const Light& obj) = delete;
 	Light& operator=(const Light& obj) = delete;
 

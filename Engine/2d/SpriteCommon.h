@@ -14,7 +14,6 @@ private:
 	~SpriteCommon() {};
 public:
 	static SpriteCommon* GetInstance();
-	static void DeleteInstance();
 
 	SpriteCommon(const SpriteCommon& obj) = delete;
 	SpriteCommon& operator=(const SpriteCommon& obj) = delete;

@@ -16,8 +16,6 @@ private:
 	~ParticleManager() {};
 public:
 	static ParticleManager* GetInstance();
-	static void DeleteInstance();
-
 	ParticleManager(const ParticleManager& obj) = delete;
 	ParticleManager& operator=(const ParticleManager& obj) = delete;
 

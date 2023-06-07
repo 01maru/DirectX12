@@ -35,7 +35,6 @@ private:
 	~Input() {};
 public:
 	static Input* GetInstance();
-	static void DeleteInstance();
 	Input(const Input& obj) = delete;
 	Input& operator=(const Input& obj) = delete;
 

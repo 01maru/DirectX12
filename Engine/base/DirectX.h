@@ -78,11 +78,12 @@ private:
 	void SetResourceBarrier(D3D12_RESOURCE_BARRIER& desc, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, ID3D12Resource* pResource = nullptr);
 	void CmdListDrawAble(D3D12_RESOURCE_BARRIER& barrierDesc, ID3D12Resource* pResource, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter,
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_, int rtDescNum = 1, FLOAT* clearColor_ = nullptr);
-public:
+	
 	MyDirectX() {};
+	~MyDirectX() {};
+public:
 	static MyDirectX* GetInstance();
 	void Initialize();
-	static void DeleteInstance();
 	void UpdateFPS();
 	void PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor_ = nullptr);
 	void PostEffectDraw(PostEffect* postEffect);

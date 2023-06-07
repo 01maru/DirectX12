@@ -23,7 +23,6 @@ private:
 	~PipelineManager() {};
 public:
 	static PipelineManager* GetInstance();
-	static void DeleteInstance();
 	PipelineManager(const PipelineManager& obj) = delete;
 	PipelineManager& operator=(const PipelineManager& obj) = delete;
 
