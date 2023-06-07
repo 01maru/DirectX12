@@ -1,4 +1,5 @@
 #include "Sprite.h"
+#include "ConstBuffStruct.h"
 #include "DirectX.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"

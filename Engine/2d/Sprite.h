@@ -1,11 +1,15 @@
 #pragma once
 #include "VertIdxBuff.h"
 #include "ConstBuff.h"
-#include "ConstBuffStruct.h"
 
 #include "Texture.h"
 #include "MyMath.h"
 #include <vector>
+
+namespace CBuff {
+	struct CBuffColorMaterial;
+	struct CBuffSpriteTransform;
+}
 
 class Sprite :public VertIdxBuff
 {
