@@ -34,6 +34,9 @@ namespace MyMath {
 
 	bool CollisionCircleLay(Vector3D startL, Vector3D endL, Vector3D pos, float rad);
 
+	//頂点ABCで作られたポリゴンから法線を計算する。
+	//Vector3D& CreatePolygonNormal(const Vector3D& a, const Vector3D& b, const Vector3D& c);
+
 	class MatView {
 	public:
 		Matrix mat;

@@ -1,35 +1,39 @@
 #include "Vector3D.h"
+
+#include "Vector4D.h"
 #include "Vector2D.h"
 #include "Matrix.h"
 #include <cmath>
 
-Vector3D::Vector3D()
-	:x(0), y(0), z(0)
-{
-}
+Vector3D::Vector3D() :x(0.0f), y(0.0f), z(0.0f) {}
 
-Vector3D::Vector3D(float x, float y, float z)
-	: x(x), y(y), z(z)
-{
-}
+Vector3D::Vector3D(float x, float y, float z) : x(x), y(y), z(z) {}
 
-Vector3D::Vector3D(const Vector2D& vec, float z)
-	: x(vec.x), y(vec.y), z(z)
-{
-}
+Vector3D::Vector3D(int x, int y, int z) :x((float)x), y((float)y), z((float)z) {}
 
-float Vector3D::length() const
+Vector3D::Vector3D(const Vector2D& vec, float z) : x(vec.x), y(vec.y), z(z) {}
+
+Vector3D::Vector3D(const Vector2D& vec, int z) :x(vec.x), y(vec.y), z((float)z) {}
+
+Vector3D::Vector3D(const Vector4D& vec) :x(vec.x), y(vec.y), z(vec.z) {}
+
+float Vector3D::GetLength() const
 {
 	return sqrt(x * x + y * y + z * z);
 }
 
-Vector3D& Vector3D::normalize()
+void Vector3D::Normalize()
 {
-	float len = length();
-	if (len != 0)
-	{
-		return *this /= len;
-	}
+	float len = GetLength();
+
+	if (len != 0)	*this /= len;
+}
+
+Vector3D& Vector3D::GetNormalize()
+{
+	float len = GetLength();
+
+	if (len != 0)	return *this /= len;
 	return *this;
 }
 
@@ -87,7 +91,12 @@ Vector3D& Vector3D::operator*=(float s)
 
 bool Vector3D::operator==(const Vector3D& vec)
 {
-	return (this->x == vec.x) && (this->y == vec.y) && (this->y == vec.y);
+	return (this->x == vec.x) && (this->y == vec.y) && (this->z == vec.z);
+}
+
+bool Vector3D::operator!=(const Vector3D& vec)
+{
+	return (this->x != vec.x) || (this->y != vec.y) || (this->z != vec.z);
 }
 
 const Vector3D operator+(const Vector3D& v1, const Vector3D& v2)
@@ -133,16 +142,4 @@ const Vector3D Vec3TransformNormal(const Vector3D& v, const Matrix& m)
 	//ans.w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];
 
 	return ans;
-}
-
-Vector3D CreatePolygonNormal(Vector3D a, Vector3D b, Vector3D c)
-{
-	Vector3D AB(b - a);
-	Vector3D BC(c - b);
-
-	Vector3D normal = AB;
-	normal.cross(BC);
-	normal.normalize();
-
-	return normal;
 }

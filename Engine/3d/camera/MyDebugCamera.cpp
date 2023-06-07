@@ -17,7 +17,7 @@ void MyDebugCamera::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
 
 	//	disEyeTraget‰Šú‰»
 	frontVec = target - eye;
-	disEyeTarget = frontVec.length();
+	disEyeTarget = frontVec.GetLength();
 
 	//	•ûŒüƒxƒNƒgƒ‹
 	CalcDirectionVec();
@@ -28,8 +28,8 @@ void MyDebugCamera::Update()
 	Input* input = Input::GetInstance();
 
 	Vector2D moveCursor = input->GetCursor() - input->GetPrevCursor();
-	float cursorDisPrev = moveCursor.length();
-	moveCursor.normalize();
+	float cursorDisPrev = moveCursor.GetLength();
+	moveCursor.Normalize();
 
 #pragma region SetMode
 	if (input->ClickTrigger(Input::WheelClick)) {

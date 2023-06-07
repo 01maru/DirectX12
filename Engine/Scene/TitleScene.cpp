@@ -30,18 +30,18 @@ void TitleScene::Initialize()
 	backSprite = std::make_unique<Sprite>(TextureManager::GetInstance()->GetWhiteTexture());
 	backSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
 	backSprite->SetSize(Vector2D{ Window::window_width,Window::window_height });
-	backSprite->SetAnchorPoint(Vector2D{ 0.5,0.5 });
+	backSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 	backSprite->TransferVertex();
 	titleSprite = std::make_unique<Sprite>(titleG);
-	titleSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,200 });
+	titleSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,200.0f });
 	titleSprite->SetSize(titleSize);
-	titleSprite->SetAnchorPoint(Vector2D{ 0.5,0.5 });
+	titleSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 	titleSprite->SetColor({ 1.0f,1.0f,1.0f,0.51f });
 	titleSprite->TransferVertex();
 	pressSprite = std::make_unique<Sprite>(pressG);
 	pressSprite->SetSize(pressSize);
-	pressSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,620 });
-	pressSprite->SetAnchorPoint(Vector2D{ 0.5,0.5 });
+	pressSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,620.0f });
+	pressSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 	pressSprite->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 	pressSprite->TransferVertex();
 #pragma endregion

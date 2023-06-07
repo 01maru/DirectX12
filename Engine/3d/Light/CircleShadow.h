@@ -28,7 +28,7 @@ private:
 public:
 	void SetDir(const Vector3D& dir_) {
 		dir = dir_;
-		dir.normalize();
+		dir.Normalize();
 	}
 	const Vector3D& GetDir() { return dir; }
 	void SetCasterPos(const Vector3D& casterPos_) { casterPos = casterPos_; }

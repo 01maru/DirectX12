@@ -1,16 +1,6 @@
 #include "Vector2D.h"
 #include <cmath>
 
-Vector2D::Vector2D() :
-	x(0), y(0)
-{
-}
-
-Vector2D::Vector2D(float x, float y) :
-	x(x), y(y)
-{
-}
-
 Vector2D Vector2D::operator+() const
 {
 	return *this;
@@ -30,18 +20,26 @@ Vector2D& Vector2D::operator-=(const Vector2D& v)
 	return *this;
 }
 
-float Vector2D::length() const
+float Vector2D::GetLength() const
 {
 	return sqrt(x * x + y * y);
 }
 
-Vector2D& Vector2D::normalize()
+void Vector2D::Normalize()
 {
-	float len = length();
-	if (len != 0)
-	{
-		return *this /= len;
-	}
+	float len = GetLength();
+
+	//	0ベクトルじゃなかったら
+	if (len != 0)	*this /= len;
+}
+
+Vector2D& Vector2D::GetNormalize()
+{
+	float len = GetLength();
+
+	//	0ベクトルじゃなかったら
+	if (len != 0)	return *this /= len;
+
 	return *this;
 }
 
@@ -62,6 +60,11 @@ Vector2D& Vector2D::operator*=(float s)
 bool Vector2D::operator!=(const Vector2D& vec)
 {
 	return (this->x != vec.x) || (this->y != vec.y);
+}
+
+bool Vector2D::operator==(const Vector2D& vec)
+{
+	return (this->x == vec.x) && (this->y == vec.y);
 }
 
 const Vector2D operator-(const Vector2D& v1, const Vector2D& v2)

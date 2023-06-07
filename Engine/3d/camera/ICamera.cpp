@@ -35,7 +35,7 @@ void ICamera::CalcDirectionVec()
 {
 	//	前方方向ベクトル
 	frontVec = target - eye;
-	frontVec.normalize();
+	frontVec.Normalize();
 
 	//	右方向ベクトル
 	rightVec = Vector3D(0, 1, 0).cross(frontVec);
@@ -46,8 +46,8 @@ void ICamera::CalcDirectionVec()
 	downVec = rightVec.cross(frontVec);
 
 	//	ベクトルの正規化
-	rightVec.normalize();
-	downVec.normalize();
+	rightVec.Normalize();
+	downVec.Normalize();
 }
 
 void ICamera::SetProjectionMatrix(int width, int height, float fovY)

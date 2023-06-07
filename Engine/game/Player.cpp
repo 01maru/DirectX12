@@ -21,7 +21,7 @@ void Player::PlayerInitialize(IModel* model_)
 	Initialize();
 	SetModel(model_);
 	float radius = 0.6f;
-	SetCollider(new SphereCollider(Vector3D(0, radius, 0), radius));
+	SetCollider(new SphereCollider(Vector3D(0.0f, radius, 0.0f), radius));
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	jumpSound = MyXAudio::GetInstance()->SoundLoadWave("jump.wav");
@@ -52,7 +52,7 @@ void Player::Update()
 	else if (Input::GetInstance()->GetTrigger(DIK_SPACE)) {
 		onGround = false;
 		const float jumpVYFist = 0.2f;
-		fallVec = { 0,jumpVYFist,0 };
+		fallVec = { 0.0f,jumpVYFist,0.0f };
 		MyXAudio::GetInstance()->SoundPlayWave(jumpSound, 0.1f);
 	}
 
@@ -87,7 +87,7 @@ void Player::CollisionUpdate()
 			const Vector3D up = { 0,1,0 };
 
 			Vector3D rejectDir = info.reject;
-			rejectDir.normalize();
+			rejectDir.Normalize();
 			float cos = rejectDir.dot(up);
 
 			const float threshold = cosf(MyMath::ConvertToRad(30.0f));
@@ -116,7 +116,7 @@ void Player::CollisionUpdate()
 	Ray ray;
 	ray.start = sphereCollider->center;
 	ray.start.y += sphereCollider->GetRadius();
-	ray.dir = { 0,-1.0,0 };
+	ray.dir = { 0,-1,0 };
 	RayCast raycastHit;
 
 	if (onGround) {

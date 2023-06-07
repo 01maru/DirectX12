@@ -87,7 +87,7 @@ bool Collision::CheckSphere2Sphere(const Sphere& sphereA, const Sphere& sphereB,
 
     Vector3D disV = sphereA.center;
     disV -= sphereB.center;
-	float vecDis = disV.length();
+	float vecDis = disV.GetLength();
 	vecDis *= vecDis;
 
 	if (vecDis <= dis) {
@@ -103,8 +103,9 @@ bool Collision::CheckSphere2Sphere(const Sphere& sphereA, const Sphere& sphereB,
 		// 押し出すベクトルを計算
 		if (reject) {
 			float rejectLen = sphereA.radius + sphereB.radius - sqrtf(vecDis);
-			
-			*reject = disV.normalize();
+
+			disV.Normalize();
+			*reject = disV;
 			*reject *= rejectLen;
 		}
 		return true;

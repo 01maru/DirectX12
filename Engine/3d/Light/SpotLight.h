@@ -30,7 +30,7 @@ private:
 public:
 	void SetLightDir(const Vector3D& lightdir_) {
 		lightdir = lightdir_;
-		lightdir.normalize();
+		lightdir.Normalize();
 	}
 	const Vector3D& GetLightDir() { return lightdir; }
 	void SetLightPos(const Vector3D& lightPos) { lightpos = lightPos; }

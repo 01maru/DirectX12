@@ -1,9 +1,7 @@
 #pragma once
 
-#pragma region 前置宣言
 class Vector3D;
 class Matrix;
-#pragma endregion
 
 class Vector4D
 {
@@ -16,11 +14,12 @@ public:
 	//	コンストラクタ
 	Vector4D();
 	Vector4D(float x, float y, float z, float w);
-	Vector4D(Vector3D v3d, float w);
+	Vector4D(const Vector3D& v, float w);
 	//	ベクトルの長さ
-	float length() const;
+	float GetLength() const;
 	//	正規化
-	Vector4D& normalize();
+	Vector4D& GetNormalize();
+	void Normalize();
 
 	Vector4D operator+() const;
 	Vector4D operator-() const;

@@ -27,7 +27,7 @@ public:
 	void SetShadow(bool shadowflag);
 	void SetLightDir(const Vector3D& lightdir_) {
 		lightdir = lightdir_;
-		lightdir.normalize();
+		lightdir.Normalize();
 	}
 	const Vector3D& GetLightDir() { return lightdir; }
 	void SetLightColor(const Vector3D& lightcolor_) { lightcolor = lightcolor_; }

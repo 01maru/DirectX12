@@ -1,60 +1,210 @@
 #include "Easing.h"
+#include "Vector2D.h"
+#include "Vector3D.h"
+#include "Vector4D.h"
 #include <math.h>
 
-template<typename T>
-T Easing::lerp(T a, T b, T t)
-{
-	return a + t * (b - a);
-}
-template float Easing::lerp<float>(float, float, float);
-template double Easing::lerp<double>(double, double, double);
+#pragma region lerp
 
-template<typename T>
-T Easing::EaseInOut(T startpos, T endpos, T time, int num)
+float Easing::lerp(float start, float end, float t)
 {
-	if (time < 0.5)
+	return start + t * (end - start);
+}
+
+Vector2D Easing::lerp(const Vector2D& start, const Vector2D& end, float t)
+{
+	Vector2D ans;
+
+	ans.x = lerp(start.x, end.x, t);
+	ans.y = lerp(start.y, end.y, t);
+
+	return ans;
+}
+
+Vector3D Easing::lerp(const Vector3D& start, const Vector3D& end, float t)
+{
+	Vector3D ans;
+
+	ans.x = lerp(start.x, end.x, t);
+	ans.y = lerp(start.y, end.y, t);
+	ans.z = lerp(start.z, end.z, t);
+
+	return ans;
+}
+
+Vector4D Easing::lerp(const Vector4D& start, const Vector4D& end, float t)
+{
+	Vector4D ans;
+
+	ans.x = lerp(start.x, end.x, t);
+	ans.y = lerp(start.y, end.y, t);
+	ans.z = lerp(start.z, end.z, t);
+	ans.w = lerp(start.w, end.w, t);
+
+	return ans;
+}
+
+#pragma endregion
+
+#pragma region EaseIn
+
+float Easing::EaseIn(float start, float end, float t, int powNum)
+{
+	return lerp(start, end, powf(t, (float)powNum));
+}
+
+Vector2D Easing::EaseIn(const Vector2D& start, const Vector2D& end, float t, int powNum)
+{
+	return lerp(start, end, powf(t, (float)powNum));
+}
+
+Vector3D Easing::EaseIn(const Vector3D& start, const Vector3D& end, float t, int powNum)
+{
+	return lerp(start, end, powf(t, (float)powNum));
+}
+
+Vector4D Easing::EaseIn(const Vector4D& start, const Vector4D& end, float t, int powNum)
+{
+	return lerp(start, end, powf(t, (float)powNum));
+}
+#pragma endregion
+
+#pragma region EaseOut
+
+float Easing::EaseOut(float start, float end, float t, int powNum)
+{
+	return lerp(start, end, (1.0f - powf(1.0f - t, (float)powNum)));
+}
+
+Vector2D Easing::EaseOut(const Vector2D& start, const Vector2D& end, float t, int powNum)
+{
+	return lerp(start, end, (1.0f - powf(1.0f - t, (float)powNum)));
+}
+
+Vector3D Easing::EaseOut(const Vector3D& start, const Vector3D& end, float t, int powNum)
+{
+	return lerp(start, end, (1.0f - powf(1.0f - t, (float)powNum)));
+}
+
+Vector4D Easing::EaseOut(const Vector4D& start, const Vector4D& end, float t, int powNum)
+{
+	return lerp(start, end, (1.0f - powf(1.0f - t, (float)powNum)));
+}
+
+#pragma endregion
+
+#pragma region EaseInOut
+
+float Easing::EaseInOut(float start, float end, float t, int powNum)
+{
+	if (t < 0.5f)
 	{
-		return lerp(startpos, endpos, (T)(pow(2, num - 1) * pow(time, num)));
+		return lerp(start, end, powf(2.0f, powNum - 1.0f) * powf(t, (float)powNum));
 	}
-	return lerp(startpos, endpos, (T)(1 - pow(-2 * time + 2, num) / 2));
-}
-template float Easing::EaseInOut<float>(float, float, float, int);
-template double Easing::EaseInOut<double>(double, double, double, int);
 
-template<typename T>
-T Easing::EaseInBack(T startpos, T endpos, T time, int num, double p1)
+	return lerp(start, end, 1.0f - powf(-2.0f * t + 2.0f, (float)powNum) / 2.0f);
+}
+
+Vector2D Easing::EaseInOut(const Vector2D& start, const Vector2D& end, float t, int powNum)
 {
-	const double c1 = p1;
-	const double c3 = c1 + 1;
+	if (t < 0.5f)
+	{
+		return lerp(start, end, powf(2.0f, powNum - 1.0f) * powf(t, (float)powNum));
+	}
 
-	return lerp(startpos, endpos, (T)pow((c3 * time * time * time - c1 * time * time), num));
+	return lerp(start, end, 1.0f - powf(-2.0f * t + 2.0f, (float)powNum) / 2);
 }
-template float Easing::EaseInBack<float>(float, float, float, int, double);
-template double Easing::EaseInBack<double>(double, double, double, int, double);
 
-template<typename T>
-T Easing::EaseOutBack(const T startpos, const T endpos, T time, int num, double p1)
+Vector3D Easing::EaseInOut(const Vector3D& start, const Vector3D& end, float t, int powNum)
 {
-	double c1 = p1;
-	double c3 = c1 + 1;
+	if (t < 0.5f)
+	{
+		return lerp(start, end, powf(2.0f, powNum - 1.0f) * powf(t, (float)powNum));
+	}
 
-	return lerp(startpos, endpos, (T)pow(1 + c3 * pow(time - 1, 3) + c1 * pow(time - 1, 2), num));
+	return lerp(start, end, 1.0f - powf(-2.0f * t + 2.0f, (float)powNum) / 2);
 }
-template float Easing::EaseOutBack<float>(float, float, float, int, double);
-template double Easing::EaseOutBack<double>(double, double, double, int, double);
 
-template<typename T>
-T Easing::EaseIn(T start, T end, T time, int num)
+Vector4D Easing::EaseInOut(const Vector4D& start, const Vector4D& end, float t, int powNum)
 {
-	return lerp(start, end, (T)pow(time, num));
-}
-template float Easing::EaseIn<float>(float, float, float, int);
-template double Easing::EaseIn<double>(double, double, double, int);
+	if (t < 0.5f)
+	{
+		return lerp(start, end, powf(2.0f, powNum - 1.0f) * powf(t, (float)powNum));
+	}
 
-template<typename T>
-T Easing::EaseOut(T start, T end, T time, int num)
-{
-	return lerp(start, end, (T)(1 - pow(1 - time, num)));
+	return lerp(start, end, 1.0f - powf(-2.0f * t + 2.0f, (float)powNum) / 2);
 }
-template float Easing::EaseOut<float>(float, float, float, int);
-template double Easing::EaseOut<double>(double, double, double, int);
+
+#pragma endregion
+
+#pragma region EaseInBack
+
+float Easing::EaseInBack(float start, float end, float t, int powNum, float p1)
+{
+	float c1 = p1;
+	float c3 = c1 + 1;
+
+	return lerp(start, end, powf((c3 * t * t * t - c1 * t * t), (float)powNum));
+}
+
+Vector2D Easing::EaseInBack(const Vector2D& start, const Vector2D& end, float t, int powNum, float p1)
+{
+	float c1 = p1;
+	float c3 = c1 + 1;
+
+	return lerp(start, end, powf((c3 * t * t * t - c1 * t * t), (float)powNum));
+}
+
+Vector3D Easing::EaseInBack(const Vector3D& start, const Vector3D& end, float t, int powNum, float p1)
+{
+	float c1 = p1;
+	float c3 = c1 + 1;
+
+	return lerp(start, end, powf((c3 * t * t * t - c1 * t * t), (float)powNum));
+}
+
+Vector4D Easing::EaseInBack(const Vector4D& start, const Vector4D& end, float t, int powNum, float p1)
+{
+	float c1 = p1;
+	float c3 = c1 + 1;
+
+	return lerp(start, end, powf((c3 * t * t * t - c1 * t * t), (float)powNum));
+}
+
+#pragma endregion
+
+#pragma region EaseOutBack
+
+float Easing::EaseOutBack(float start, float end, float t, int powNum, float p1)
+{
+	float c1 = p1;
+	float c3 = c1 + 1;
+
+	return lerp(start, end, powf(1.0f + c3 * powf(t - 1.0f, 3.0f) + c1 * powf(t - 1.0f, 2.0f), (float)powNum));
+}
+
+Vector2D Easing::EaseOutBack(const Vector2D& start, const Vector2D& end, float t, int powNum, float p1)
+{
+	float c1 = p1;
+	float c3 = c1 + 1;
+
+	return lerp(start, end, powf(1.0f + c3 * powf(t - 1.0f, 3.0f) + c1 * powf(t - 1.0f, 2.0f), (float)powNum));
+}
+
+Vector3D Easing::EaseOutBack(const Vector3D& start, const Vector3D& end, float t, int powNum, float p1)
+{
+	float c1 = p1;
+	float c3 = c1 + 1;
+
+	return lerp(start, end, powf(1.0f + c3 * powf(t - 1.0f, 3.0f) + c1 * powf(t - 1.0f, 2.0f), (float)powNum));
+}
+
+Vector4D Easing::EaseOutBack(const Vector4D& start, const Vector4D& end, float t, int powNum, float p1)
+{
+	float c1 = p1;
+	float c3 = c1 + 1;
+
+	return lerp(start, end, powf(1.0f + c3 * powf(t - 1.0f, 3.0f) + c1 * powf(t - 1.0f, 2.0f), (float)powNum));
+}
+
+#pragma endregion

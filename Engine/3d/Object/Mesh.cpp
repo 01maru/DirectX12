@@ -42,7 +42,7 @@ void Mesh::CalcSmoothedNormals()
 			normal += vertices[index].normal;
 		}
 		normal /= (float)v.size();
-		normal.normalize();
+		normal.Normalize();
 
 		for (unsigned short index : v) {
 			vertices[index].normal = normal;

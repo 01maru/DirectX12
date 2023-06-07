@@ -54,7 +54,7 @@ bool MeshCollider::CheckCollisionSphere(const Sphere& sphere, Vector3D* inter, V
 	Sphere localSphere;
 	localSphere.center = Vec3Transform(sphere.center, invMatWorld);
 	Vector3D vec(invMatWorld.m[0][0], invMatWorld.m[0][1], invMatWorld.m[0][2]);
-	localSphere.radius *= vec.length();
+	localSphere.radius *= vec.GetLength();
 
 	std::vector<Triangle>::const_iterator it = triangles.cbegin();
 

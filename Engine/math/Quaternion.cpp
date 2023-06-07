@@ -4,7 +4,7 @@
 Quaternion SetQuaternion(const Vector3D& v, float angle)
 {
     Vector3D vec = v;
-    vec.normalize();
+    vec.Normalize();
 
     Quaternion ans;
     float rad = sinf(angle / 2);
@@ -235,7 +235,7 @@ Quaternion MakeAxisAngle(const Vector3D& axis, float angle)
 {
     Quaternion ans;
     Vector3D axis_ = axis;
-    axis_.normalize();
+    axis_.Normalize();
 
     float rad = sinf(angle / 2);
     ans.x = axis_.x * rad;
@@ -330,7 +330,7 @@ Quaternion DirectionToDirection(const Vector3D& u, const Vector3D& v)
 
     float dot = vecU.dot(v);
     Vector3D cross = vecU.cross(v);
-    cross.normalize();
+    cross.Normalize();
 
     float theta = (float)acos(dot);
 

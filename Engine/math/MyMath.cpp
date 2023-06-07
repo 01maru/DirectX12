@@ -48,10 +48,10 @@ Matrix MyMath::LookAtLH(const Vector3D& eye, const Vector3D& target, const Vecto
 	Vector3D baseY;
 	Vector3D baseZ = target - eye;
 
-	baseZ.normalize();
+	baseZ.Normalize();
 
 	baseX = baseX.cross(baseZ);
-	baseX.normalize();
+	baseX.Normalize();
 
 	baseY = baseZ;
 	baseY = baseY.cross(baseX);
@@ -96,10 +96,10 @@ bool MyMath::CollisionCircleLay(Vector3D startL, Vector3D endL, Vector3D pos, fl
 	Vector3D end_to_center = Vector3D(pos.x - endL.x, pos.y - endL.y, pos.z - endL.z);
 	Vector3D start_to_end = Vector3D(endL.x - startL.x, endL.y - startL.y, endL.z - startL.z);
 	// 単位ベクトル化する
-	start_to_end.normalize();
+	start_to_end.Normalize();
 	Vector3D dis = start_to_end.cross(start_to_center);
 
-	float distance_projection = dis.length();
+	float distance_projection = dis.GetLength();
 
 	if (fabs(distance_projection) >= rad) return false;
 
@@ -114,14 +114,26 @@ bool MyMath::CollisionCircleLay(Vector3D startL, Vector3D endL, Vector3D pos, fl
 		return true;
 	}
 
-	if (start_to_center.length() < rad ||
-		end_to_center.length() < rad)
+	if (start_to_center.GetLength() < rad ||
+		end_to_center.GetLength() < rad)
 	{
 		return true;
 	}
 
 	return false;
 }
+
+//Vector3D& MyMath::CreatePolygonNormal(const Vector3D& a, const Vector3D& b, const Vector3D& c)
+//{
+//	Vector3D AB(b - a);
+//	Vector3D BC(c - b);
+//
+//	Vector3D normal = AB;
+//	normal.cross(BC);
+//	normal.Normalize();
+//
+//	return normal;
+//}
 
 Matrix MyMath::PerspectiveFovLH(const int winwidth, const int winheight, float fovY, float nearZ, float farZ)
 {
