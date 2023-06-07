@@ -10,7 +10,7 @@ class SceneManager
 {
 private:
 	//	フェードインアウトフレーム数
-	static const int SCENE_CHANGE_TIME;
+	static const int S_SCENE_CHANGE_TIME = 60;
 
 	IScene* scene = nullptr;
 	IScene* nextScene = nullptr;
@@ -40,13 +40,14 @@ private:
 #pragma endregion
 
 	SceneManager() {};
-	~SceneManager();
+	~SceneManager() {};
 public:
 	static SceneManager* GetInstance();
 	SceneManager(const SceneManager& obj) = delete;
 	SceneManager& operator=(const SceneManager& obj) = delete;
 
 	void Initialize();
+	void Finalize();
 	void Update();
 	void Draw();
 

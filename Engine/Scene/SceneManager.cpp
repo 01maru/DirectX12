@@ -4,15 +4,6 @@
 #include "ImGuiManager.h"
 #include "Window.h"
 
-const int SceneManager::SCENE_CHANGE_TIME = 60;
-
-SceneManager::~SceneManager()
-{
-	scene->Finalize();
-	delete scene;
-	ImGuiManager::GetInstance()->Finalize();
-}
-
 SceneManager* SceneManager::GetInstance()
 {
 	static SceneManager instance;
@@ -56,6 +47,12 @@ void SceneManager::Initialize()
 	MyDirectX::GetInstance()->UploadTexture();
 }
 
+void SceneManager::Finalize()
+{
+	scene->Finalize();
+	ImGuiManager::GetInstance()->Finalize();
+}
+
 void SceneManager::Update()
 {
 	if (endLoading) {
@@ -65,7 +62,7 @@ void SceneManager::Update()
 			if (sceneChangeTimer > 0) {
 				sceneChangeTimer--;
 
-				float color = Easing::lerp(1.0f, 0.0f, sceneChangeTimer / (float)SCENE_CHANGE_TIME);
+				float color = Easing::lerp(1.0f, 0.0f, sceneChangeTimer / (float)S_SCENE_CHANGE_TIME);
 				screenColor.x = color;
 				screenColor.y = color;
 				screenColor.z = color;
@@ -83,10 +80,10 @@ void SceneManager::Update()
 		else {
 			//	nextSceneがセットされたら
 			//	フェードアウト
-			if (sceneChangeTimer < SCENE_CHANGE_TIME) {
+			if (sceneChangeTimer < S_SCENE_CHANGE_TIME) {
 				sceneChangeTimer++;
 
-				float color = Easing::lerp(1.0f, 0.0f, sceneChangeTimer / (float)SCENE_CHANGE_TIME);
+				float color = Easing::lerp(1.0f, 0.0f, sceneChangeTimer / (float)S_SCENE_CHANGE_TIME);
 				screenColor.x = color;
 				screenColor.y = color;
 				screenColor.z = color;
@@ -95,12 +92,12 @@ void SceneManager::Update()
 				mainScene->SetColor(screenColor);
 			}
 
-			if (sceneChangeTimer >= SCENE_CHANGE_TIME) {
+			if (sceneChangeTimer >= S_SCENE_CHANGE_TIME) {
 				//	フェードアウト済みロード画面へ
 				endLoading = false;
 				//	非同期
 				sceneInitInfo = std::async(std::launch::async, [this] {return SceneChange(); });
-				sceneChangeTimer = SCENE_CHANGE_TIME;
+				sceneChangeTimer = S_SCENE_CHANGE_TIME;
 			}
 		}
 	}

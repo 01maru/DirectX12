@@ -376,6 +376,9 @@
       <Filter>ソース ファイル\lib\Input</Filter>
     </ClCompile>
     <ClCompile Include="InputMouse.cpp">
+      <Filter>ソース ファイル\lib\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingObject.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -597,6 +600,9 @@
       <Filter>ヘッダー ファイル\lib\Input</Filter>
     </ClInclude>
     <ClInclude Include="InputMouse.h">
+      <Filter>ヘッダー ファイル\lib\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingObject.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

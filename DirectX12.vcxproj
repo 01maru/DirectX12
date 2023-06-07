@@ -78,6 +78,7 @@
     <ClCompile Include="Engine\2d\Grass.cpp" />
     <ClCompile Include="Engine\base\input\InputManager.cpp" />
     <ClCompile Include="InputMouse.cpp" />
+    <ClCompile Include="LoadingObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\3d\Object\ObjModel.cpp" />
     <ClCompile Include="Engine\base\PipelineManager.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Engine\2d\Grass.h" />
     <ClInclude Include="Engine\base\input\InputManager.h" />
     <ClInclude Include="InputMouse.h" />
+    <ClInclude Include="LoadingObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
