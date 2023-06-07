@@ -12,11 +12,15 @@ private:
 	std::vector<ComPtr<ID3D12Resource>> texBuff;
 	std::vector<ComPtr<ID3D12Resource>> uploadBuff;
 	std::vector<bool> texExist;
+
+	TextureManager() {}
+	~TextureManager() {}
 public:
 	void SetWhiteTexHandle();		//	読み込み失敗用白色画像のセット
 	static TextureManager* GetInstance();
-	TextureManager();
-	~TextureManager() {};
+	TextureManager(const TextureManager& obj) = delete;
+	TextureManager& operator=(const TextureManager& obj) = delete;
+
 	void Initialize();
 	void DeleteTexture(int handle);
 	Texture LoadTextureGraph(const wchar_t* textureName);

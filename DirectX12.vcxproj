@@ -76,7 +76,8 @@
     <ClCompile Include="Engine\3d\Light\VolumeLight.cpp" />
     <ClCompile Include="Engine\3d\Object\FbxModel.cpp" />
     <ClCompile Include="Engine\2d\Grass.cpp" />
-    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Engine\base\input\InputManager.cpp" />
+    <ClCompile Include="InputMouse.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\3d\Object\ObjModel.cpp" />
     <ClCompile Include="Engine\base\PipelineManager.cpp" />
@@ -154,7 +155,8 @@
     <ClInclude Include="Engine\base\PipelineManager.h" />
     <ClInclude Include="Engine\2d\Texture.h" />
     <ClInclude Include="Engine\2d\Grass.h" />
-    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Engine\base\input\InputManager.h" />
+    <ClInclude Include="InputMouse.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

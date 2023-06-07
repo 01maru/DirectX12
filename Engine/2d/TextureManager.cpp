@@ -1,5 +1,6 @@
 #include "TextureManager.h"
 #include "DirectX.h"
+
 #include <DirectXTex.h>
 using namespace DirectX;
 
@@ -14,10 +15,6 @@ TextureManager* TextureManager::GetInstance()
 {
 	static TextureManager instance;
 	return &instance;
-}
-
-TextureManager::TextureManager()
-{
 }
 
 void TextureManager::Initialize()

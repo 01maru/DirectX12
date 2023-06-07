@@ -372,8 +372,11 @@
     <ClCompile Include="Engine\base\FPS.cpp">
       <Filter>ソース ファイル\lib\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="InputManager.cpp">
+    <ClCompile Include="Engine\base\input\InputManager.cpp">
       <Filter>ソース ファイル\lib\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="InputMouse.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -590,8 +593,11 @@
     <ClInclude Include="Engine\base\FPS.h">
       <Filter>ヘッダー ファイル\lib\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h">
+    <ClInclude Include="Engine\base\input\InputManager.h">
       <Filter>ヘッダー ファイル\lib\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputMouse.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
