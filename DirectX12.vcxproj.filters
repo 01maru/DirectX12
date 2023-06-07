@@ -189,9 +189,6 @@
     <ClCompile Include="Engine\2d\Sprite.cpp">
       <Filter>ソース ファイル\lib\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2d\SpriteCommon.cpp">
-      <Filter>ソース ファイル\lib\Sprite</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Scene\SceneManager.cpp">
       <Filter>ソース ファイル\lib\Scene</Filter>
     </ClCompile>
@@ -405,9 +402,6 @@
       <Filter>ヘッダー ファイル\lib\Math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2d\Sprite.h">
-      <Filter>ヘッダー ファイル\lib\Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2d\SpriteCommon.h">
       <Filter>ヘッダー ファイル\lib\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Collider\IScene.h">

@@ -1,11 +1,6 @@
 #include "GameScene.h"
 #include "MyDebugCamera.h"
 #include "GameCamera.h"
-#include "CollisionManager.h"
-#include "SphereCollider.h"
-#include "CollisionAttribute.h"
-#include "MeshCollider.h"
-#include "SceneManager.h"
 #include "MyXAudio.h"
 #include "NormalCamera.h"
 #include "TextureManager.h"
@@ -21,7 +16,7 @@
 void GameScene::CollisionUpdate()
 {
 	//player->CollisionUpdate();
-	collisionMan->CheckAllCollisions();
+	//collisionMan->CheckAllCollisions();
 }
 
 void GameScene::MatUpdate()
@@ -42,8 +37,6 @@ GameScene::~GameScene()
 
 void GameScene::Initialize()
 {
-	collisionMan = CollisionManager::GetInstance();
-
 	camera = new MyDebugCamera();
 	camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
 	//camera = Light::GetInstance()->GetDirLightCamera(0);
@@ -54,12 +47,6 @@ void GameScene::Initialize()
 	
 	Particle::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Particle", GPipeline::ADD_BLEND));
 	Particle::SetCamera(camera);
-
-	Object2D::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Obj2D", GPipeline::ADD_BLEND));
-	Object2D::SetCamera(camera);
-	
-	Player::SetCamera(camera);
-	player = std::make_unique<Player>();
 }
 
 void GameScene::Finalize()
@@ -78,13 +65,12 @@ void GameScene::LoadResources()
 	//	’n–Ê
 	ground.reset(Object3D::Create(modelGround.get()));
 #pragma region Texture
-	VolumeLightObj::SetLightGraph(TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/lightTex.jpg"));
 	reimuG = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/reimu.png");
 	grassG = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/grass.png");
 #pragma endregion
 
 #pragma region Sprite
-	sprite = std::make_unique<Sprite>(SceneManager::GetInstance()->GetShadowMap());
+	sprite = std::make_unique<Sprite>(reimuG);
 	sprite->SetSize(Vector2D(200.0f, 200.0f));
 #pragma endregion
 }
@@ -119,6 +105,7 @@ void GameScene::Draw()
 	skydome->Draw();
 	//	’n–Ê
 	ground->Draw();
+	sprite->Draw();
 
 	//DebugTextManager::GetInstance()->Draw();
 	ParticleManager::GetInstance()->Draw();

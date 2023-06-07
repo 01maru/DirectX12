@@ -1,21 +1,18 @@
 #pragma once
-#include "SpriteCommon.h"
 #include "VertIdxBuff.h"
 #include "Texture.h"
+#include "MyMath.h"
+#include <vector>
 
 class Sprite :public VertIdxBuff
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	SpriteCommon* common = nullptr;
+	static Matrix mat2D;
+	
+	MyMath::SpriteMatrix mat;
 
-	Matrix matWorld;
-	Matrix matRot;
-	Matrix matTrans;
-
-	float rotAngle = 0.0f;
-	Vector2D trans;
 	Vector4D color;
 	Vector2D size = { 100.0f,100.0f };
 	Vector2D anchorPoint;
@@ -53,6 +50,8 @@ private:
 	ComPtr<ID3D12Resource> material;
 	ConstBufferDataMaterial* mapMaterial = nullptr;
 public:
+	static void StaticInitialize();
+
 	Sprite() {};
 	Sprite(Texture texture_);
 	void Initialize(Texture texture_);
@@ -62,25 +61,28 @@ public:
 	void Draw();
 	void DrawRect(const Vector2D& textureLeftTop, const Vector2D& textureSize);
 
-	void SetPosition(const Vector2D& position) { trans = position; }
+	void TransferVertex();
+
+	//	Getter
+	const Vector2D& GetPosition() { return mat.GetTrans(); }
+	const Vector2D& GetSize() const { return size; }
+	float GetRotation() { return mat.GetAngle(); }
+	const Vector4D& GetColor() const { return color; }
+	const Vector2D& GetTextureSize() const { return textureSize; }
+	const Vector2D& GetTextureLeftTop() const { return textureLeftTop; }
+
+	//	Setter
+	void SetPosition(const Vector2D& position) { mat.SetTrans(position); }
 	void SetSize(const Vector2D& size_) { size = size_; }
 	void SetAnchorPoint(const Vector2D& anchor) { anchorPoint = anchor; }
 	void SetTextureLeftTop(const Vector2D& leftTop) { textureLeftTop = leftTop; }
-	const Vector2D& GetTextureLeftTop() const { return textureLeftTop; }
 	void SetTextureSize(const Vector2D& size_) { textureSize = size_; }
-	const Vector2D& GetTextureSize() const { return textureSize; }
-	const Vector2D& GetPosition() const { return trans; }
-	const Vector2D& GetSize() const { return size; }
-	void SetRotation(float rotation) { rotAngle = rotation; }
-	float GetRotation() const { return rotAngle; }
+	void SetRotation(float rotation) { mat.SetAngle(rotation); }
 	void SetColor(const Vector4D& color_) { color = color_; }
-	const Vector4D& GetColor() const { return color; }
 	void SetHandle(Texture handle_) { handle = handle_; }
-	void TransferVertex();
 private:
 	void SetVertices() override;
-	void SetMatRotation();
-	void SetMatTransform();
+
 	void AdjustTextureSize();
 };
 

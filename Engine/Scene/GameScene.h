@@ -4,23 +4,14 @@
 #include "IModel.h"
 #include "Sprite.h"
 #include "Object3D.h"
-#include "Object2D.h"
-#include "VolumeLight.h"
-#include "Player.h"
 #include "ICamera.h"
 #include "Texture.h"
-
-
-class CollisionManager;
 
 class GameScene :public IScene
 {
 private:
 	ICamera* camera = nullptr;
 
-	CollisionManager* collisionMan = nullptr;
-
-	bool isDebug = true;
 #pragma region Model
 	std::unique_ptr<IModel> modelSkydome;
 	std::unique_ptr<IModel> modelGround;
@@ -36,7 +27,6 @@ private:
 #pragma endregion
 	std::unique_ptr<Object3D> skydome;
 	std::unique_ptr<Object3D> ground;
-	std::unique_ptr<Player> player;
 
 	float lightColor = 1.0f;
 public:	

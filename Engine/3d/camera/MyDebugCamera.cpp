@@ -1,10 +1,7 @@
 #include "MyDebugCamera.h"
 #include "Input.h"
+#include "MyMath.h"
 #include <cmath>
-
-MyDebugCamera::~MyDebugCamera()
-{
-}
 
 void MyDebugCamera::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
 {

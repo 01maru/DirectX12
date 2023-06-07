@@ -68,5 +68,28 @@ namespace MyMath {
 		void Initialize();
 		void Update();
 	};
+
+	class SpriteMatrix
+	{
+	private:
+		Matrix matWorld;
+
+		Matrix matRot;
+		float rotAngle = 0.0f;
+
+		Matrix matTrans;
+		Vector2D trans_;
+	public:
+		void SetMatRotation();
+		void SetMatTransform();
+		void Update();
+
+		const Matrix& GetMatWorld() { return matWorld; }
+		float GetAngle() { return rotAngle; }
+		const Vector2D& GetTrans() { return trans_; }
+
+		void SetAngle(float angle) { rotAngle = angle; }
+		void SetTrans(const Vector2D& trans) { trans_ = trans; }
+	};
 }
 

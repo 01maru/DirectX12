@@ -258,3 +258,37 @@ void MyMath::ObjMatrix::Update()
 	SetMatTransform();
 	matWorld *= matTrans;
 }
+
+
+void MyMath::SpriteMatrix::SetMatRotation()
+{
+	matRot.Identity();
+	Matrix matRotZ;
+	matRotZ.m[0][0] = cos(rotAngle);
+	matRotZ.m[0][1] = sin(rotAngle);
+	matRotZ.m[1][0] = -sin(rotAngle);
+	matRotZ.m[1][1] = cos(rotAngle);
+
+	matRot = matRotZ;
+}
+
+void MyMath::SpriteMatrix::SetMatTransform()
+{
+	matTrans.Identity();
+	matTrans.m[3][0] = trans_.x;
+	matTrans.m[3][1] = trans_.y;
+	matTrans.m[3][2] = 0.0f;
+}
+
+void MyMath::SpriteMatrix::Update()
+{
+	matWorld.Identity();
+
+	//	âÒì]
+	SetMatRotation();
+	matWorld *= matRot;
+
+	//	ïΩçsà⁄ìÆ
+	SetMatTransform();
+	matWorld *= matTrans;
+}

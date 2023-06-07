@@ -1,5 +1,5 @@
 #pragma once
-#include "MyMath.h"
+#include "Vector2D.h"
 #include "ICamera.h"
 
 class MyDebugCamera :public ICamera
@@ -17,7 +17,7 @@ private:
 	MoveMode mode = NoMove;
 public:
 	MyDebugCamera() {};
-	~MyDebugCamera() override;
+	~MyDebugCamera() override {};
 
 	void Initialize(Vector3D eye_, Vector3D target_, Vector3D up_) override;
 	void Update() override;

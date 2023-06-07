@@ -62,7 +62,6 @@
     <ClCompile Include="Engine\Collider\SphereCollider.cpp" />
     <ClCompile Include="Engine\3d\Light\SpotLight.cpp" />
     <ClCompile Include="Engine\2d\Sprite.cpp" />
-    <ClCompile Include="Engine\2d\SpriteCommon.cpp" />
     <ClCompile Include="Engine\2d\Particle.cpp" />
     <ClCompile Include="Engine\2d\TextureManager.cpp" />
     <ClCompile Include="Engine\math\Vector2D.cpp" />
@@ -138,7 +137,6 @@
     <ClInclude Include="Engine\Collider\SphereCollider.h" />
     <ClInclude Include="Engine\3d\Light\SpotLight.h" />
     <ClInclude Include="Engine\2d\Sprite.h" />
-    <ClInclude Include="Engine\2d\SpriteCommon.h" />
     <ClInclude Include="Engine\2d\Particle.h" />
     <ClInclude Include="Engine\2d\TextureManager.h" />
     <ClInclude Include="Engine\math\Vector2D.h" />

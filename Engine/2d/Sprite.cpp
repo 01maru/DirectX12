@@ -1,11 +1,22 @@
 #include "Sprite.h"
 #include "DirectX.h"
 #include "TextureManager.h"
+#include "PipelineManager.h"
+#include "Window.h"
+
+Matrix Sprite::mat2D;
+
+void Sprite::StaticInitialize()
+{
+	mat2D.Identity();
+	mat2D.m[0][0] = 2.0f / Window::window_width;
+	mat2D.m[1][1] = -2.0f / Window::window_height;
+	mat2D.m[3][0] = -1;
+	mat2D.m[3][1] = 1;
+}
 
 void Sprite::Initialize(Texture texture_)
-{
-	common = SpriteCommon::GetInstance();
-	
+{	
 	HRESULT result;
 
 	//if (handle_ != UINT32_MAX) {
@@ -124,20 +135,10 @@ Sprite::Sprite(Texture texture_)
 
 void Sprite::MatUpdate()
 {
-#pragma region WorldMatrix
-	matWorld.Identity();
+	mat.Update();
 
-	//	回転
-	SetMatRotation();
-	matWorld *= matRot;
-
-	//	平行移動
-	SetMatTransform();
-	matWorld *= matTrans;
-#pragma endregion
-
-	constMapTransform->mat = matWorld;
-	constMapTransform->mat *= common->Get2DMat();
+	constMapTransform->mat = mat.GetMatWorld();
+	constMapTransform->mat *= mat2D;
 
 	mapMaterial->color = color;
 }
@@ -179,7 +180,11 @@ void Sprite::Draw()
 	if (isInvisible) {
 		return;
 	}
-	common->Draw();
+
+	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
+	pipeline_->Setting();
+	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
 	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
 	//	テクスチャ
 	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
@@ -209,7 +214,11 @@ void Sprite::DrawRect(const Vector2D& textureLeftTop_, const Vector2D& textureSi
 	if (isInvisible) {
 		return;
 	}
-	common->Draw();
+
+	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
+	pipeline_->Setting();
+	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
 	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
 	//	テクスチャ
 	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
@@ -268,26 +277,6 @@ void Sprite::SetVertices()
 	vertBuff->Unmap(0, nullptr);
 	// 頂点1つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(vertices[0]);
-}
-
-void Sprite::SetMatRotation()
-{
-	matRot.Identity();
-	Matrix matRotZ;
-	matRotZ.m[0][0] = cos(rotAngle);
-	matRotZ.m[0][1] = sin(rotAngle);
-	matRotZ.m[1][0] = -sin(rotAngle);
-	matRotZ.m[1][1] = cos(rotAngle);
-
-	matRot = matRotZ;
-}
-
-void Sprite::SetMatTransform()
-{
-	matTrans.Identity();
-	matTrans.m[3][0] = trans.x;
-	matTrans.m[3][1] = trans.y;
-	matTrans.m[3][2] = 0.0f;
 }
 
 void Sprite::AdjustTextureSize()

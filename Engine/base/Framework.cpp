@@ -8,6 +8,7 @@
 #include "Input.h"
 #include "InputJoypad.h"
 #include "FPS.h"
+#include "Sprite.h"
 
 void Framework::Run()
 {
@@ -48,6 +49,8 @@ void Framework::Initialize()
 	DebugTextManager::GetInstance()->Initialize();
 
 	FPS::GetInstance()->Initialize();
+
+	Sprite::StaticInitialize();
 }
 
 void Framework::Update()
