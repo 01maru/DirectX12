@@ -7,6 +7,12 @@
 class PipelineManager
 {
 private:
+#pragma region Sprite
+	std::unique_ptr<GPipeline> loadingSpritePipe;		//	Loading—p
+
+#pragma endregion
+
+
 	std::vector<std::unique_ptr<GPipeline>> modelPipeline;
 	std::vector<std::unique_ptr<GPipeline>> obj2DPipeline;
 	std::vector<std::unique_ptr<GPipeline>> luminncePipeline;
@@ -21,6 +27,8 @@ private:
 	std::unique_ptr<GPipeline> yBlurPipeline;
 	std::unique_ptr<GPipeline> luminncexBlurPipeline;
 	std::unique_ptr<GPipeline> luminnceyBlurPipeline;
+
+
 	PipelineManager() {};
 	~PipelineManager() {};
 public:

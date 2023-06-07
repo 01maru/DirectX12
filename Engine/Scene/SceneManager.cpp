@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include "ImGuiManager.h"
 #include "Window.h"
+#include "PipelineManager.h"
 
 SceneManager* SceneManager::GetInstance()
 {
@@ -35,11 +36,11 @@ void SceneManager::Initialize()
 	endLoading = true;
 
 	loadTex = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/loading.png");
-	//loadSprite = std::make_unique<Sprite>(loadTex);
-	//loadSprite->SetPosition(Vector2D{ Window::window_width - 96,Window::window_height - 98 });
-	//loadSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-	//loadSprite->SetSize(Vector2D{ 64,64 });
-	//loadSprite->TransferVertex();
+	loadSprite = std::make_unique<Sprite>();
+	loadSprite->Initialize(loadTex);
+	loadSprite->SetPosition(Vector2D{ Window::window_width - 96,Window::window_height - 98 });
+	loadSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
+	loadSprite->SetSize(Vector2D{ 64,64 });
 
 	ImGuiManager::GetInstance()->Initialize();
 
@@ -108,8 +109,9 @@ void SceneManager::Update()
 			endLoading = true;
 		}
 		//	ロード画面
-		//float rot = loadSprite->GetRotation();
-		//loadSprite->SetRotation(rot + 0.1f);
+		float rot = loadSprite->GetRotation();
+		loadSprite->SetRotation(rot + 0.1f);
+		loadSprite->Update();
 	}
 
 	ImGuiManager::GetInstance()->Begin();
@@ -178,7 +180,7 @@ void SceneManager::Draw()
 	mainScene->Draw(false, false, false, ybulrluminnce->GetTexture().GetHandle());
 	if (!endLoading) {
 		//	ロード画面
-		//loadSprite->Draw();
+		loadSprite->Draw(PipelineManager::GetInstance()->GetPipeline("LoadingSprite"));
 	}
 
 	ImGuiManager::GetInstance()->Draw();

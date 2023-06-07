@@ -89,11 +89,14 @@ void Sprite::MatUpdate()
 	}
 }
 
-void Sprite::Draw()
+void Sprite::Draw(GPipeline* pipeline)
 {
 	if (isInvisible) return;
 
-	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
+	GPipeline* pipeline_ = nullptr;
+	if (pipeline != nullptr) pipeline_ = pipeline;
+
+	else					 pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
 	pipeline_->Setting();
 	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 

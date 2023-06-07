@@ -146,6 +146,7 @@ void PipelineManager::Initialize()
 #pragma endregion
 
 #pragma region Sprite
+
 	spritePipeline.reserve(blendMordNum);
 
 	D3D12_INPUT_ELEMENT_DESC spriteInputLayout[] = {
@@ -165,6 +166,9 @@ void PipelineManager::Initialize()
 		//	pipeline’Ç‰Á
 		spritePipeline.emplace_back(spritepipe_);
 	}
+
+	loadingSpritePipe = std::make_unique<GPipeline>();
+	loadingSpritePipe->Init(Spriteshader, spriteInputLayout, _countof(spriteInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 #pragma endregion
 
 #pragma region Particle
@@ -224,6 +228,9 @@ GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::Blen
 	}
 	else if (name == "Sprite") {
 		return spritePipeline[blend].get();
+	}
+	else if (name == "LoadingSprite") {
+		return loadingSpritePipe.get();
 	}
 	else if (name == "Particle") {
 		return particlePipeline[blend].get();

@@ -11,6 +11,8 @@ namespace CBuff {
 	struct CBuffSpriteTransform;
 }
 
+class GPipeline;
+
 class Sprite :public VertIdxBuff
 {
 private:
@@ -74,7 +76,7 @@ public:
 
 	void Initialize(Texture texture_);
 	void Update();
-	void Draw();
+	void Draw(GPipeline* pipeline = nullptr);
 
 	//	Getter
 	const Vector2D& GetPosition() { return mat.GetTrans(); }
