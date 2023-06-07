@@ -1,5 +1,6 @@
 #include "Material.h"
 #include "TextureManager.h"
+#include <cassert>
 
 MyDirectX* Material::dx = MyDirectX::GetInstance();
 

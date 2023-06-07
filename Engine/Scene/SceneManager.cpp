@@ -2,6 +2,7 @@
 #include "Easing.h"
 #include "TextureManager.h"
 #include "ImGuiManager.h"
+#include "Window.h"
 
 const int SceneManager::SCENE_CHANGE_TIME = 60;
 

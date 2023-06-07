@@ -2,6 +2,7 @@
 #include "DirectX.h"
 #include <wrl.h>
 #include <vector>
+#include <cassert>
 
 void VertIdxBuff::BuffUpdate(ID3D12GraphicsCommandList* cmdList)
 {

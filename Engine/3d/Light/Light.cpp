@@ -1,4 +1,5 @@
 #include "Light.h"
+#include <cassert>
 
 Light* Light::GetInstance()
 {

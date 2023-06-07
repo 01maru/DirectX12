@@ -23,6 +23,7 @@
     <ClCompile Include="Engine\3d\Object\TouchableObject.cpp" />
     <ClCompile Include="Engine\3d\Object\Wind.cpp" />
     <ClCompile Include="Engine\3d\Light\CircleShadow.cpp" />
+    <ClCompile Include="Engine\base\FPS.cpp" />
     <ClCompile Include="Engine\Collider\Collision.cpp" />
     <ClCompile Include="Engine\Collider\CollisionAttribute.cpp" />
     <ClCompile Include="Engine\Collider\CollisionInfo.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Engine\3d\Object\Object3D.h" />
     <ClInclude Include="Engine\3d\Object\TouchableObject.h" />
     <ClInclude Include="Engine\3d\Object\Wind.h" />
+    <ClInclude Include="Engine\base\FPS.h" />
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
     <ClInclude Include="Engine\3d\Light\CircleShadow.h" />
     <ClInclude Include="Engine\Collider\Collision.h" />

@@ -1,25 +1,21 @@
 #pragma once
-#include "Window.h"
 #include "ViewPort.h"
 #include "ScissorRect.h"
+
 #include <d3d12.h>
 #include <dxgi1_6.h>
-#include <cassert>
+
 #include <vector>
-#include <string>
 #include <wrl.h>
-#include <chrono>
-#include <thread>
-#include "PostEffect.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
+class PostEffect;
+
 class MyDirectX
 {
 private:
-	Window* win = nullptr;
-
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 	ComPtr<ID3D12Device> device;
@@ -65,12 +61,8 @@ private:
 	// シザー矩形
 	ScissorRect scissorRect;
 
-	std::chrono::steady_clock::time_point reference_;
-
 private:
 	void DebugLayer();
-
-	void InitializeFPS();
 
 	void ScreenClear(FLOAT* clearColor_, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_);
 	void ScreenClear(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_);
@@ -84,7 +76,6 @@ private:
 public:
 	static MyDirectX* GetInstance();
 	void Initialize();
-	void UpdateFPS();
 	void PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor_ = nullptr);
 	void PostEffectDraw(PostEffect* postEffect);
 	void PrevDraw(FLOAT* clearColor_ = nullptr);

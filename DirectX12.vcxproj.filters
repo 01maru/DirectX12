@@ -372,6 +372,9 @@
     <ClCompile Include="Engine\2d\Grass.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\FPS.cpp">
+      <Filter>ソース ファイル\lib\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\base\input\InputJoypad.h">
@@ -586,6 +589,9 @@
     </ClInclude>
     <ClInclude Include="Engine\2d\Grass.h">
       <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\FPS.h">
+      <Filter>ヘッダー ファイル\lib\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,8 @@
 #pragma once
 #include "GPipeline.h"
 #include <vector>
+#include <memory>
+#include <string>
 
 class PipelineManager
 {

@@ -1,6 +1,7 @@
 #include "SpriteCommon.h"
 #include "DirectX.h"
 #include "PipelineManager.h"
+#include "Window.h"
 
 SpriteCommon::SpriteCommon()
 {

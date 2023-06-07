@@ -2,8 +2,9 @@
 #include "Window.h"
 #include "PostEffect.h"
 #pragma comment (lib, "winmm.lib")
-#include <DirectXTex.h>
-using namespace DirectX;
+#include <cassert>
+//#include <DirectXTex.h>
+//using namespace DirectX;
 
 // 対応レベルの配列
 D3D_FEATURE_LEVEL levels[] = {
@@ -29,33 +30,9 @@ void MyDirectX::DebugLayer()
 	}
 }
 
-void MyDirectX::InitializeFPS()
-{
-	reference_ = std::chrono::steady_clock::now();
-}
-
-void MyDirectX::UpdateFPS()
-{
-	const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
-	const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 65.0f));
-
-	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-
-	std::chrono::microseconds elapsed =
-		std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
-
-	if (elapsed < kMinCheckTime) {
-		while (std::chrono::steady_clock::now() - reference_ < kMinTime) {
-			std::this_thread::sleep_for(std::chrono::microseconds(1));
-		}
-	}
-
-	reference_ = std::chrono::steady_clock::now();
-}
-
 void MyDirectX::Initialize()
 {
-	win = Window::GetInstance();
+	//Window* win = Window::GetInstance();
 
 #ifdef _DEBUG
 	DebugLayer();
@@ -191,7 +168,7 @@ void MyDirectX::Initialize()
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
-		cmdQueue.Get(), win->GetHwnd(), &swapChainDesc, nullptr, nullptr,
+		cmdQueue.Get(), Window::GetInstance()->GetHwnd(), &swapChainDesc, nullptr, nullptr,
 		&swapChain1);
 
 	swapChain1.As(&swapChain);		//	1→4に変換
@@ -290,8 +267,6 @@ void MyDirectX::Initialize()
 	// フェンスの生成
 	result = device->CreateFence(uploadTexFenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&uploadTexFence));
 #pragma endregion fence
-
-	InitializeFPS();
 
 	//	ビューポート
 	viewPort.Init(Window::window_width, Window::window_height, 0, 0, 0.0f, 1.0f);

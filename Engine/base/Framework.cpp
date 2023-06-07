@@ -7,6 +7,7 @@
 #include "MyXAudio.h"
 #include "Input.h"
 #include "InputJoypad.h"
+#include "FPS.h"
 
 void Framework::Run()
 {
@@ -45,6 +46,8 @@ void Framework::Initialize()
 	ParticleManager::GetInstance()->Initialize();
 
 	DebugTextManager::GetInstance()->Initialize();
+
+	FPS::GetInstance()->Initialize();
 }
 
 void Framework::Update()
@@ -55,7 +58,7 @@ void Framework::Update()
 	InputJoypad::GetInstance()->Update();
 
 	//	60fpsŒÅ’è—p
-	MyDirectX::GetInstance()->UpdateFPS();
+	FPS::GetInstance()->Update();
 }
 
 void Framework::Finalize()

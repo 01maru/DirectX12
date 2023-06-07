@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "TextureManager.h"
+#include <cassert>
 
 MyDirectX* Mesh::dx = MyDirectX::GetInstance();
 
