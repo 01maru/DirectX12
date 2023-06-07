@@ -70,6 +70,11 @@ Vector4D& Vector4D::operator*=(const Matrix& m)
 	return *this;
 }
 
+bool Vector4D::operator!=(const Vector4D& vec)
+{
+	return (this->x != vec.x) || (this->y != vec.y) || (this->z != vec.z) || (this->w != vec.w);
+}
+
 const Vector4D operator-(const Vector4D& v1, const Vector4D& v2)
 {
 	Vector4D temp(v1);

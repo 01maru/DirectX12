@@ -29,6 +29,10 @@ private:
 	Texture handle;
 
 	bool isInvisible = false;
+	bool dirtyFlagUV = true;
+	bool dirtyFlagPos = true;
+	bool dirtyFlagMat = true;
+	bool dirtyFlagColor = true;
 
 	std::vector<ScreenVertex> vertices;
 
@@ -48,17 +52,25 @@ private:
 	CBuff::CBuffColorMaterial* mapMaterial = nullptr;
 #pragma endregion
 
+private:
+	void SetVertices() override;
+
+	void MatUpdate();
+	//	verticesの座標設定
+	void SetVerticesPos();
+	//	verticesのUV設定
+	void SetVerticesUV();
+	//	vertices転送
+	void TransferVertex();
+
+	//	画像サイズを取得する
+	void AdjustTextureSize();
 public:
 	static void StaticInitialize();
 
 	void Initialize(Texture texture_);
-	void SetTextureRect();
 	void Update();
-	void MatUpdate();
 	void Draw();
-	void DrawRect(const Vector2D& textureLeftTop, const Vector2D& textureSize);
-
-	void TransferVertex();
 
 	//	Getter
 	const Vector2D& GetPosition() { return mat.GetTrans(); }
@@ -69,23 +81,16 @@ public:
 	const Vector2D& GetTextureLeftTop() const { return textureLeftTop; }
 
 	//	Setter
-	void SetPosition(const Vector2D& position) { mat.SetTrans(position); }
-	void SetSize(const Vector2D& size_) { size = size_; }
-	void SetAnchorPoint(const Vector2D& anchor) { anchorPoint = anchor; }
-	void SetTextureLeftTop(const Vector2D& leftTop) { textureLeftTop = leftTop; }
-	void SetTextureSize(const Vector2D& size_) { textureSize = size_; }
-	void SetRotation(float rotation) { mat.SetAngle(rotation); }
-	void SetColor(const Vector4D& color_) { color = color_; }
+	void SetPosition(const Vector2D& position);
+	void SetRotation(float rotation);
+	
+	void SetColor(const Vector4D& color_);
+	
+	void SetSize(const Vector2D& size_);
+	void SetAnchorPoint(const Vector2D& anchor);
+
+	void SetTextureLeftTop(const Vector2D& leftTop);
+	void SetTextureSize(const Vector2D& size_);
 	void SetHandle(Texture handle_) { handle = handle_; }
-private:
-	void SetVertices() override;
-
-	//	verticesの座標設定
-	void SetVerticesPos();
-
-	void SetVerticesUV();
-
-	//	画像サイズを取得する
-	void AdjustTextureSize();
 };
 

@@ -108,9 +108,8 @@ void SceneManager::Update()
 			endLoading = true;
 		}
 		//	ƒ[ƒh‰æ–Ê
-		float rot = loadSprite->GetRotation();
-		loadSprite->SetRotation(rot + 0.1f);
-		loadSprite->MatUpdate();
+		//float rot = loadSprite->GetRotation();
+		//loadSprite->SetRotation(rot + 0.1f);
 	}
 
 	ImGuiManager::GetInstance()->Begin();

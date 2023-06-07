@@ -4,6 +4,8 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <iostream>
+#include <vector>
+
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
@@ -30,7 +32,10 @@ protected:
 private:
 	void SetResDesc(UINT size);
 protected:
+	void Initialize(uint16_t sizeVB, const std::vector<uint16_t>& indices);
+	void Initialize(uint16_t sizeVB);
 	void BuffInitialize(ID3D12Device* dev, UINT sizeVB, UINT sizeIB = NULL, uint16_t* indices = nullptr, int indicesSize = NULL);
+	void IASetVertIdxBuff();
 	void BuffUpdate(ID3D12GraphicsCommandList* cmdList);
 public:
 	VertIdxBuff() {};

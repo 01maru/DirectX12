@@ -26,13 +26,14 @@ void Sprite::Initialize(Texture texture_)
 
 #pragma region VertBuff
 
+	vertices.clear();
 	vertices.resize(4);
 
 	SetVerticesPos();
 	SetVerticesUV();
 
-	UINT sizePV = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
-	BuffInitialize(MyDirectX::GetInstance()->GetDev(), sizePV, (int)vertices.size());
+	uint16_t sizePV = static_cast<uint16_t>(sizeof(vertices[0]) * vertices.size());
+	VertIdxBuff::Initialize(sizePV);
 
 #pragma endregion
 
@@ -54,21 +55,21 @@ void Sprite::Initialize(Texture texture_)
 
 void Sprite::Update()
 {
-	ID3D12Resource* texBuff = handle.GetResourceBuff();
+	if (dirtyFlagPos) SetVerticesPos();
+	if (dirtyFlagUV) SetVerticesUV();
 
-	if (texBuff) {
-		D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
-
-		float tex_left = textureLeftTop.x / resDesc_.Width;
-		float tex_right = (textureLeftTop.x + textureSize.x) / resDesc_.Width;
-		float tex_top = textureLeftTop.y / resDesc_.Height;
-		float tex_bottom = (textureLeftTop.y + textureSize.y) / resDesc_.Height;
-
-		vertices[LB].uv = { tex_left,tex_bottom };
-		vertices[LT].uv = { tex_left,tex_top };
-		vertices[RB].uv = { tex_right,tex_bottom };
-		vertices[RT].uv = { tex_right,tex_top };
+	if (dirtyFlagPos || dirtyFlagUV)
+	{
+		dirtyFlagPos = false;
+		dirtyFlagUV = false;
+		
 		TransferVertex();
+	}
+
+	if (dirtyFlagColor)
+	{
+		dirtyFlagColor = false;
+		mapMaterial->color = color;
 	}
 
 	MatUpdate();
@@ -78,42 +79,31 @@ void Sprite::MatUpdate()
 {
 	mat.Update();
 
-	constMapTransform->mat = mat.GetMatWorld();
-	constMapTransform->mat *= mat2D;
+	if (dirtyFlagMat)
+	{
+		dirtyFlagMat = false;
 
-	mapMaterial->color = color;
+		constMapTransform->mat = mat.GetMatWorld();
+		constMapTransform->mat *= mat2D;
+	}
 }
 
-void Sprite::SetTextureRect()
+void Sprite::Draw()
 {
-	ID3D12Resource* texBuff = handle.GetResourceBuff();
+	if (isInvisible) return;
 
-	if (texBuff) {
-		D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
+	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
+	pipeline_->Setting();
+	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-		float tex_left = textureLeftTop.x / (float)resDesc_.Width;
-		float tex_right = (textureLeftTop.x + textureSize.x) / (float)resDesc_.Width;
-		float tex_top = textureLeftTop.y / (float)resDesc_.Height;
-		float tex_bottom = (textureLeftTop.y + textureSize.y) / (float)resDesc_.Height;
+	IASetVertIdxBuff();
+	//	テクスチャ
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
 
-		vertices[LB].uv = { tex_left,tex_bottom };
-		vertices[LT].uv = { tex_left,tex_top };
-		vertices[RB].uv = { tex_right,tex_bottom };
-		vertices[RT].uv = { tex_right,tex_top };
+	colorMaterial.SetGraphicsRootCBuffView(1);
+	transform.SetGraphicsRootCBuffView(2);
 
-		// 頂点バッファに送信
-		ScreenVertex* vertMap = nullptr;
-		HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-		assert(SUCCEEDED(result));
-		// 全頂点に対して
-		for (int i = 0; i < (int)vertices.size(); i++) {
-			vertMap[i] = vertices[i]; // 座標をコピー
-		}
-		// 繋がりを解除
-		vertBuff->Unmap(0, nullptr);
-	}
-
-	MatUpdate();
+	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);
 }
 
 void Sprite::SetVerticesUV()
@@ -159,7 +149,6 @@ void Sprite::SetVerticesPos()
 
 void Sprite::TransferVertex()
 {
-
 	//	GPUメモリの値書き換えよう
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
 	ScreenVertex* vertMap = nullptr;
@@ -175,17 +164,7 @@ void Sprite::TransferVertex()
 
 void Sprite::SetVertices()
 {
-	//	GPUメモリの値書き換えよう
-	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
-	ScreenVertex* vertMap = nullptr;
-	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-	assert(SUCCEEDED(result));
-	// 全頂点に対して
-	for (int i = 0; i < vertices.size(); i++) {
-		vertMap[i] = vertices[i]; // 座標をコピー
-	}
-	// 繋がりを解除
-	vertBuff->Unmap(0, nullptr);
+	TransferVertex();
 	// 頂点1つ分のデータサイズ
 	vbView.StrideInBytes = sizeof(vertices[0]);
 }
@@ -200,57 +179,67 @@ void Sprite::AdjustTextureSize()
 	textureSize.y = static_cast<float>(resDesc_.Height);
 }
 
-void Sprite::Draw()
+void Sprite::SetPosition(const Vector2D& position)
 {
-	if (isInvisible) {
-		return;
+	Vector2D trans = mat.GetTrans();
+
+	if (trans != position)
+	{
+		dirtyFlagMat = true;
+		mat.SetTrans(position);
 	}
-
-	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
-	pipeline_->Setting();
-	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
-	//	テクスチャ
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
-
-	colorMaterial.SetGraphicsRootCBuffView(1);
-	transform.SetGraphicsRootCBuffView(2);
-
-	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);
 }
 
-void Sprite::DrawRect(const Vector2D& textureLeftTop_, const Vector2D& textureSize_)
+void Sprite::SetRotation(float rotation)
 {
-	bool dirtyFlag = false;
-
-	if (this->textureLeftTop != textureLeftTop_) {
-		dirtyFlag = true;
-		this->textureLeftTop = textureLeftTop_;
+	if (mat.GetAngle() != rotation)
+	{
+		dirtyFlagMat = true;
+		mat.SetAngle(rotation);
 	}
-	if (this->textureSize != textureSize_) {
-		dirtyFlag = true;
-		this->textureSize = textureSize_;
+}
+
+void Sprite::SetAnchorPoint(const Vector2D& anchor)
+{
+	if (anchorPoint != anchor)
+	{
+		dirtyFlagPos = true;
+		anchorPoint = anchor;
 	}
+}
 
-	if (dirtyFlag) {
-		SetTextureRect();
+void Sprite::SetSize(const Vector2D& size_)
+{
+	if (size != size_)
+	{
+		dirtyFlagPos = true;
+		size = size_;
 	}
+}
 
-	if (isInvisible) {
-		return;
+void Sprite::SetColor(const Vector4D& color_)
+{
+	if (color != color_)
+	{
+		dirtyFlagColor = true;
+		color = color_;
 	}
+}
 
-	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
-	pipeline_->Setting();
-	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+void Sprite::SetTextureLeftTop(const Vector2D& leftTop)
+{
+	if (textureLeftTop != leftTop)
+	{
+		dirtyFlagUV = true;
+		textureLeftTop = leftTop;
+	}
+}
 
-	BuffUpdate(MyDirectX::GetInstance()->GetCmdList());
-	//	テクスチャ
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
-	//MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
-	//MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
-	transform.SetGraphicsRootCBuffView(2);
-
-	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);
+void Sprite::SetTextureSize(const Vector2D& size_)
+{
+	if (textureSize != size_) 
+	{
+		dirtyFlagUV = true;
+		textureSize = size_;
+	}
 }

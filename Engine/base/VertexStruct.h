@@ -36,3 +36,9 @@ struct ScreenVertex
 	Vector3D pos;
 	Vector2D uv;
 };
+
+struct SpriteVertex
+{
+	Vector2D pos;
+	Vector2D uv;
+};

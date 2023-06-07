@@ -48,7 +48,7 @@ void DebugTextManager::Print(const std::string& text, const Vector2D& pos, float
 		sprites[index].SetTextureSize({ (float)fontWidth, (float)fontHeight });
 		sprites[index].SetSize({ fontWidth * size, fontHeight * size });
 		sprites[index].Update();
-		sprites[index].SetTextureRect();
+		//sprites[index].SetTextureRect();
 		// •¶š‚ğ‚P‚Âi‚ß‚é
 		index++;
 	}
