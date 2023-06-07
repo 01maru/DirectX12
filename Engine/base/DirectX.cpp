@@ -1,10 +1,9 @@
 #include "DirectX.h"
 #include "Window.h"
 #include "PostEffect.h"
-#pragma comment (lib, "winmm.lib")
 #include <cassert>
-//#include <DirectXTex.h>
-//using namespace DirectX;
+
+#pragma comment (lib, "winmm.lib")
 
 // 対応レベルの配列
 D3D_FEATURE_LEVEL levels[] = {
@@ -32,8 +31,6 @@ void MyDirectX::DebugLayer()
 
 void MyDirectX::Initialize()
 {
-	//Window* win = Window::GetInstance();
-
 #ifdef _DEBUG
 	DebugLayer();
 #endif
@@ -269,9 +266,9 @@ void MyDirectX::Initialize()
 #pragma endregion fence
 
 	//	ビューポート
-	viewPort.Init(Window::window_width, Window::window_height, 0, 0, 0.0f, 1.0f);
+	viewPort.InitializeVP(Window::window_width, Window::window_height, 0, 0, 0.0f, 1.0f);
 	// シザー矩形
-	scissorRect.Init(0, Window::window_width, 0, Window::window_height);
+	viewPort.InitializeSR(0, Window::window_width, 0, Window::window_height);
 }
 
 void MyDirectX::SetResourceBarrier(D3D12_RESOURCE_BARRIER& desc, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, ID3D12Resource* pResource)
@@ -376,7 +373,6 @@ void MyDirectX::PrevDraw(FLOAT* clearColor_)
 		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, rtvHandle, dsvHandle, 1, clearColor_);
 
 	viewPort.Update();
-	scissorRect.Update();
 }
 
 void MyDirectX::PostDraw()

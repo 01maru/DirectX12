@@ -1,6 +1,5 @@
 #pragma once
 #include "ViewPort.h"
-#include "ScissorRect.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -59,7 +58,6 @@ private:
 	//	ビューポート
 	ViewPort viewPort;
 	// シザー矩形
-	ScissorRect scissorRect;
 
 private:
 	void DebugLayer();
@@ -75,6 +73,9 @@ private:
 	~MyDirectX() {};
 public:
 	static MyDirectX* GetInstance();
+	MyDirectX(const MyDirectX& obj) = delete;
+	MyDirectX& operator=(const MyDirectX& obj) = delete;
+
 	void Initialize();
 	void PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor_ = nullptr);
 	void PostEffectDraw(PostEffect* postEffect);
@@ -90,7 +91,6 @@ public:
 	ID3D12Device* GetDev() { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCmdList() { return cmdList.Get(); }
 	ID3D12GraphicsCommandList* GetLoadTexCmdList() { return loadTexCmdList.Get(); }
-	Matrix GetViewportMat() { return viewPort.Mat(); }
 	D3D12_RESOURCE_DESC GetBackBuffDesc() { return backBuffers[0]->GetDesc(); }
 	D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc() { return rtvHeap->GetDesc(); }
 };

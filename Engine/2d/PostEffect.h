@@ -1,7 +1,6 @@
 #pragma once
 #include <d3d12.h>
 #include "ViewPort.h"
-#include "ScissorRect.h"
 #include "VertIdxBuff.h"
 #include "Texture.h"
 #include <vector>
@@ -37,10 +36,8 @@ private:
 	Vector4D color = { 1.0f,1.0f,1.0f,1.0f };
 
 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
-	//	ビューポート
+	//	ビューポートシザー矩形
 	ViewPort viewPort;
-	// シザー矩形
-	ScissorRect scissorRect;
 
 	ComPtr<ID3D12DescriptorHeap> dsvHeap;
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;

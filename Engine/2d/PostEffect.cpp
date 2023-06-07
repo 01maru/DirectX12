@@ -82,9 +82,9 @@ void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT for
 	BuffInitialize(MyDirectX::GetInstance()->GetDev(), sizePV, sizeIB, indices, indexSize);
 
 	//	ビューポート
-	viewPort.Init(width, height, 0, 0, 0.0f, 1.0f, texNum);
+	viewPort.InitializeVP(width, height, 0, 0, 0.0f, 1.0f, texNum);
 	// シザー矩形
-	scissorRect.Init(0, width, 0, height, texNum);
+	viewPort.InitializeSR(0, width, 0, height, texNum);
 
 	auto resDesc_ = MyDirectX::GetInstance()->GetBackBuffDesc();
 	resDesc_.Format = format;
@@ -269,8 +269,6 @@ void PostEffect::SetColor(const Vector4D& color_)
 void PostEffect::Setting()
 {
 	viewPort.Update();
-
-	scissorRect.Update();
 }
 
 void PostEffect::DrawLuminnce()

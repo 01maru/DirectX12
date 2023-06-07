@@ -207,9 +207,6 @@
     <ClCompile Include="Engine\base\ViewPort.cpp">
       <Filter>ソース ファイル\lib\Screen</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\base\ScissorRect.cpp">
-      <Filter>ソース ファイル\lib\Screen</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\2d\PostEffect.cpp">
       <Filter>ソース ファイル\lib\Screen</Filter>
     </ClCompile>
@@ -375,6 +372,9 @@
     <ClCompile Include="Engine\base\FPS.cpp">
       <Filter>ソース ファイル\lib\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>ソース ファイル\lib\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\base\input\InputJoypad.h">
@@ -427,9 +427,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Collider\SphereCollider.h">
       <Filter>ヘッダー ファイル\lib\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\ScissorRect.h">
-      <Filter>ヘッダー ファイル\lib\Screen</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\ViewPort.h">
       <Filter>ヘッダー ファイル\lib\Screen</Filter>
@@ -592,6 +589,9 @@
     </ClInclude>
     <ClInclude Include="Engine\base\FPS.h">
       <Filter>ヘッダー ファイル\lib\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>ヘッダー ファイル\lib\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

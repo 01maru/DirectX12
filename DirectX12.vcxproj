@@ -57,7 +57,6 @@
     <ClCompile Include="Engine\Collider\RayCast.cpp" />
     <ClCompile Include="Engine\Scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\Scene\SceneManager.cpp" />
-    <ClCompile Include="Engine\base\ScissorRect.cpp" />
     <ClCompile Include="Engine\2d\PostEffect.cpp" />
     <ClCompile Include="Engine\Collider\SphereCollider.cpp" />
     <ClCompile Include="Engine\3d\Light\SpotLight.cpp" />
@@ -77,6 +76,7 @@
     <ClCompile Include="Engine\3d\Light\VolumeLight.cpp" />
     <ClCompile Include="Engine\3d\Object\FbxModel.cpp" />
     <ClCompile Include="Engine\2d\Grass.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\3d\Object\ObjModel.cpp" />
     <ClCompile Include="Engine\base\PipelineManager.cpp" />
@@ -130,7 +130,6 @@
     <ClInclude Include="Engine\Collider\RayCast.h" />
     <ClInclude Include="Engine\Scene\SceneFactory.h" />
     <ClInclude Include="Engine\Scene\SceneManager.h" />
-    <ClInclude Include="Engine\base\ScissorRect.h" />
     <ClInclude Include="Engine\2d\PostEffect.h" />
     <ClInclude Include="Engine\Collider\SphereCollider.h" />
     <ClInclude Include="Engine\3d\Light\SpotLight.h" />
@@ -155,6 +154,7 @@
     <ClInclude Include="Engine\base\PipelineManager.h" />
     <ClInclude Include="Engine\2d\Texture.h" />
     <ClInclude Include="Engine\2d\Grass.h" />
+    <ClInclude Include="InputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
