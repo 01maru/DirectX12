@@ -1,5 +1,4 @@
 #pragma once
-#define NOMINMAX
 #include <Windows.h>
 #include <Xinput.h>
 #include "MyMath.h"
