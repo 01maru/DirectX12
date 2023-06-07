@@ -5,11 +5,14 @@
 #include "PipelineManager.h"
 #include "ParticleManager.h"
 #include "MyXAudio.h"
+#include "Input.h"
+#include "InputJoypad.h"
 
 void Framework::Run()
 {
 	//	初期化
 	Initialize();
+
 	//	ゲームループ
 	while (gameroopFlag)
 	{
@@ -19,7 +22,7 @@ void Framework::Run()
 		//	描画
 		Draw();
 	}
-	//	シングルトンクラスのdelete
+
 	Finalize();
 }
 
@@ -37,8 +40,7 @@ void Framework::Initialize()
 	//	ロード失敗した際の白色テクスチャのロード
 	TextureManager::GetInstance()->SetWhiteTexHandle();
 
-	joypad = InputJoypad::GetInstance();
-	input = Input::GetInstance();
+	Input::GetInstance()->Initialize();
 
 	ParticleManager::GetInstance()->Initialize();
 
@@ -47,10 +49,10 @@ void Framework::Initialize()
 
 void Framework::Update()
 {
-	gameroopFlag = !(Window::GetInstance()->MsgUpdate() || input->GetTrigger(DIK_ESCAPE));
+	gameroopFlag = !(Window::GetInstance()->MsgUpdate() || Input::GetInstance()->GetTrigger(DIK_ESCAPE));
 
-	input->Update();
-	joypad->Update();
+	Input::GetInstance()->Update();
+	InputJoypad::GetInstance()->Update();
 
 	//	60fps固定用
 	MyDirectX::GetInstance()->UpdateFPS();

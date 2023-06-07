@@ -1,13 +1,8 @@
 #pragma once
-#include "Input.h"
-#include "InputJoypad.h"
 
 class Framework
 {
 protected:
-	Input* input = nullptr;
-	InputJoypad* joypad = nullptr;
-
 	//	ゲームループ用フラグ
 	bool gameroopFlag = true;
 public:
