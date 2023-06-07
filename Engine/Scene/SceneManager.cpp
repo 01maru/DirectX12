@@ -179,7 +179,7 @@ void SceneManager::Draw()
 	mainScene->Draw(false, false, false, ybulrluminnce->GetTexture().GetHandle());
 	if (!endLoading) {
 		//	ƒ[ƒh‰æ–Ê
-		loadSprite->Draw();
+		//loadSprite->Draw();
 	}
 
 	ImGuiManager::GetInstance()->Draw();
