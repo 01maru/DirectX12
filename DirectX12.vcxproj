@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Engine\3d\camera\ICamera.cpp" />
     <ClCompile Include="Engine\base\DebugTextManager.cpp" />
     <ClCompile Include="Engine\2d\ParticleManager.cpp" />
@@ -85,6 +86,7 @@
     <ClCompile Include="Engine\2d\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraManager.h" />
     <ClInclude Include="Engine\base\DebugTextManager.h" />
     <ClInclude Include="Engine\2d\ParticleManager.h" />
     <ClInclude Include="Engine\2d\ParticleStruct.h" />
