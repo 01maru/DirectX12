@@ -53,7 +53,7 @@ void Player::Update()
 		onGround = false;
 		const float jumpVYFist = 0.2f;
 		fallVec = { 0.0f,jumpVYFist,0.0f };
-		MyXAudio::GetInstance()->SoundPlayWave(jumpSound, 0.1f);
+		//MyXAudio::GetInstance()->SoundPlayWave(jumpSound, 0.1f);
 	}
 
 	moveVec *= spd;

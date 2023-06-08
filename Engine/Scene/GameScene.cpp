@@ -51,7 +51,6 @@ void GameScene::Initialize()
 
 void GameScene::Finalize()
 {
-	MyXAudio::GetInstance()->StopAllLoopSound();
 }
 
 void GameScene::LoadResources()

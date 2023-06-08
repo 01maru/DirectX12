@@ -2,53 +2,87 @@
 #include <xaudio2.h>
 #include <wrl.h>
 #include <vector>
+#include <string>
 
 #pragma comment(lib,"xaudio2.lib")
 
-struct ChunkHeader {
-	char id[4];
-	int32_t size;
-};
-struct RiffHeader {
-	ChunkHeader chunk;
-	char type[4];
-};
-struct FormatChunk {
-	ChunkHeader chunk;
-	WAVEFORMATEX fmt;
-};
 struct SoundData {
 	WAVEFORMATEX wfex;
 	BYTE* pBuffer;
 	unsigned int bufferSize;
+	std::string name;
 };
+
+struct SoundVoicePtr {
+	IXAudio2SourceVoice* ptr;
+	float volume = 1.0f;
+};
+
 class MyXAudio
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	IXAudio2MasteringVoice* masterVoice;
+
+	ComPtr<IXAudio2> xAudio2;
+	IXAudio2MasteringVoice* masterVoice = nullptr;
+
+	//	soundÇÃÉfÅ[É^îzóÒ
 	std::vector<SoundData> soundData;
-	std::vector<IXAudio2SourceVoice*> soundPtr;
-	int handle;
+	int soundDataIndex = 0;
+
+	std::vector<SoundVoicePtr> soundEffectPtr;
+	std::vector<SoundVoicePtr> bgmsoundPtr;
+
+	//	volume
+	float bgmVolume = 1.0f;
+	float seVolume = 1.0f;
+	float masterVolume = 1.0f;
+
+	float pitchRatio = 1.0f;
+
+public:
+	//	âπó í≤êﬂópEnum
+	enum SoundType {
+		Master,
+		BGM,
+		SE,
+	};
+
+private:
 	void SoundUnload(SoundData* soundData_);
 
-	MyXAudio();
-	~MyXAudio();
+	MyXAudio() {};
+	~MyXAudio() {};
 public:
-	ComPtr<IXAudio2> xAudio2;
-
 	static MyXAudio* GetInstance();
 	MyXAudio(const MyXAudio& obj) = delete;
 	MyXAudio& operator=(const MyXAudio& obj) = delete;
 
+	void Initialize();
+	void Finalize();
+	//	load
 	int SoundLoadWave(const char* filename);
+	//	volumeïœçXóp
+	void VolumeUpdate(SoundType type);
+	void ChangeVolume(float volume, SoundType type);
+	void ChangeAllPitchRatio(float pitch);
+
+	//	play
 	//	volumeÇÕ0.0fÅ`1.0f
-	void SoundPlayWave(int handle_, float volume = 1.0f, bool stop = false);
-	//	volumeÇÕ0.0fÅ`1.0f
-	void SoundPlayLoopWave(int handle_, float volume = 1.0f);
-	//	volumeÇÕ0.0fÅ`1.0f
-	void SoundPlayLoopWave(std::vector<IXAudio2SourceVoice*>& ptr, int handle_, float volume = 1.0f);
-	void StopAllLoopSound();
-	void StopSound(std::vector<IXAudio2SourceVoice*>& ptr);
+	void SoundPlayWave(int handle_, SoundType type, float volume = 1.0f, bool loop = false);
+
+	//	stop
+	void StopAllSound();
+	void StopBGM();
+	void StopSE();
+	void DeleteAllSound();
+
+	//	Getter 
+	//	îÕàÕÇÕ0.0fÅ`1.0f
+	float GetBGMVolume() { return bgmVolume; }
+	//	îÕàÕÇÕ0.0fÅ`1.0f
+	float GetSEVolume() { return seVolume; }
+	//	îÕàÕÇÕ0.0fÅ`1.0f
+	float GetMasterVolume() { return masterVolume; }
 };
 

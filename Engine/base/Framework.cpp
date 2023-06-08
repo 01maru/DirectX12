@@ -66,5 +66,6 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
+	MyXAudio::GetInstance()->Finalize();
 	Window::GetInstance()->Finalize();
 }

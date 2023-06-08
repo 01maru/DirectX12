@@ -27,9 +27,6 @@ private:
 	bool endLoading = false;
 	bool sceneInitialized = true;
 
-	Texture loadTex;
-	std::unique_ptr<Sprite> loadSprite;
-
 	std::unique_ptr<ILoadingObj> loadObj;
 #pragma endregion
 

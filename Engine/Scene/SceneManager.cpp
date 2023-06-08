@@ -6,7 +6,6 @@
 #include "PipelineManager.h"
 
 #include "LoadingSprite.h"
-#include "LoadingModel.h"
 
 SceneManager* SceneManager::GetInstance()
 {
@@ -38,13 +37,7 @@ void SceneManager::Initialize()
 	scene->Initialize();
 	endLoading = true;
 
-	loadTex = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/loading.png");
-	loadSprite = std::make_unique<Sprite>();
-	loadSprite->Initialize(loadTex);
-	loadSprite->SetPosition(Vector2D{ Window::window_width - 96,Window::window_height - 98 });
-	loadSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-	loadSprite->SetSize(Vector2D{ 64,64 });
-	loadObj = std::make_unique<LoadingModel>();
+	loadObj = std::make_unique<LoadingSprite>();
 	loadObj->Initialize();
 	loadObj->SetIsLoading(!endLoading);
 
@@ -117,10 +110,6 @@ void SceneManager::Update()
 			endLoading = true;
 			loadObj->SetIsLoading(!endLoading);
 		}
-		//	ロード画面
-		//float rot = loadSprite->GetRotation();
-		//loadSprite->SetRotation(rot + 0.1f);
-		//loadSprite->Update();
 	}
 
 	loadObj->Update();
@@ -187,12 +176,8 @@ void SceneManager::Draw()
 #pragma region MultiPath
 	dx->PrevDraw();
 
-	//ybulr->Draw(false, false);
 	mainScene->Draw(false, false, false, ybulrluminnce->GetTexture().GetHandle());
-	if (!endLoading) {
-		//	ロード画面
-		//loadSprite->Draw(PipelineManager::GetInstance()->GetPipeline("LoadingSprite"));
-	}
+	
 	loadObj->Draw();
 
 	ImGuiManager::GetInstance()->Draw();
