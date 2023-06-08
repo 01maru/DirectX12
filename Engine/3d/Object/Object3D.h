@@ -7,6 +7,14 @@
 #include "ICamera.h"
 #include "CollisionInfo.h"
 
+#include "ConstBuff.h"
+
+namespace CBuff {
+	struct CBuffLightMaterial;
+	struct CBuffObj3DTransform;
+	struct CBuffSkinData;
+}
+
 class BaseCollider;
 
 class Object3D
@@ -14,12 +22,24 @@ class Object3D
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	static const int MAX_BONES = 32;
-
 	static GPipeline* pipeline;
 	static Light* light;
 	static MyDirectX* dx;
 	static ICamera* camera;
+
+#pragma region CBuff
+	
+	ConstBuff transform;
+	CBuff::CBuffObj3DTransform* cTransformMap = nullptr;
+
+	ConstBuff lightMaterial;
+	CBuff::CBuffLightMaterial* cLightMap = nullptr;
+
+	ConstBuff skinData;
+	CBuff::CBuffSkinData* cSkinMap = nullptr;
+
+#pragma endregion
+
 
 	struct ConstBufferDataTransform {
 		Matrix matview;
@@ -32,15 +52,8 @@ private:
 		Matrix mLVP;
 		Vector3D cameraPos;
 	};
-	ComPtr<ID3D12Resource> transform;
 	ComPtr<ID3D12Resource> shadowtransform;
-	ComPtr<ID3D12Resource> lightTransform;
 
-	struct ConstBufferDataSkin
-	{
-		Matrix bones[MAX_BONES];
-	};
-	ComPtr<ID3D12Resource> constBuffSkin;
 
 	Object3D* parent = nullptr;
 	IModel* model = nullptr;
