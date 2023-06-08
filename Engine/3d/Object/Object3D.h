@@ -13,6 +13,7 @@ namespace CBuff {
 	struct CBuffLightMaterial;
 	struct CBuffObj3DTransform;
 	struct CBuffSkinData;
+	struct CBuffColorMaterial;
 }
 
 class BaseCollider;
@@ -41,6 +42,9 @@ private:
 	ConstBuff skinData;
 	CBuff::CBuffSkinData* cSkinMap = nullptr;
 
+	ConstBuff colorMaterial;
+	CBuff::CBuffColorMaterial* cColorMap = nullptr;
+
 #pragma endregion
 
 	Object3D* parent = nullptr;
@@ -48,7 +52,7 @@ private:
 	float animationTimer = 0.0f;
 protected:
 	MyMath::ObjMatrix mat;
-	Vector3D color = { 1.0f,1.0f,1.0f };
+	Vector4D color = { 1.0f,1.0f,1.0f,1.0f };
 	BaseCollider* collider = nullptr;
 	
 public:
@@ -59,11 +63,12 @@ public:
 
 	virtual void Initialize();
 	virtual void ColliderUpdate();
-	void MatUpdate();
+	void MatUpdate(ICamera* camera_ = nullptr);
 	void PlayAnimation();
 	virtual void DrawShadow();
 	void DrawShadowReciever();
 	virtual void Draw();
+	void DrawSilhouette();
 
 	static void SetLight(Light* light_);
 	static void SetPipeline(GPipeline* pipeline_);
@@ -73,8 +78,9 @@ public:
 	BaseCollider* GetCollider() { return collider; }
 	void SetAttribute(unsigned short attribute);
 
-	void SetColor(const Vector3D& color_) { color = color_; }
-	const Vector3D& GetColor() { return color; }
+	void SetColor(const Vector4D& color_) { color = color_; }
+	void SetColor(const Vector3D& color_) { color = Vector4D(color_, color.w); }
+	const Vector4D& GetColor() { return color; }
 
 	void SetAnimatonTimer(float timer) { animationTimer = timer; }
 	const float GetAnimationTimer() { return animationTimer; }

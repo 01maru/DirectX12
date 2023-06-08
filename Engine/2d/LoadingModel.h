@@ -5,7 +5,7 @@
 
 #include <memory>
 
-class LoadingObject :public ILoadingObj
+class LoadingModel :public ILoadingObj
 {
 private:
 

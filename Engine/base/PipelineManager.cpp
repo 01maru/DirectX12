@@ -24,13 +24,20 @@ void PipelineManager::Initialize()
 		{"BONEWEIGHTS",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
 	};
 
+	Shader silhouetteShader(L"Resources/shader/ObjVS.hlsl", L"Resources/shader/SilhouettePS.hlsl");
+
+	modelSilhouettePipe = std::make_unique<GPipeline>();
+	modelSilhouettePipe->Init(silhouetteShader, modelInputLayout, _countof(modelInputLayout), 5,
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+	modelSilhouettePipe->SetBlend(GPipeline::ALPHA_BLEND);
+
 	for (int i = 0; i < blendMordNum; i++)
 	{
 		//	pipeline’Ç‰Á
 		modelPipeline.emplace_back(new GPipeline());
 		
 		GPipeline* modelpipeline_ = modelPipeline.back().get();
-		modelpipeline_->Init(objShader, modelInputLayout, _countof(modelInputLayout), 4
+		modelpipeline_->Init(objShader, modelInputLayout, _countof(modelInputLayout), 5
 			, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
 		modelpipeline_->SetBlend(i);
 	}
@@ -42,7 +49,7 @@ void PipelineManager::Initialize()
 	};
 
 	shadowPipeline = std::make_unique<GPipeline>();
-	shadowPipeline->Init(shadowShader, shadowInputLayout, _countof(shadowInputLayout), 4
+	shadowPipeline->Init(shadowShader, shadowInputLayout, _countof(shadowInputLayout), 5
 		, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R32G32_FLOAT);
 	shadowPipeline->SetBlend(GPipeline::NONE_BLEND);
 
@@ -168,7 +175,8 @@ void PipelineManager::Initialize()
 	}
 
 	loadingSpritePipe = std::make_unique<GPipeline>();
-	loadingSpritePipe->Init(Spriteshader, spriteInputLayout, _countof(spriteInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+	loadingSpritePipe->Init(Spriteshader, spriteInputLayout, _countof(spriteInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
+		D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 	loadingSpritePipe->SetBlend(GPipeline::ALPHA_BLEND);
 #pragma endregion
 
@@ -214,6 +222,9 @@ GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::Blen
 {
 	if (name == "Model") {
 		return modelPipeline[blend].get();
+	}
+	else if (name == "ModelSilhouette") {
+		return modelSilhouettePipe.get();
 	}
 	else if (name == "Obj2D") {
 		return obj2DPipeline[blend].get();

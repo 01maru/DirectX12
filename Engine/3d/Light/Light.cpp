@@ -154,6 +154,11 @@ void Light::Draw()
 	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(3, constBuff->GetGPUVirtualAddress());
 }
 
+void Light::SetGraphicsRootCBuffView(int32_t lootparaIdx)
+{
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(lootparaIdx, constBuff->GetGPUVirtualAddress());
+}
+
 void  Light::SetPointLightActive(int index, bool active)
 {
 	assert(0 <= index && index < PointLightNum);

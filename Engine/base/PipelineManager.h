@@ -12,6 +12,13 @@ private:
 
 #pragma endregion
 
+#pragma region Model
+
+	std::unique_ptr<GPipeline> modelSilhouettePipe;		//	Obj3D単色シェーダー
+
+#pragma endregion
+
+
 
 	std::vector<std::unique_ptr<GPipeline>> modelPipeline;
 	std::vector<std::unique_ptr<GPipeline>> obj2DPipeline;

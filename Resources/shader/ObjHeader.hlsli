@@ -80,6 +80,11 @@ cbuffer skinning:register(b3)
 	matrix matSkinning[MAX_BONES];
 }
 
+cbuffer CBuffColorMaterial:register(b4)
+{
+	float4 materialColor;
+}
+
 struct VSOutput
 {
 	//	セマンティック(SV_はSystem Value)

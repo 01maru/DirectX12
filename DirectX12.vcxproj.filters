@@ -381,7 +381,7 @@
     <ClCompile Include="Engine\2d\ILoadingObj.cpp">
       <Filter>ソース ファイル\lib\2D\Loading</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2d\LoadingObject.cpp">
+    <ClCompile Include="Engine\2d\LoadingModel.cpp">
       <Filter>ソース ファイル\lib\2D\Loading</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2d\LoadingSprite.cpp">
@@ -398,6 +398,9 @@
     </ClCompile>
     <ClCompile Include="Engine\2d\Sprite.cpp">
       <Filter>ソース ファイル\lib\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\3d\camera\ObjCamera2D.cpp">
+      <Filter>ソース ファイル\lib\3D\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -605,7 +608,7 @@
     <ClInclude Include="Engine\2d\LoadingSprite.h">
       <Filter>ヘッダー ファイル\lib\2D\Loading</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2d\LoadingObject.h">
+    <ClInclude Include="Engine\2d\LoadingModel.h">
       <Filter>ヘッダー ファイル\lib\2D\Loading</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2d\ILoadingObj.h">
@@ -631,6 +634,9 @@
     </ClInclude>
     <ClInclude Include="Engine\2d\Sprite.h">
       <Filter>ヘッダー ファイル\lib\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\camera\ObjCamera2D.h">
+      <Filter>ヘッダー ファイル\lib\3D\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -722,6 +728,9 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\ScreenShadowPS.hlsl">
       <Filter>リソース ファイル\ScreenShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\SilhouettePS.hlsl">
+      <Filter>リソース ファイル\ObjShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

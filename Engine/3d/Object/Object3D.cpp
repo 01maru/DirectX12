@@ -101,6 +101,11 @@ void Object3D::Initialize()
 	result = skinData.GetResource()->Map(0, nullptr, (void**)&cSkinMap);	//	マッピング
 	assert(SUCCEEDED(result));
 
+	colorMaterial.Initialize(sizeof(CBuff::CBuffColorMaterial));
+	//	定数バッファのマッピング
+	result = colorMaterial.GetResource()->Map(0, nullptr, (void**)&cColorMap);	//	マッピング
+	assert(SUCCEEDED(result));
+
 #pragma endregion
 
 	mat.Initialize();
@@ -119,9 +124,9 @@ void Object3D::ColliderUpdate()
 	}
 }
 
-void Object3D::MatUpdate()
+void Object3D::MatUpdate(ICamera* camera_)
 {
-	HRESULT result;
+
 #pragma region WorldMatrix
 	mat.Update();
 #pragma endregion
@@ -141,8 +146,15 @@ void Object3D::MatUpdate()
 		mat.matWorld *= parent->mat.matWorld;
 	}
 
-	const Matrix& matViewProjection = camera->GetViewProj();
-	const Vector3D& cameraPos = camera->GetEye();
+	ICamera* cam = nullptr;
+	if (camera_ != nullptr) {
+		cam = camera_;
+	}
+	else {
+		cam = camera;
+	}
+	const Matrix& matViewProjection = cam->GetViewProj();
+	const Vector3D& cameraPos = cam->GetEye();
 
 	cTransformMap->matViewProj = matViewProjection;
 	cTransformMap->matViewProj = matViewProjection;
@@ -169,6 +181,8 @@ void Object3D::MatUpdate()
 
 	cLightMap->mLVP = matView_;
 	cLightMap->cameraPos = light->GetDirLightCamera(0)->GetEye();
+
+	cColorMap->color = color;
 }
 
 void Object3D::PlayAnimation()
@@ -191,7 +205,23 @@ void Object3D::Draw()
 
 	transform.SetGraphicsRootCBuffView(2);
 	skinData.SetGraphicsRootCBuffView(4);
-	light->Draw();
+	colorMaterial.SetGraphicsRootCBuffView(5);
+
+	light->SetGraphicsRootCBuffView(3);
+
+	model->Draw();
+}
+
+void Object3D::DrawSilhouette()
+{
+	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("ModelSilhouette");
+	pipeline_->Setting();
+	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	transform.SetGraphicsRootCBuffView(2);
+	skinData.SetGraphicsRootCBuffView(4);
+	colorMaterial.SetGraphicsRootCBuffView(5);
+	light->SetGraphicsRootCBuffView(3);
 
 	model->Draw();
 }

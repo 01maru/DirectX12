@@ -50,6 +50,7 @@ public:
 	void TransferConstBuffer();
 	void Update();
 	void Draw();
+	void SetGraphicsRootCBuffView(int32_t lootparaIdx);
 
 	void SetDirLightActive(int index, bool active);
 	void SetDirLightDir(int index, const Vector3D& lightdir_);

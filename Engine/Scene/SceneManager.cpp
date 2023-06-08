@@ -6,6 +6,7 @@
 #include "PipelineManager.h"
 
 #include "LoadingSprite.h"
+#include "LoadingModel.h"
 
 SceneManager* SceneManager::GetInstance()
 {
@@ -43,7 +44,7 @@ void SceneManager::Initialize()
 	loadSprite->SetPosition(Vector2D{ Window::window_width - 96,Window::window_height - 98 });
 	loadSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 	loadSprite->SetSize(Vector2D{ 64,64 });
-	loadObj = std::make_unique<LoadingSprite>();
+	loadObj = std::make_unique<LoadingModel>();
 	loadObj->Initialize();
 	loadObj->SetIsLoading(!endLoading);
 

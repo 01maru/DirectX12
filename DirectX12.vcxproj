@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Engine\3d\camera\ICamera.cpp" />
+    <ClCompile Include="Engine\3d\camera\ObjCamera2D.cpp" />
     <ClCompile Include="Engine\base\DebugTextManager.cpp" />
     <ClCompile Include="Engine\2d\ParticleManager.cpp" />
     <ClCompile Include="Engine\2d\ParticleStruct.cpp" />
@@ -79,7 +80,7 @@
     <ClCompile Include="Engine\base\input\InputManager.cpp" />
     <ClCompile Include="Engine\2d\ILoadingObj.cpp" />
     <ClCompile Include="InputMouse.cpp" />
-    <ClCompile Include="Engine\2d\LoadingObject.cpp" />
+    <ClCompile Include="Engine\2d\LoadingModel.cpp" />
     <ClCompile Include="Engine\2d\LoadingSprite.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\3d\Object\ObjModel.cpp" />
@@ -88,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="Engine\3d\camera\ObjCamera2D.h" />
     <ClInclude Include="Engine\base\ConstBuffStruct.h" />
     <ClInclude Include="Engine\base\DebugTextManager.h" />
     <ClInclude Include="Engine\2d\ParticleManager.h" />
@@ -162,7 +164,7 @@
     <ClInclude Include="Engine\base\input\InputManager.h" />
     <ClInclude Include="Engine\2d\ILoadingObj.h" />
     <ClInclude Include="InputMouse.h" />
-    <ClInclude Include="Engine\2d\LoadingObject.h" />
+    <ClInclude Include="Engine\2d\LoadingModel.h" />
     <ClInclude Include="Engine\2d\LoadingSprite.h" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +203,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\SilhouettePS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\shader\XBlurVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
