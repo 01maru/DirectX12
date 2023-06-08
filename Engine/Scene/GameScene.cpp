@@ -106,7 +106,7 @@ void GameScene::Draw()
 	skydome->Draw();
 	//	’n–Ê
 	ground->Draw();
-	sprite->Draw();
+	//sprite->Draw();
 
 	//DebugTextManager::GetInstance()->Draw();
 	ParticleManager::GetInstance()->Draw();

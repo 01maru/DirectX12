@@ -23,6 +23,7 @@ void Sprite::Initialize(Texture texture_)
 	//if (handle_ != UINT32_MAX) {
 		handle = texture_;
 		AdjustTextureSize();
+		size = textureSize;
 	//}
 
 #pragma region VertBuff

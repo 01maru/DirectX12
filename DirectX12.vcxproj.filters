@@ -375,10 +375,16 @@
     <ClCompile Include="InputMouse.cpp">
       <Filter>ソース ファイル\lib\Input</Filter>
     </ClCompile>
-    <ClCompile Include="LoadingObject.cpp">
+    <ClCompile Include="Engine\2d\LoadingObject.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CameraManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2d\ILoadingObj.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\2d\LoadingSprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -599,13 +605,19 @@
     <ClInclude Include="InputMouse.h">
       <Filter>ヘッダー ファイル\lib\Input</Filter>
     </ClInclude>
-    <ClInclude Include="LoadingObject.h">
+    <ClInclude Include="Engine\2d\LoadingObject.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CameraManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\ConstBuffStruct.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2d\ILoadingObj.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2d\LoadingSprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

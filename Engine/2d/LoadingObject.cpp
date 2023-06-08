@@ -5,12 +5,6 @@
 //
 //void LoadingObject::Initialize()
 //{
-//    loadTex_ = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/loading.png");
-//    loadSprite_ = std::make_unique<Sprite>(loadTex_);
-//    loadSprite_->SetPosition(Vector2D{ Window::window_width - 96,Window::window_height - 98 });
-//    loadSprite_->SetAnchorPoint(Vector2D{ 0.5,0.5 });
-//    loadSprite_->SetSize(Vector2D{ 64,64 });
-//    loadSprite_->TransferVertex();
 //
 //    //loadModel = std::make_unique<ObjModel>("sapling");
 //    //loadObj.reset(Object3D::Create(loadModel.get()));

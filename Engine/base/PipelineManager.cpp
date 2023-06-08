@@ -169,6 +169,7 @@ void PipelineManager::Initialize()
 
 	loadingSpritePipe = std::make_unique<GPipeline>();
 	loadingSpritePipe->Init(Spriteshader, spriteInputLayout, _countof(spriteInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+	loadingSpritePipe->SetBlend(GPipeline::ALPHA_BLEND);
 #pragma endregion
 
 #pragma region Particle

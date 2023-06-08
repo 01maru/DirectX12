@@ -6,6 +6,8 @@
 #include "Texture.h"
 #include "PostEffect.h"
 
+#include "ILoadingObj.h"
+
 class SceneManager
 {
 private:
@@ -27,6 +29,8 @@ private:
 
 	Texture loadTex;
 	std::unique_ptr<Sprite> loadSprite;
+
+	std::unique_ptr<ILoadingObj> loadObj;
 #pragma endregion
 
 #pragma region PostEffect

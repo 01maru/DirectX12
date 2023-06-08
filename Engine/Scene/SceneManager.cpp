@@ -5,6 +5,8 @@
 #include "Window.h"
 #include "PipelineManager.h"
 
+#include "LoadingSprite.h"
+
 SceneManager* SceneManager::GetInstance()
 {
 	static SceneManager instance;
@@ -41,6 +43,9 @@ void SceneManager::Initialize()
 	loadSprite->SetPosition(Vector2D{ Window::window_width - 96,Window::window_height - 98 });
 	loadSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 	loadSprite->SetSize(Vector2D{ 64,64 });
+	loadObj = std::make_unique<LoadingSprite>();
+	loadObj->Initialize();
+	loadObj->SetIsLoading(!endLoading);
 
 	ImGuiManager::GetInstance()->Initialize();
 
@@ -80,6 +85,8 @@ void SceneManager::Update()
 		}
 		else {
 			//	nextSceneがセットされたら
+			loadObj->SetIsLoading(true);
+
 			//	フェードアウト
 			if (sceneChangeTimer < S_SCENE_CHANGE_TIME) {
 				sceneChangeTimer++;
@@ -107,12 +114,15 @@ void SceneManager::Update()
 		if (loadStatus == std::future_status::ready) {
 			//	ロード終わりフラグ
 			endLoading = true;
+			loadObj->SetIsLoading(!endLoading);
 		}
 		//	ロード画面
-		float rot = loadSprite->GetRotation();
-		loadSprite->SetRotation(rot + 0.1f);
-		loadSprite->Update();
+		//float rot = loadSprite->GetRotation();
+		//loadSprite->SetRotation(rot + 0.1f);
+		//loadSprite->Update();
 	}
+
+	loadObj->Update();
 
 	ImGuiManager::GetInstance()->Begin();
 	ImGuiManager::GetInstance()->End();
@@ -180,8 +190,9 @@ void SceneManager::Draw()
 	mainScene->Draw(false, false, false, ybulrluminnce->GetTexture().GetHandle());
 	if (!endLoading) {
 		//	ロード画面
-		loadSprite->Draw(PipelineManager::GetInstance()->GetPipeline("LoadingSprite"));
+		//loadSprite->Draw(PipelineManager::GetInstance()->GetPipeline("LoadingSprite"));
 	}
+	loadObj->Draw();
 
 	ImGuiManager::GetInstance()->Draw();
 	dx->PostDraw();
