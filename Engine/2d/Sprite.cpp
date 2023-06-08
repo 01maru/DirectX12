@@ -5,51 +5,42 @@
 #include "PipelineManager.h"
 #include "Window.h"
 
-Matrix Sprite::mat2D;
+Matrix Sprite::sMat2DTransform = Create2DTransformMatrix();
 
-void Sprite::StaticInitialize()
+void Sprite::Initialize(Texture texture)
 {
-	mat2D.Identity();
-	mat2D.m[0][0] = 2.0f / Window::window_width;
-	mat2D.m[1][1] = -2.0f / Window::window_height;
-	mat2D.m[3][0] = -1;
-	mat2D.m[3][1] = 1;
-}
-
-void Sprite::Initialize(Texture texture_)
-{	
 	HRESULT result;
 
 	//if (handle_ != UINT32_MAX) {
-		handle = texture_;
-		AdjustTextureSize();
-		size = textureSize;
+	handle_ = texture;
+	AdjustTextureSize();
+	size_ = textureSize_;
 	//}
 
 #pragma region VertBuff
 
-	vertices.clear();
-	vertices.resize(4);
+	vertices_.clear();
+	vertices_.resize(4);
 
 	SetVerticesPos();
 	SetVerticesUV();
 
-	uint16_t sizePV = static_cast<uint16_t>(sizeof(vertices[0]) * vertices.size());
+	uint32_t sizePV = static_cast<uint32_t>(sizeof(vertices_[0]) * vertices_.size());
 	VertIdxBuff::Initialize(sizePV);
 
 #pragma endregion
 
 #pragma region ConstBuffer
 
-	transform.Initialize(sizeof(CBuff::CBuffSpriteTransform));
+	cbTransform_.Initialize(sizeof(CBuff::CBuffSpriteTransform));
 	//	定数バッファのマッピング
-	result = transform.GetResource()->Map(0, nullptr, (void**)&constMapTransform);	//	マッピング
+	result = cbTransform_.GetResource()->Map(0, nullptr, (void**)&cbTransformMat_);	//	マッピング
 	assert(SUCCEEDED(result));
 
 
-	colorMaterial.Initialize(sizeof(CBuff::CBuffColorMaterial));
+	cbColorMaterial_.Initialize(sizeof(CBuff::CBuffColorMaterial));
 	//	定数バッファのマッピング
-	result = colorMaterial.GetResource()->Map(0, nullptr, (void**)&mapMaterial);	//	マッピング
+	result = cbColorMaterial_.GetResource()->Map(0, nullptr, (void**)&cbMaterialMap_);	//	マッピング
 	assert(SUCCEEDED(result));
 
 #pragma endregion
@@ -57,21 +48,21 @@ void Sprite::Initialize(Texture texture_)
 
 void Sprite::Update()
 {
-	if (dirtyFlagPos) SetVerticesPos();
-	if (dirtyFlagUV) SetVerticesUV();
+	if (dirtyFlagPos_) SetVerticesPos();
+	if (dirtyFlagUV_) SetVerticesUV();
 
-	if (dirtyFlagPos || dirtyFlagUV)
+	if (dirtyFlagPos_ || dirtyFlagUV_)
 	{
-		dirtyFlagPos = false;
-		dirtyFlagUV = false;
+		dirtyFlagPos_ = false;
+		dirtyFlagUV_ = false;
 		
 		TransferVertex();
 	}
 
-	if (dirtyFlagColor)
+	if (dirtyFlagColor_)
 	{
-		dirtyFlagColor = false;
-		mapMaterial->color = color;
+		dirtyFlagColor_ = false;
+		cbMaterialMap_->color = color_;
 	}
 
 	MatUpdate();
@@ -79,20 +70,20 @@ void Sprite::Update()
 
 void Sprite::MatUpdate()
 {
-	mat.Update();
+	mat_.Update();
 
-	if (dirtyFlagMat)
+	if (dirtyFlagMat_)
 	{
-		dirtyFlagMat = false;
+		dirtyFlagMat_ = false;
 
-		constMapTransform->mat = mat.GetMatWorld();
-		constMapTransform->mat *= mat2D;
+		cbTransformMat_->mat = mat_.GetMatWorld();
+		cbTransformMat_->mat *= sMat2DTransform;
 	}
 }
 
 void Sprite::Draw(GPipeline* pipeline)
 {
-	if (isInvisible) return;
+	if (isInvisible_) return;
 
 	GPipeline* pipeline_ = nullptr;
 	if (pipeline != nullptr) pipeline_ = pipeline;
@@ -103,53 +94,53 @@ void Sprite::Draw(GPipeline* pipeline)
 
 	IASetVertIdxBuff();
 	//	テクスチャ
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle.GetHandle()));
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle_.GetHandle()));
 
-	colorMaterial.SetGraphicsRootCBuffView(1);
-	transform.SetGraphicsRootCBuffView(2);
+	cbColorMaterial_.SetGraphicsRootCBuffView(1);
+	cbTransform_.SetGraphicsRootCBuffView(2);
 
 	MyDirectX::GetInstance()->GetCmdList()->DrawInstanced(4, 1, 0, 0);
 }
 
 void Sprite::SetVerticesUV()
 {
-	ID3D12Resource* texBuff = handle.GetResourceBuff();
+	ID3D12Resource* texBuff = handle_.GetResourceBuff();
 
 	if (texBuff) {
 		D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
 
-		float tex_left = textureLeftTop.x / (float)resDesc_.Width;
-		float tex_right = (textureLeftTop.x + textureSize.x) / (float)resDesc_.Width;
-		float tex_top = textureLeftTop.y / (float)resDesc_.Height;
-		float tex_bottom = (textureLeftTop.y + textureSize.y) / (float)resDesc_.Height;
+		float tex_left = textureLeftTop_.x / (float)resDesc_.Width;
+		float tex_right = (textureLeftTop_.x + textureSize_.x) / (float)resDesc_.Width;
+		float tex_top = textureLeftTop_.y / (float)resDesc_.Height;
+		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / (float)resDesc_.Height;
 
-		vertices[LB].uv = { tex_left,tex_bottom };
-		vertices[LT].uv = { tex_left,tex_top };
-		vertices[RB].uv = { tex_right,tex_bottom };
-		vertices[RT].uv = { tex_right,tex_top };
+		vertices_[LB].uv = { tex_left,tex_bottom };
+		vertices_[LT].uv = { tex_left,tex_top };
+		vertices_[RB].uv = { tex_right,tex_bottom };
+		vertices_[RT].uv = { tex_right,tex_top };
 	}
 }
 
 void Sprite::SetVerticesPos()
 {
-	float left = (0.0f - anchorPoint.x) * size.x;
-	float right = (1.0f - anchorPoint.x) * size.x;
-	float top = (0.0f - anchorPoint.y) * size.y;
-	float bottom = (1.0f - anchorPoint.y) * size.y;
+	float left = (0.0f - anchorPoint_.x) * size_.x;
+	float right = (1.0f - anchorPoint_.x) * size_.x;
+	float top = (0.0f - anchorPoint_.y) * size_.y;
+	float bottom = (1.0f - anchorPoint_.y) * size_.y;
 
-	if (isFlipX) {
+	if (isFlipX_) {
 		left = -left;
 		right = -right;
 	}
-	if (isFlipY) {
+	if (isFlipY_) {
 		top = -top;
 		bottom = -bottom;
 	}
 
-	vertices[LB].pos = { left,bottom,0.0f };
-	vertices[LT].pos = { left,top,0.0f };
-	vertices[RB].pos = { right,bottom,0.0f };
-	vertices[RT].pos = { right,top,0.0f };
+	vertices_[LB].pos = { left,bottom,0.0f };
+	vertices_[LT].pos = { left,top,0.0f };
+	vertices_[RB].pos = { right,bottom,0.0f };
+	vertices_[RT].pos = { right,top,0.0f };
 }
 
 void Sprite::TransferVertex()
@@ -160,8 +151,8 @@ void Sprite::TransferVertex()
 	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
-	for (int i = 0; i < vertices.size(); i++) {
-		vertMap[i] = vertices[i]; // 座標をコピー
+	for (int i = 0; i < vertices_.size(); i++) {
+		vertMap[i] = vertices_[i]; // 座標をコピー
 	}
 	// 繋がりを解除
 	vertBuff->Unmap(0, nullptr);
@@ -171,80 +162,80 @@ void Sprite::SetVertices()
 {
 	TransferVertex();
 	// 頂点1つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(vertices[0]);
+	vbView.StrideInBytes = sizeof(vertices_[0]);
 }
 
 void Sprite::AdjustTextureSize()
 {
-	ID3D12Resource* texBuff = handle.GetResourceBuff();
+	ID3D12Resource* texBuff = handle_.GetResourceBuff();
 	assert(texBuff);
 
 	D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
-	textureSize.x = static_cast<float>(resDesc_.Width);
-	textureSize.y = static_cast<float>(resDesc_.Height);
+	textureSize_.x = static_cast<float>(resDesc_.Width);
+	textureSize_.y = static_cast<float>(resDesc_.Height);
 }
 
 void Sprite::SetPosition(const Vector2D& position)
 {
-	Vector2D trans = mat.GetTrans();
+	Vector2D trans = mat_.GetTrans();
 
 	if (trans != position)
 	{
-		dirtyFlagMat = true;
-		mat.SetTrans(position);
+		dirtyFlagMat_ = true;
+		mat_.SetTrans(position);
 	}
 }
 
 void Sprite::SetRotation(float rotation)
 {
-	if (mat.GetAngle() != rotation)
+	if (mat_.GetAngle() != rotation)
 	{
-		dirtyFlagMat = true;
-		mat.SetAngle(rotation);
+		dirtyFlagMat_ = true;
+		mat_.SetAngle(rotation);
 	}
 }
 
 void Sprite::SetAnchorPoint(const Vector2D& anchor)
 {
-	if (anchorPoint != anchor)
+	if (anchorPoint_ != anchor)
 	{
-		dirtyFlagPos = true;
-		anchorPoint = anchor;
+		dirtyFlagPos_ = true;
+		anchorPoint_ = anchor;
 	}
 }
 
-void Sprite::SetSize(const Vector2D& size_)
+void Sprite::SetSize(const Vector2D& size)
 {
-	if (size != size_)
+	if (size_ != size)
 	{
-		dirtyFlagPos = true;
-		size = size_;
+		dirtyFlagPos_ = true;
+		size_ = size;
 	}
 }
 
-void Sprite::SetColor(const Vector4D& color_)
+void Sprite::SetColor(const Vector4D& color)
 {
-	if (color != color_)
+	if (color_ != color)
 	{
-		dirtyFlagColor = true;
-		color = color_;
+		dirtyFlagColor_ = true;
+		color_ = color;
 	}
 }
 
 void Sprite::SetTextureLeftTop(const Vector2D& leftTop)
 {
-	if (textureLeftTop != leftTop)
+	if (textureLeftTop_ != leftTop)
 	{
-		dirtyFlagUV = true;
-		textureLeftTop = leftTop;
+		dirtyFlagUV_ = true;
+		textureLeftTop_ = leftTop;
 	}
 }
 
-void Sprite::SetTextureSize(const Vector2D& size_)
+void Sprite::SetTextureSize(const Vector2D& size)
 {
-	if (textureSize != size_) 
+	if (textureSize_ != size) 
 	{
-		dirtyFlagUV = true;
-		textureSize = size_;
+		dirtyFlagUV_ = true;
+		textureSize_ = size;
 	}
 }

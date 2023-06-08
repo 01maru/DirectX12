@@ -32,8 +32,8 @@ protected:
 private:
 	void SetResDesc(UINT size);
 protected:
-	void Initialize(uint16_t sizeVB, const std::vector<uint16_t>& indices);
-	void Initialize(uint16_t sizeVB);
+	void Initialize(uint32_t sizeVB, const std::vector<uint32_t>& indices);
+	void Initialize(uint32_t sizeVB);
 	void BuffInitialize(ID3D12Device* dev, UINT sizeVB, UINT sizeIB = NULL, uint16_t* indices = nullptr, int indicesSize = NULL);
 	void IASetVertIdxBuff();
 	void BuffUpdate(ID3D12GraphicsCommandList* cmdList);

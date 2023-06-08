@@ -50,7 +50,7 @@ void Framework::Initialize()
 
 	FPS::GetInstance()->Initialize();
 
-	Sprite::StaticInitialize();
+	MyXAudio::GetInstance()->Initialize();
 }
 
 void Framework::Update()

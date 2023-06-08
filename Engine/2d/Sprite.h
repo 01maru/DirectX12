@@ -18,29 +18,33 @@ class Sprite :public VertIdxBuff
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	static Matrix mat2D;
+	static Matrix sMat2DTransform;
 	
 	//	画像を張り付けるポリゴンの設定
-	MyMath::SpriteMatrix mat;
-	Vector2D size = { 100.0f,100.0f };
-	Vector2D anchorPoint;
+	MyMath::SpriteMatrix mat_;
+	Vector2D size_ = { 100.0f,100.0f };
+	Vector2D anchorPoint_;
 
 	//	表示する画像の設定
-	Vector2D textureLeftTop;
-	Vector2D textureSize = { 100.0f,100.0f };
-	Vector4D color = { 1.0f,1.0f,1.0f,1.0f };
-	bool isFlipX = false;
-	bool isFlipY = false;
+	Vector2D textureLeftTop_;
+	Vector2D textureSize_ = { 100.0f,100.0f };
+	Vector4D color_ = { 1.0f,1.0f,1.0f,1.0f };
+	bool isFlipX_ = false;
+	bool isFlipY_ = false;
 
-	Texture handle;
+	Texture handle_;
 
-	bool isInvisible = false;
-	bool dirtyFlagUV = true;
-	bool dirtyFlagPos = true;
-	bool dirtyFlagMat = true;
-	bool dirtyFlagColor = true;
+	bool isInvisible_ = false;
 
-	std::vector<ScreenVertex> vertices;
+	//	dirtyFlag
+	bool dirtyFlagUV_ = true;
+	bool dirtyFlagPos_ = true;
+	bool dirtyFlagMat_ = true;
+	bool dirtyFlagColor_ = true;
+
+#pragma region VertBuff
+	//	頂点情報
+	std::vector<ScreenVertex> vertices_;
 
 	enum VertexNumber {
 		LB,
@@ -48,14 +52,15 @@ private:
 		RB,
 		RT,
 	};
+#pragma endregion
 
 #pragma region CBuff
 	//	行列
-	ConstBuff transform;
-	CBuff::CBuffSpriteTransform* constMapTransform = nullptr;
+	ConstBuff cbTransform_;
+	CBuff::CBuffSpriteTransform* cbTransformMat_ = nullptr;
 	//	色
-	ConstBuff colorMaterial;
-	CBuff::CBuffColorMaterial* mapMaterial = nullptr;
+	ConstBuff cbColorMaterial_;
+	CBuff::CBuffColorMaterial* cbMaterialMap_ = nullptr;
 #pragma endregion
 
 private:
@@ -72,31 +77,30 @@ private:
 	//	画像サイズを取得する
 	void AdjustTextureSize();
 public:
-	static void StaticInitialize();
-
-	void Initialize(Texture texture_);
+	
+	void Initialize(Texture texture);
 	void Update();
 	void Draw(GPipeline* pipeline = nullptr);
 
 	//	Getter
-	const Vector2D& GetPosition() { return mat.GetTrans(); }
-	const Vector2D& GetSize() const { return size; }
-	float GetRotation() { return mat.GetAngle(); }
-	const Vector4D& GetColor() const { return color; }
-	const Vector2D& GetTextureSize() const { return textureSize; }
-	const Vector2D& GetTextureLeftTop() const { return textureLeftTop; }
+	const Vector2D& GetPosition() { return mat_.GetTrans(); }
+	const Vector2D& GetSize() const { return size_; }
+	float GetRotation() { return mat_.GetAngle(); }
+	const Vector4D& GetColor() const { return color_; }
+	const Vector2D& GetTextureSize() const { return textureSize_; }
+	const Vector2D& GetTextureLeftTop() const { return textureLeftTop_; }
 
 	//	Setter
 	void SetPosition(const Vector2D& position);
 	void SetRotation(float rotation);
 	
-	void SetColor(const Vector4D& color_);
+	void SetColor(const Vector4D& color);
 	
-	void SetSize(const Vector2D& size_);
+	void SetSize(const Vector2D& size);
 	void SetAnchorPoint(const Vector2D& anchor);
 
 	void SetTextureLeftTop(const Vector2D& leftTop);
-	void SetTextureSize(const Vector2D& size_);
-	void SetHandle(Texture handle_) { handle = handle_; }
+	void SetTextureSize(const Vector2D& size);
+	void SetHandle(Texture handle) { handle_ = handle; }
 };
 

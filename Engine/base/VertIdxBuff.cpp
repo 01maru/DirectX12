@@ -14,7 +14,7 @@ void VertIdxBuff::BuffUpdate(ID3D12GraphicsCommandList* cmdList)
 	}
 }
 
-void VertIdxBuff::Initialize(uint16_t sizeVB, const std::vector<uint16_t>& indices)
+void VertIdxBuff::Initialize(uint32_t sizeVB, const std::vector<uint32_t>& indices)
 {
 	Initialize(sizeVB);
 
@@ -29,7 +29,7 @@ void VertIdxBuff::Initialize(uint16_t sizeVB, const std::vector<uint16_t>& indic
 
 		ibExist = true;
 
-		uint32_t sizeIB = static_cast<uint32_t>(sizeof(uint16_t) * indices.size());
+		uint32_t sizeIB = static_cast<uint32_t>(sizeof(uint32_t) * indices.size());
 		SetResDesc(sizeIB);
 		result = dev->CreateCommittedResource(
 			&heapProp, // ヒープ設定
@@ -40,7 +40,7 @@ void VertIdxBuff::Initialize(uint16_t sizeVB, const std::vector<uint16_t>& indic
 			IID_PPV_ARGS(&indexBuff));
 		assert(SUCCEEDED(result));
 		//	インデックスバッファマッピング
-		uint16_t* indexMap = nullptr;
+		uint32_t* indexMap = nullptr;
 		result = indexBuff->Map(0, nullptr, (void**)&indexMap);
 		assert(SUCCEEDED(result));
 		// 全頂点に対して
@@ -57,7 +57,7 @@ void VertIdxBuff::Initialize(uint16_t sizeVB, const std::vector<uint16_t>& indic
 #pragma endregion
 }
 
-void VertIdxBuff::Initialize(uint16_t sizeVB)
+void VertIdxBuff::Initialize(uint32_t sizeVB)
 {
 	ID3D12Device* dev = MyDirectX::GetInstance()->GetDev();
 	D3D12_HEAP_PROPERTIES heapProp{};
