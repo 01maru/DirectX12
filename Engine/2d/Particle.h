@@ -4,6 +4,13 @@
 #include "VertIdxBuff.h"
 #include "ICamera.h"
 
+#include "ConstBuff.h"
+
+namespace CBuff {
+	struct CBuffColorMaterial;
+	struct CBuffSpriteTransform;
+}
+
 class Particle :public VertIdxBuff
 {
 private:
@@ -19,14 +26,16 @@ private:
 		Vector3D cameraPos;
 		float scale;
 	};
-	ComPtr<ID3D12Resource> transform;
-	ConstBufferDataTransform* constMapTransform = nullptr;
+	
+#pragma region CBuff
 
-	struct ConstBufferDataMaterial {
-		Vector4D color;	//	RGBA
-	};
-	ComPtr<ID3D12Resource> material;
-	ConstBufferDataMaterial* mapMaterial = nullptr;
+	ConstBuff transform;
+	ConstBufferDataTransform* cTransformMap = nullptr;
+
+	ConstBuff colorMaterial;
+	CBuff::CBuffColorMaterial* cColorMap = nullptr;
+
+#pragma endregion
 
 	Vector3D vertex;
 	Vector4D color = { 1.0f,1.0f,1.0f,1.0f };

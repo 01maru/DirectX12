@@ -2,6 +2,8 @@
 #include "TextureManager.h"
 #include "PipelineManager.h"
 
+#include "ConstBuffStruct.h"
+
 MyDirectX* Particle::dx = MyDirectX::GetInstance();
 ICamera* Particle::camera = nullptr;
 GPipeline* Particle::pipeline = nullptr;
@@ -19,54 +21,27 @@ void Particle::SetPipeline(GPipeline* pipe)
 void Particle::Initialize()
 {
 	HRESULT result;
-	D3D12_HEAP_PROPERTIES cbHeapProp{};
-	D3D12_RESOURCE_DESC cbResourceDesc{};
-	ID3D12Device* dev = dx->GetDev();
+	
 #pragma region  ConstBuffer
-	//	ヒープ設定
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//	GPU転送用
 
-	//	リソース設定
-	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xFF) & ~0xFF;
-	cbResourceDesc.Height = 1;
-	cbResourceDesc.DepthOrArraySize = 1;
-	cbResourceDesc.MipLevels = 1;
-	cbResourceDesc.SampleDesc.Count = 1;
-	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	//	生成
-	result = dev->CreateCommittedResource(
-		&cbHeapProp,	//	ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,	//	リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&transform));
-	assert(SUCCEEDED(result));
-
+	transform.Initialize(sizeof(ConstBufferDataTransform));
 	//	定数バッファのマッピング
-	result = transform->Map(0, nullptr, (void**)&constMapTransform);	//	マッピング
+	result = transform.GetResource()->Map(0, nullptr, (void**)&cTransformMap);	//	マッピング
 	assert(SUCCEEDED(result));
 
-	cbResourceDesc.Width = (sizeof(ConstBufferDataMaterial) + 0xFF) & ~0xFF;
-	//	生成
-	result = dev->CreateCommittedResource(
-		&cbHeapProp,	//	ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,	//	リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&material));
-	assert(SUCCEEDED(result));
-
+	colorMaterial.Initialize(sizeof(CBuff::CBuffColorMaterial));
 	//	定数バッファのマッピング
-	result = material->Map(0, nullptr, (void**)&mapMaterial);	//	マッピング
+	result = colorMaterial.GetResource()->Map(0, nullptr, (void**)&cColorMap);	//	マッピング
 	assert(SUCCEEDED(result));
+
 #pragma endregion
-	UINT sizePV = static_cast<UINT>(sizeof(vertex) * 1);
 
-	BuffInitialize(dev, sizePV, 1);
+#pragma region VertBuff
+
+	uint16_t sizePV = static_cast<uint16_t>(sizeof(vertex));
+	VertIdxBuff::Initialize(sizePV);
+
+#pragma endregion
 }
 
 Particle::Particle()
@@ -82,18 +57,18 @@ Particle::Particle(const Vector3D& pos_)
 
 void Particle::MatUpdate()
 {
-	constMapTransform->matBillboard = Matrix();
+	cTransformMap->matBillboard = Matrix();
 	if (isBillboardY) {
-		constMapTransform->matBillboard = camera->GetBillboardY();
+		cTransformMap->matBillboard = camera->GetBillboardY();
 	}
 	if (isBillboard) {
-		constMapTransform->matBillboard = camera->GetBillboard();
+		cTransformMap->matBillboard = camera->GetBillboard();
 	}
-	constMapTransform->scale = scale;
-	constMapTransform->cameraPos = camera->GetEye();
-	constMapTransform->mat = camera->GetViewProj();
+	cTransformMap->scale = scale;
+	cTransformMap->cameraPos = camera->GetEye();
+	cTransformMap->mat = camera->GetViewProj();
 
-	mapMaterial->color = color;
+	cColorMap->color = color;
 }
 
 void Particle::Draw(int handle)
@@ -106,8 +81,8 @@ void Particle::Draw(int handle)
 	BuffUpdate(cmdList);
 	//	テクスチャ
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle));
-	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
-	cmdList->SetGraphicsRootConstantBufferView(2, transform->GetGPUVirtualAddress());
+	colorMaterial.SetGraphicsRootCBuffView(1);
+	transform.SetGraphicsRootCBuffView(2);
 
 	cmdList->DrawInstanced(1, 1, 0, 0);
 }
