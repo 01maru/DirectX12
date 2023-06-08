@@ -32,6 +32,9 @@ private:
 	ConstBuff transform;
 	CBuff::CBuffObj3DTransform* cTransformMap = nullptr;
 
+	ConstBuff shadowTransform;
+	CBuff::CBuffObj3DTransform* cShadowTransMap = nullptr;
+
 	ConstBuff lightMaterial;
 	CBuff::CBuffLightMaterial* cLightMap = nullptr;
 
@@ -39,21 +42,6 @@ private:
 	CBuff::CBuffSkinData* cSkinMap = nullptr;
 
 #pragma endregion
-
-
-	struct ConstBufferDataTransform {
-		Matrix matview;
-		Matrix matworld;
-		Vector3D cameraPos;
-		//float pad1;
-		//Vector3D color;
-	};
-	struct ConstBufferLight {
-		Matrix mLVP;
-		Vector3D cameraPos;
-	};
-	ComPtr<ID3D12Resource> shadowtransform;
-
 
 	Object3D* parent = nullptr;
 	IModel* model = nullptr;

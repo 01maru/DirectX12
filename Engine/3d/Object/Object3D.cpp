@@ -78,54 +78,32 @@ Object3D* Object3D::Create(IModel* model)
 void Object3D::Initialize()
 {
 	HRESULT result;
-	D3D12_HEAP_PROPERTIES cbHeapProp{};
-	D3D12_RESOURCE_DESC cbResourceDesc{};
 
 #pragma region ConstBuff
 
-	transform.Initialize((sizeof(CBuff::CBuffObj3DTransform) + 0xFF) & ~0xFF);
+	transform.Initialize(sizeof(CBuff::CBuffObj3DTransform));
 	//	定数バッファのマッピング
 	result = transform.GetResource()->Map(0, nullptr, (void**)&cTransformMap);	//	マッピング
 	assert(SUCCEEDED(result));
 
-	lightMaterial.Initialize((sizeof(CBuff::CBuffLightMaterial) + 0xFF) & ~0xFF);
+	shadowTransform.Initialize(sizeof(CBuff::CBuffObj3DTransform));
+	//	定数バッファのマッピング
+	result = shadowTransform.GetResource()->Map(0, nullptr, (void**)&cShadowTransMap);	//	マッピング
+	assert(SUCCEEDED(result));
+
+	lightMaterial.Initialize(sizeof(CBuff::CBuffLightMaterial));
 	//	定数バッファのマッピング
 	result = lightMaterial.GetResource()->Map(0, nullptr, (void**)&cLightMap);	//	マッピング
 	assert(SUCCEEDED(result));
 
-	skinData.Initialize((sizeof(CBuff::CBuffSkinData) + 0xFF) & ~0xFF);
+	skinData.Initialize(sizeof(CBuff::CBuffSkinData));
 	//	定数バッファのマッピング
 	result = skinData.GetResource()->Map(0, nullptr, (void**)&cSkinMap);	//	マッピング
 	assert(SUCCEEDED(result));
 
 #pragma endregion
 
-
-	//	ヒープ設定
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//	GPU転送用
-
-	//	リソース設定
-	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferDataTransform) + 0xFF) & ~0xFF;
-	cbResourceDesc.Height = 1;
-	cbResourceDesc.DepthOrArraySize = 1;
-	cbResourceDesc.MipLevels = 1;
-	cbResourceDesc.SampleDesc.Count = 1;
-	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-
-	//	生成
-	result = dx->GetDev()->CreateCommittedResource(
-		&cbHeapProp,	//	ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,	//	リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&shadowtransform));
-	assert(SUCCEEDED(result));
-
 	mat.Initialize();
-
 
 	//	ボーンの初期化
 	for (UINT i = 0; i < CBuff::MAX_BONES; i++)
@@ -179,33 +157,18 @@ void Object3D::MatUpdate()
 
 	const Matrix& matView_ = light->GetDirLightCamera(0)->GetViewProj();
 
-	ConstBufferDataTransform* constMap_ = nullptr;
-	result = shadowtransform->Map(0, nullptr, (void**)&constMap_);
-	constMap_->matview = matView_;
+	
+	cShadowTransMap->matViewProj = matView_;
 	if (model != nullptr) {
-		constMap_->matworld = model->GetModelTransform();
-		constMap_->matworld *= mat.matWorld;
+		cShadowTransMap->matWorld = model->GetModelTransform();
+		cShadowTransMap->matWorld *= mat.matWorld;
 	}
 	else {
-		constMap_->matworld = mat.matWorld;
+		cShadowTransMap->matWorld = mat.matWorld;
 	}
-	shadowtransform->Unmap(0, nullptr);
-
 
 	cLightMap->mLVP = matView_;
 	cLightMap->cameraPos = light->GetDirLightCamera(0)->GetEye();
-}
-
-void Object3D::Draw()
-{
-	pipeline->Setting();
-	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	transform.SetGraphicsRootCBuffView(2);
-	skinData.SetGraphicsRootCBuffView(4);
-	light->Draw();
-
-	model->Draw();
 }
 
 void Object3D::PlayAnimation()
@@ -221,13 +184,25 @@ void Object3D::PlayAnimation()
 	}
 }
 
+void Object3D::Draw()
+{
+	pipeline->Setting();
+	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	transform.SetGraphicsRootCBuffView(2);
+	skinData.SetGraphicsRootCBuffView(4);
+	light->Draw();
+
+	model->Draw();
+}
+
 void Object3D::DrawShadow()
 {
 	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Shadow");
 	pipeline_->Setting();
 	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	dx->GetCmdList()->SetGraphicsRootConstantBufferView(2, shadowtransform->GetGPUVirtualAddress());
+	shadowTransform.SetGraphicsRootCBuffView(2);
 	lightMaterial.SetGraphicsRootCBuffView(3);
 
 	model->Draw();

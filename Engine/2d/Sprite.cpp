@@ -41,13 +41,13 @@ void Sprite::Initialize(Texture texture_)
 
 #pragma region ConstBuffer
 
-	transform.Initialize((sizeof(CBuff::CBuffSpriteTransform) + 0xFF) & ~0xFF);
+	transform.Initialize(sizeof(CBuff::CBuffSpriteTransform));
 	//	定数バッファのマッピング
 	result = transform.GetResource()->Map(0, nullptr, (void**)&constMapTransform);	//	マッピング
 	assert(SUCCEEDED(result));
 
 
-	colorMaterial.Initialize((sizeof(CBuff::CBuffColorMaterial) + 0xFF) & ~0xFF);
+	colorMaterial.Initialize(sizeof(CBuff::CBuffColorMaterial));
 	//	定数バッファのマッピング
 	result = colorMaterial.GetResource()->Map(0, nullptr, (void**)&mapMaterial);	//	マッピング
 	assert(SUCCEEDED(result));

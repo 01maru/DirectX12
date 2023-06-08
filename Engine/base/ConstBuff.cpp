@@ -13,7 +13,7 @@ void ConstBuff::Initialize(uint64_t resWidth)
 
 	//	ÉäÉ\Å[ÉXê›íË
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resourceDesc.Width = resWidth;
+	resourceDesc.Width = (resWidth + 0xFF) & ~0xFF;
 	resourceDesc.Height = 1;
 	resourceDesc.DepthOrArraySize = 1;
 	resourceDesc.MipLevels = 1;
