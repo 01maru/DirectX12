@@ -13,8 +13,45 @@ SceneManager* SceneManager::GetInstance()
 	return &instance;
 }
 
+void SceneManager::FirstSceneInitialize()
+{
+	scene->Initialize();
+	//	画像転送
+	MyDirectX::GetInstance()->UploadTexture();
+}
+
 void SceneManager::Initialize()
 {
+	sceneFactry = std::make_unique<SceneFactory>();
+	scene = sceneFactry->CreateScene("GAMESCENE");
+
+#pragma region Loading
+
+	endLoading = true;
+	loadObj = std::make_unique<LoadingSprite>();
+	loadObj->Initialize();
+	loadObj->SetIsLoading(!endLoading);
+
+#pragma endregion
+
+#pragma region SplashScreen
+
+	//	非同期
+	sceneInitInfo = std::async(std::launch::async, [this] {return FirstSceneInitialize(); });
+	isSplashScreen = true;
+
+	rogoUI = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/rogo.png");
+	splashSprite = std::make_unique<Sprite>();
+	splashSprite->Initialize(rogoUI);
+	splashSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
+	splashSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
+	//splashSprite->SetSize(Vector2D{ 500,64 });
+	//splashSprite->TransferVertex();
+
+#pragma endregion
+
+#pragma region PostEffect
+
 	mainScene = std::make_unique<PostEffect>();
 	mainScene->Initialize(Window::window_width, Window::window_height, 1.0f, DXGI_FORMAT_R11G11B10_FLOAT);
 	luminnce = std::make_unique<PostEffect>();
@@ -32,14 +69,11 @@ void SceneManager::Initialize()
 	ybulr = std::make_unique<PostEffect>();
 	ybulr->Initialize(Window::window_width / 2, Window::window_height / 2, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
 
-	sceneFactry = std::make_unique<SceneFactory>();
-	scene = sceneFactry->CreateScene("GAMESCENE");
-	scene->Initialize();
-	endLoading = true;
+	screenColor = { 0.0f,0.0f,0.0f,1.0f };
+	//	色設定
+	mainScene->SetColor(screenColor);
 
-	loadObj = std::make_unique<LoadingSprite>();
-	loadObj->Initialize();
-	loadObj->SetIsLoading(!endLoading);
+#pragma endregion
 
 	ImGuiManager::GetInstance()->Initialize();
 
@@ -55,66 +89,117 @@ void SceneManager::Finalize()
 
 void SceneManager::Update()
 {
-	if (endLoading) {
-		if (sceneInitialized) {
+	static bool easeInSplashScreen = true;
+	static int splashCount = 0;
 
-			//	フェードイン
+	if (isSplashScreen) {
+		float color = 0.0f;
+		if (splashCount == 2) color = 1.0f;
+
+		else if (splashCount == 0 || splashCount == 4) color = 0.0f;
+
+		else color = Easing::lerp(0.0f, 1.0f, (float)sceneChangeTimer / S_SCENE_CHANGE_TIME);
+
+		splashSprite->SetColor({ 1.0f,1.0f,1.0f,color });
+		splashSprite->Update();
+
+		std::future_status loadStatus = sceneInitInfo.wait_for(std::chrono::seconds(0));
+		if (loadStatus == std::future_status::ready && !easeInSplashScreen) {
 			if (sceneChangeTimer > 0) {
 				sceneChangeTimer--;
-
-				float color = Easing::lerp(1.0f, 0.0f, sceneChangeTimer / (float)S_SCENE_CHANGE_TIME);
-				screenColor.x = color;
-				screenColor.y = color;
-				screenColor.z = color;
-
-				//	色設定
-				mainScene->SetColor(screenColor);
-
-				scene->MatUpdate();
 			}
 			else {
-				//	同期処理
-				scene->Update();
+				splashCount++;
+				sceneChangeTimer = S_SCENE_CHANGE_TIME;
+
+				//	スプラッシュスクリーン終わりフラグ
+				if (splashCount == 5) {
+					isSplashScreen = false;
+					scene->Update();
+				}
 			}
 		}
 		else {
-			//	nextSceneがセットされたら
-			loadObj->SetIsLoading(true);
-
-			//	フェードアウト
 			if (sceneChangeTimer < S_SCENE_CHANGE_TIME) {
 				sceneChangeTimer++;
-
-				float color = Easing::lerp(1.0f, 0.0f, sceneChangeTimer / (float)S_SCENE_CHANGE_TIME);
-				screenColor.x = color;
-				screenColor.y = color;
-				screenColor.z = color;
-
-				//	色設定
-				mainScene->SetColor(screenColor);
 			}
-
-			if (sceneChangeTimer >= S_SCENE_CHANGE_TIME) {
-				//	フェードアウト済みロード画面へ
-				endLoading = false;
-				//	非同期
-				sceneInitInfo = std::async(std::launch::async, [this] {return SceneChange(); });
-				sceneChangeTimer = S_SCENE_CHANGE_TIME;
+			else {
+				if (splashCount != 1) {
+					sceneChangeTimer = 0;
+				}
+				else {
+					easeInSplashScreen = false;
+				}
+				splashCount++;
 			}
 		}
 	}
 	else {
-		std::future_status loadStatus = sceneInitInfo.wait_for(std::chrono::seconds(0));
-		if (loadStatus == std::future_status::ready) {
-			//	ロード終わりフラグ
-			endLoading = true;
-			loadObj->SetIsLoading(!endLoading);
+		if (endLoading) {
+			if (sceneInitialized) {
+
+				//	フェードイン
+				if (sceneChangeTimer > 0) {
+					sceneChangeTimer--;
+
+					float color = Easing::lerp(1.0f, 0.0f, sceneChangeTimer / (float)S_SCENE_CHANGE_TIME);
+					screenColor.x = color;
+					screenColor.y = color;
+					screenColor.z = color;
+
+					//	色設定
+					mainScene->SetColor(screenColor);
+
+					scene->MatUpdate();
+				}
+				else {
+					//	同期処理
+					scene->Update();
+				}
+			}
+			else {
+				//	nextSceneがセットされたら
+				loadObj->SetIsLoading(true);
+
+				//	フェードアウト
+				if (sceneChangeTimer < S_SCENE_CHANGE_TIME) {
+					sceneChangeTimer++;
+
+					float color = Easing::lerp(1.0f, 0.0f, sceneChangeTimer / (float)S_SCENE_CHANGE_TIME);
+					screenColor.x = color;
+					screenColor.y = color;
+					screenColor.z = color;
+
+					//	色設定
+					mainScene->SetColor(screenColor);
+				}
+
+				if (sceneChangeTimer >= S_SCENE_CHANGE_TIME) {
+					//	フェードアウト済みロード画面へ
+					endLoading = false;
+					//	非同期
+					sceneInitInfo = std::async(std::launch::async, [this] {return SceneChange(); });
+					sceneChangeTimer = S_SCENE_CHANGE_TIME;
+				}
+			}
+		}
+		else {
+			std::future_status loadStatus = sceneInitInfo.wait_for(std::chrono::seconds(0));
+			if (loadStatus == std::future_status::ready) {
+				//	ロード終わりフラグ
+				endLoading = true;
+				loadObj->SetIsLoading(!endLoading);
+			}
 		}
 	}
 
 	loadObj->Update();
 
+#ifdef _DEBUG
+
 	ImguiUpdate();
+
+#endif // _DEBUG
 }
 
 void SceneManager::ImguiUpdate()
@@ -133,7 +218,7 @@ void SceneManager::Draw()
 #pragma region DrawScreen
 	dx->PrevPostEffect(shadowEffect.get());
 
-	if (endLoading) {
+	if (endLoading && !isSplashScreen) {
 		scene->DrawShadow();
 	}
 	
@@ -153,7 +238,7 @@ void SceneManager::Draw()
 	
 	dx->PrevPostEffect(mainScene.get());
 
-	if (endLoading) {
+	if (endLoading && !isSplashScreen) {
 		scene->Draw();
 	}
 
@@ -184,9 +269,15 @@ void SceneManager::Draw()
 #pragma region MultiPath
 	dx->PrevDraw();
 
-	mainScene->Draw(false, false, false, ybulrluminnce->GetTexture().GetHandle());
+	if (!isSplashScreen) {
+		mainScene->Draw(false, false, false, ybulrluminnce->GetTexture().GetHandle());
+	}
 	
 	loadObj->Draw();
+
+	if (isSplashScreen) {
+		splashSprite->Draw(PipelineManager::GetInstance()->GetPipeline("LoadingSprite"));
+	}
 
 	ImGuiManager::GetInstance()->Draw();
 	dx->PostDraw();

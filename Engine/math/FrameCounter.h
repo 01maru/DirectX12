@@ -22,7 +22,7 @@ public:
 	void StartCount();
 	void ResetCount();
 
-	void Initialize(int maxFrameCount, bool isIncrement, int maxCount = 1, bool isLoop = false, bool isEndless = false);
+	void Initialize(int maxFrameCount, bool isIncrement, bool isLoop = false, int maxCount = 1);
 	void Update();
 
 	//	Getter
@@ -40,5 +40,6 @@ public:
 	void SetIsIncrement(bool isIncrement) { isIncrement_ = isIncrement; }
 	void AddCount();
 	void SubCount();
+	void SetIsEndless(bool isEndless) { isEndless_ = isEndless; }
 };
 

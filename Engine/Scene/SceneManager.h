@@ -22,6 +22,14 @@ private:
 
 	int sceneChangeTimer = 0;
 
+#pragma region SplashScreen
+
+	bool isSplashScreen = true;
+	Texture rogoUI;
+	std::unique_ptr<Sprite> splashSprite;
+
+#pragma endregion
+
 #pragma region Loading
 	std::future<void> sceneInitInfo;
 	bool endLoading = false;
@@ -49,6 +57,7 @@ public:
 	SceneManager(const SceneManager& obj) = delete;
 	SceneManager& operator=(const SceneManager& obj) = delete;
 
+	void FirstSceneInitialize();
 	void Initialize();
 	void Finalize();
 	void Update();

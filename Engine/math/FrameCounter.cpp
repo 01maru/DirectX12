@@ -15,15 +15,13 @@ void FrameCounter::ResetCount()
 	count_ = 0;
 }
 
-void FrameCounter::Initialize(int maxFrameCount, bool isIncrement, int maxCount, bool isLoop, bool isEndless)
+void FrameCounter::Initialize(int maxFrameCount, bool isIncrement, bool isLoop, int maxCount)
 {
 	if (isIncrement_) frameCount_ = 0;
 	else			  frameCount_ = maxFrameCount;
 
 	maxFrameCount_ = maxFrameCount;
 	maxCount_ = maxCount;
-
-	isEndless_ = isEndless;
 	isLoop_ = isLoop;
 	isIncrement_ = isIncrement;
 
