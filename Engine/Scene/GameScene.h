@@ -36,6 +36,7 @@ public:
 	void Finalize() override;
 	void LoadResources() override;
 	void Update() override;
+	void ImguiUpdate() override;
 	void DrawShadow() override;
 	void Draw() override;
 private:

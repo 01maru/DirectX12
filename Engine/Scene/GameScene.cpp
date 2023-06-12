@@ -95,6 +95,10 @@ void GameScene::Update()
 	Light::GetInstance()->SetDirLightColor(0, Vector3D(1.0f, 1.0f, 1.0f));
 }
 
+void GameScene::ImguiUpdate()
+{
+}
+
 void GameScene::DrawShadow()
 {
 }

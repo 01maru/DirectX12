@@ -402,6 +402,9 @@
     <ClCompile Include="Engine\3d\camera\ObjCamera2D.cpp">
       <Filter>ソース ファイル\lib\3D\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\math\FrameCounter.cpp">
+      <Filter>ソース ファイル\lib\Engine\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\base\input\InputJoypad.h">
@@ -477,9 +480,6 @@
       <Filter>ヘッダー ファイル\lib\Engine\Scene\Factory</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectX.h">
-      <Filter>ヘッダー ファイル\lib\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\base\ImGuiManager.h">
       <Filter>ヘッダー ファイル\lib\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Audio\MyXAudio.h">
@@ -637,6 +637,12 @@
     </ClInclude>
     <ClInclude Include="Engine\3d\camera\ObjCamera2D.h">
       <Filter>ヘッダー ファイル\lib\3D\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\ImGuiManager.h">
+      <Filter>ヘッダー ファイル\lib\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\math\FrameCounter.h">
+      <Filter>ヘッダー ファイル\lib\Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@ public:
 	virtual void LoadResources() = 0;
 	virtual void Update() = 0;
 	virtual void MatUpdate() = 0;
+	virtual void ImguiUpdate() = 0;
 	virtual void DrawShadow() = 0;
 	virtual void Draw() = 0;
 };

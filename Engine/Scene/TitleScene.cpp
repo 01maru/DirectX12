@@ -6,14 +6,6 @@
 #include "TextureManager.h"
 #include "Easing.h"
 
-TitleScene::TitleScene()
-{
-}
-
-TitleScene::~TitleScene()
-{
-}
-
 void TitleScene::Initialize()
 {
 	camera = std::make_unique<NormalCamera>();
@@ -90,6 +82,10 @@ void TitleScene::Update()
 	//}
 
 	MatUpdate();
+}
+
+void TitleScene::ImguiUpdate()
+{
 }
 
 void TitleScene::DrawShadow()

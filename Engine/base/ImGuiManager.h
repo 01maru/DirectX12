@@ -1,5 +1,6 @@
 #pragma once
-#include "DirectX.h"
+#include <wrl.h>
+#include <d3d12.h>
 
 class ImGuiManager
 {
@@ -7,10 +8,10 @@ private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
+
 	ImGuiManager() {};
 	~ImGuiManager() {};
 public:
-
 	static ImGuiManager* GetInstance();
 	//	コピーコンストラクタ無効
 	ImGuiManager(const ImGuiManager& obj) = delete;

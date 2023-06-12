@@ -40,6 +40,8 @@ private:
 	std::unique_ptr<PostEffect> ybulr;
 #pragma endregion
 
+	void ImguiUpdate();
+
 	SceneManager() {};
 	~SceneManager() {};
 public:

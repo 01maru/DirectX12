@@ -114,7 +114,15 @@ void SceneManager::Update()
 
 	loadObj->Update();
 
+	ImguiUpdate();
+}
+
+void SceneManager::ImguiUpdate()
+{
 	ImGuiManager::GetInstance()->Begin();
+	if (endLoading) {
+		scene->ImguiUpdate();
+	}
 	ImGuiManager::GetInstance()->End();
 }
 
