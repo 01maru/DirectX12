@@ -32,7 +32,7 @@ void FrameCounter::Update()
 {
 	if (isActive_) {
 
-		bool countContinue = isEndless_ || count_ < maxCount_;
+		bool countContinue = isEndless_ || count_ <= maxCount_;
 
 		if (isIncrement_)	//	インクリメント
 		{
@@ -72,7 +72,7 @@ void FrameCounter::Update()
 		}
 
 		//	エンドレスじゃなくcountが範囲外になったら
-		if (countContinue)	isActive_ = false;
+		if (!isEndless_ && count_ >= maxCount_)	isActive_ = false;
 	}
 }
 

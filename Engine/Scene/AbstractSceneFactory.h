@@ -1,11 +1,12 @@
 #pragma once
-#include "IScene.h"
 #include <string>
+
+class IScene;
 
 class AbstractSceneFactory
 {
 public:
 	virtual ~AbstractSceneFactory() = default;
-	virtual IScene* CreateScene(const std::string &sceneName) = 0;
+	virtual IScene* CreateScene(const std::string& sceneName) = 0;
 };
 

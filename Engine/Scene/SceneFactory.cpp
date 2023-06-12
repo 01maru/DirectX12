@@ -1,8 +1,8 @@
 #include "SceneFactory.h"
 
 #pragma region Scene‚ð’Ç‰Á‚·‚é‚½‚Ñ‚É‚»‚ÌScene‚ðinclude
-#include "GameScene.h"
 #include "TitleScene.h"
+#include "GameScene.h"
 #pragma endregion
 
 IScene* SceneFactory::CreateScene(const std::string& sceneName)

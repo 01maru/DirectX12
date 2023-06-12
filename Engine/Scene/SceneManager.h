@@ -1,12 +1,14 @@
 #pragma once
-#include "IScene.h"
-#include "SceneFactory.h"
+#include "AbstractSceneFactory.h"
 #include <future>
+
+#include "IScene.h"
 #include "Sprite.h"
 #include "Texture.h"
 #include "PostEffect.h"
 
 #include "ILoadingObj.h"
+#include "FrameCounter.h"
 
 class SceneManager
 {
@@ -14,13 +16,16 @@ private:
 	//	フェードインアウトフレーム数
 	static const int S_SCENE_CHANGE_TIME = 60;
 
-	IScene* scene = nullptr;
-	IScene* nextScene = nullptr;
-	std::unique_ptr<AbstractSceneFactory> sceneFactry;
+	std::unique_ptr<IScene> scene_;
+	std::unique_ptr<IScene> nextScene_;
+
+	std::unique_ptr<AbstractSceneFactory> sceneFactry_;
 
 	Vector4D screenColor = { 1.0f,1.0f,1.0f,1.0f };
 
 	int sceneChangeTimer = 0;
+
+	FrameCounter sceneChangeCounter;
 
 #pragma region SplashScreen
 
@@ -48,6 +53,12 @@ private:
 	std::unique_ptr<PostEffect> ybulr;
 #pragma endregion
 
+	void ScreenColorUpdate();
+	void SplashUpdate();
+	void SceneFadeInUpdate();
+	void SceneFadeOutUpdate();
+	void SceneAsyncUpdate();
+	void SceneUpdate();
 	void ImguiUpdate();
 
 	SceneManager() {};

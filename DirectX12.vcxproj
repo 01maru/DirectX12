@@ -87,6 +87,7 @@
     <ClCompile Include="Engine\3d\Object\ObjModel.cpp" />
     <ClCompile Include="Engine\base\PipelineManager.cpp" />
     <ClCompile Include="Engine\2d\Texture.cpp" />
+    <ClCompile Include="SplashSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraManager.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="InputMouse.h" />
     <ClInclude Include="Engine\2d\LoadingModel.h" />
     <ClInclude Include="Engine\2d\LoadingSprite.h" />
+    <ClInclude Include="SplashSprite.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
