@@ -3,32 +3,46 @@
 #include <wrl.h>
 #include <vector>
 #include <string>
+#include <map>
 
 #pragma comment(lib,"xaudio2.lib")
 
+//	音データ
 struct SoundData {
 	WAVEFORMATEX wfex;
 	BYTE* pBuffer;
 	unsigned int bufferSize;
-	std::string name;
+
+	float volume = 1.0f;
 };
 
+//	再生中の音データ
 struct SoundVoicePtr {
-	IXAudio2SourceVoice* ptr;
-	float volume = 1.0f;
+	std::string soundname;
+	IXAudio2SourceVoice* ptr = nullptr;
+	//float volume = 1.0f;
 };
 
 class MyXAudio
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+public:
+	//	音量調節用Enum
+	enum SoundType {
+		Master,
+		BGM,
+		SE,
+	};
+private:
+	//	Imgui用
+	bool isDebug_ = false;
 
 	ComPtr<IXAudio2> xAudio2;
 	IXAudio2MasteringVoice* masterVoice = nullptr;
 
 	//	soundのデータ配列
-	std::vector<SoundData> soundData;
-	int soundDataIndex = 0;
+	std::map<std::string, SoundData, std::less<>> data_;
 
 	std::vector<SoundVoicePtr> soundEffectPtr;
 	std::vector<SoundVoicePtr> bgmsoundPtr;
@@ -40,15 +54,7 @@ private:
 
 	float pitchRatio = 1.0f;
 
-public:
-	//	音量調節用Enum
-	enum SoundType {
-		Master,
-		BGM,
-		SE,
-	};
-
-private:
+private:	//	関数
 	void SoundUnload(SoundData* soundData_);
 
 	MyXAudio() {};
@@ -60,21 +66,25 @@ public:
 
 	void Initialize();
 	void Finalize();
+	void Update();
+	void ImguiUpdate();
+
 	//	load
-	int SoundLoadWave(const char* filename);
-	//	volume変更用
+	void LoadSoundWave(const std::string& filename);
+	//	play
+	void PlaySoundWave(const std::string& soundName, SoundType type, bool loop = false);
+
+	//	volume変更用(Optionとかで)
 	void VolumeUpdate(SoundType type);
 	void ChangeVolume(float volume, SoundType type);
-	void ChangeAllPitchRatio(float pitch);
-
-	//	play
-	//	volumeは0.0f～1.0f
-	void SoundPlayWave(int handle_, SoundType type, float volume = 1.0f, bool loop = false);
+	//void ChangeAllPitchRatio(float pitch);
 
 	//	stop
 	void StopAllSound();
 	void StopBGM();
 	void StopSE();
+
+	//	delete
 	void DeleteAllSound();
 
 	//	Getter 

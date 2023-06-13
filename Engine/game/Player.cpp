@@ -24,7 +24,7 @@ void Player::PlayerInitialize(IModel* model_)
 	SetCollider(new SphereCollider(Vector3D(0.0f, radius, 0.0f), radius));
 	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
-	jumpSound = MyXAudio::GetInstance()->SoundLoadWave("jump.wav");
+	//jumpSound = MyXAudio::GetInstance()->SoundLoadWave("jump.wav");
 }
 
 void Player::Update()

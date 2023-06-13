@@ -1,6 +1,7 @@
 #include "MyXAudio.h"
 #include <fstream>
 
+#include "ImGuiManager.h"
 #include "Input.h"
 #include "MyMath.h"
 
@@ -48,25 +49,59 @@ void MyXAudio::Finalize()
 	StopAllSound();
 	masterVoice->DestroyVoice();
 	xAudio2.Reset();
-	for (size_t i = 0; i < soundData.size(); i++)
+
+	for (auto itr = data_.begin(); itr != data_.end(); ++itr)
 	{
-		SoundUnload(&soundData[i]);
+		SoundUnload(&itr->second);
 	}
-	soundData.clear();
+	data_.clear();
 }
 
-int MyXAudio::SoundLoadWave(const char* filename)
+void MyXAudio::Update()
 {
-	for (int i = 0; i < soundData.size(); i++) {
-		if (soundData[i].name == filename)
-		{
-			//	既にあったら
-			return i;
-		}
+#ifdef _DEBUG
+
+	if (!isDebug_) return;
+
+	for (size_t i = 0; i < bgmsoundPtr.size(); i++)
+	{
+		bgmsoundPtr[i].ptr->SetVolume(bgmVolume * data_[bgmsoundPtr[i].soundname].volume);
+	}
+	for (size_t i = 0; i < soundEffectPtr.size(); i++)
+	{
+		soundEffectPtr[i].ptr->SetVolume(seVolume * data_[soundEffectPtr[i].soundname].volume);
 	}
 
+#endif // _DEBUG
+}
+
+void MyXAudio::ImguiUpdate()
+{
+	ImGuiManager* imguiMan = ImGuiManager::GetInstance();
+
+	imguiMan->SetWindow("Volume");
+
+	imguiMan->CheckBox("IsDebug", isDebug_);
+	
+	if (isDebug_) {
+		for (auto itr = data_.begin(); itr != data_.end(); ++itr)
+		{
+			imguiMan->SetSliderFloat(itr->first.c_str(), itr->second.volume, 0.0f, 1.0f);
+		}
+
+		imguiMan->SetButton("Save");
+	}
+
+	imguiMan->EndWindow();
+}
+
+void MyXAudio::LoadSoundWave(const std::string& filename)
+{
+	//	既に読み込み済みだったら
+	if (data_.count(filename) == 1) return;
+
 	std::ifstream file;
-	const std::string filePath = "Resources/Sound/" + (std::string)filename;
+	const std::string filePath = "Resources/Sound/" + filename;
 	file.open(filePath, std::ios_base::binary);
 	assert(file.is_open());
 
@@ -98,26 +133,26 @@ int MyXAudio::SoundLoadWave(const char* filename)
 	file.read(pBuffer, data.size);
 	file.close();
 
-	SoundData _soundData = {};
+	SoundData soundData = {};
+	soundData.wfex = format.fmt;
+	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
+	soundData.bufferSize = data.size;
 
-	_soundData.wfex = format.fmt;
-	_soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
-	_soundData.bufferSize = data.size;
-	_soundData.name = filename;
-
-	soundData.push_back(_soundData);
-
-	return soundDataIndex++;
+	//	データの挿入
+	data_.emplace(filename, soundData);
 }
 
-void MyXAudio::SoundPlayWave(int handle_, SoundType type, float volume, bool loop)
+void MyXAudio::PlaySoundWave(const std::string& soundName, SoundType type, bool loop)
 {
 	HRESULT result;
+	
+	//	音データがあったら
+	assert(data_.count(soundName) != 0);
 
 	SoundVoicePtr pSourceVoice;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice.ptr, &soundData[handle_].wfex, 0U, 3.0f);
-	assert(SUCCEEDED(result));
-	pSourceVoice.volume = volume;
+	result = xAudio2->CreateSourceVoice(&pSourceVoice.ptr, &data_[soundName].wfex, 0U, 3.0f);
+
+	pSourceVoice.soundname = soundName;
 	float typeVolume = 0.0f;
 	switch (type)
 	{
@@ -130,11 +165,10 @@ void MyXAudio::SoundPlayWave(int handle_, SoundType type, float volume, bool loo
 	case MyXAudio::SE:
 		typeVolume = seVolume;
 		break;
-	default:
-		break;
 	}
-	pSourceVoice.ptr->SetVolume(volume * typeVolume);
+	pSourceVoice.ptr->SetVolume(data_[soundName].volume * typeVolume);
 
+	//	配列に挿入
 	switch (type)
 	{
 	case MyXAudio::BGM:
@@ -143,13 +177,11 @@ void MyXAudio::SoundPlayWave(int handle_, SoundType type, float volume, bool loo
 	case MyXAudio::SE:
 		soundEffectPtr.push_back(pSourceVoice);
 		break;
-	default:
-		break;
 	}
 
 	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = soundData[handle_].pBuffer;
-	buf.AudioBytes = soundData[handle_].bufferSize;
+	buf.pAudioData = data_[soundName].pBuffer;
+	buf.AudioBytes = data_[soundName].bufferSize;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 	//	ループ再生
 	if (loop) buf.LoopCount = XAUDIO2_LOOP_INFINITE;
@@ -196,14 +228,14 @@ void MyXAudio::ChangeVolume(float volume, SoundType type)
 		bgmVolume = volume;
 		for (size_t i = 0; i < bgmsoundPtr.size(); i++)
 		{
-			bgmsoundPtr[i].ptr->SetVolume(bgmVolume * bgmsoundPtr[i].volume);
+			bgmsoundPtr[i].ptr->SetVolume(bgmVolume * data_[bgmsoundPtr[i].soundname].volume);
 		}
 		break;
 	case MyXAudio::SE:
 		seVolume = volume;
 		for (size_t i = 0; i < soundEffectPtr.size(); i++)
 		{
-			soundEffectPtr[i].ptr->SetVolume(seVolume * soundEffectPtr[i].volume);
+			soundEffectPtr[i].ptr->SetVolume(seVolume * data_[soundEffectPtr[i].soundname].volume);
 		}
 		break;
 	default:
@@ -211,28 +243,19 @@ void MyXAudio::ChangeVolume(float volume, SoundType type)
 	}
 }
 
-void MyXAudio::ChangeAllPitchRatio(float pitch)
-{
-	for (size_t i = 0; i < bgmsoundPtr.size(); i++)
-	{
-		bgmsoundPtr[i].ptr->SetFrequencyRatio(pitch);
-
-		if (pitch <= 1.0f)	bgmsoundPtr[i].ptr->SetVolume(bgmVolume * bgmsoundPtr[i].volume);
-		else				bgmsoundPtr[i].ptr->SetVolume(bgmVolume * bgmsoundPtr[i].volume * 0.5f);
-	}
-	for (size_t i = 0; i < soundEffectPtr.size(); i++)
-	{
-		soundEffectPtr[i].ptr->SetFrequencyRatio(pitch);
-	}
-}
-
-//void MyXAudio::StopAllLoopSound()
+//void MyXAudio::ChangeAllPitchRatio(float pitch)
 //{
-//	for (int i = 0; i < soundPtr.size(); i++)
+//	for (size_t i = 0; i < bgmsoundPtr.size(); i++)
 //	{
-//		soundPtr[i]->Stop();
+//		bgmsoundPtr[i].ptr->SetFrequencyRatio(pitch);
+//
+//		if (pitch <= 1.0f)	bgmsoundPtr[i].ptr->SetVolume(bgmVolume * bgmsoundPtr[i].volume);
+//		else				bgmsoundPtr[i].ptr->SetVolume(bgmVolume * bgmsoundPtr[i].volume * 0.5f);
 //	}
-//	soundPtr.resize(0);
+//	for (size_t i = 0; i < soundEffectPtr.size(); i++)
+//	{
+//		soundEffectPtr[i].ptr->SetFrequencyRatio(pitch);
+//	}
 //}
 
 void MyXAudio::StopAllSound()
@@ -247,7 +270,7 @@ void MyXAudio::StopBGM()
 	{
 		bgmsoundPtr[i].ptr->Stop();
 	}
-	bgmsoundPtr.resize(0);
+	bgmsoundPtr.clear();
 }
 
 void MyXAudio::StopSE()
@@ -256,15 +279,14 @@ void MyXAudio::StopSE()
 	{
 		soundEffectPtr[i].ptr->Stop();
 	}
-	soundEffectPtr.resize(0);
+	soundEffectPtr.clear();
 }
 
 void MyXAudio::DeleteAllSound()
 {
-	for (size_t i = 0; i < soundData.size(); i++)
+	for (auto itr = data_.begin(); itr != data_.end(); ++itr)
 	{
-		SoundUnload(&soundData[i]);
+		SoundUnload(&itr->second);
 	}
-	soundData.clear();
-	soundDataIndex = 0;
+	data_.clear();
 }

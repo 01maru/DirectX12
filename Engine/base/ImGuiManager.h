@@ -1,6 +1,9 @@
 #pragma once
 #include <wrl.h>
 #include <d3d12.h>
+#include <string>
+
+#include "Vector2D.h"
 
 class ImGuiManager
 {
@@ -27,5 +30,11 @@ public:
 	void End();
 	//	ï`âÊèàóù
 	void Draw();
+
+	void SetWindow(const std::string& windowName);
+	void EndWindow();
+	bool SetButton(const std::string& buttonName, const Vector2D& size = Vector2D());
+	void SetSliderFloat(const std::string& sliderName, float& value, float minValue, float maxValue);
+	void CheckBox(const std::string& name, bool& flag);
 };
 

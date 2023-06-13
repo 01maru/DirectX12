@@ -21,7 +21,9 @@ private:
 #pragma endregion
 
 #pragma region sound
-
+	int titleBGM = -1;
+	int cursorMoveSound = -1;
+	int decisionSound = -1;
 #pragma endregion
 
 #pragma region Texture

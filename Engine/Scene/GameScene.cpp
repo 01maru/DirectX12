@@ -73,6 +73,11 @@ void GameScene::LoadResources()
 	sprite->SetSize(Vector2D(200.0f, 200.0f));
 	sprite->Initialize(reimuG);
 #pragma endregion
+
+#pragma region Sound
+	MyXAudio::GetInstance()->LoadSoundWave("bgm.wav");
+#pragma endregion
+
 }
 
 void GameScene::Update()

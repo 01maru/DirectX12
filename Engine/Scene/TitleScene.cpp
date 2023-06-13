@@ -5,6 +5,9 @@
 #include "NormalCamera.h"
 #include "TextureManager.h"
 #include "Easing.h"
+#include "ImGuiManager.h"
+
+#include "MyXAudio.h"
 
 void TitleScene::Initialize()
 {
@@ -31,16 +34,22 @@ void TitleScene::Initialize()
 	//pressSprite->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 	//pressSprite->TransferVertex();
 #pragma endregion
+	MyXAudio::GetInstance()->PlaySoundWave("titleBGM.wav", MyXAudio::BGM, true);
 }
 
 void TitleScene::Finalize()
 {
+	MyXAudio::GetInstance()->StopAllSound();
+	MyXAudio::GetInstance()->DeleteAllSound();
 }
 
 void TitleScene::LoadResources()
 {
 #pragma region Sound
-
+	
+	MyXAudio::GetInstance()->LoadSoundWave("titleBGM.wav");
+	MyXAudio::GetInstance()->LoadSoundWave("cursorMove.wav");
+	MyXAudio::GetInstance()->LoadSoundWave("decision.wav");
 #pragma endregion
 
 #pragma region Texture
@@ -86,6 +95,9 @@ void TitleScene::Update()
 
 void TitleScene::ImguiUpdate()
 {
+	ImGuiManager::GetInstance()->SetWindow("test");
+	ImGuiManager::GetInstance()->SetButton("testbutton");
+	ImGuiManager::GetInstance()->EndWindow();
 }
 
 void TitleScene::DrawShadow()
