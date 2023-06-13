@@ -29,7 +29,7 @@ private:
 
 #pragma region SplashScreen
 
-	bool isSplashScreen = true;
+	bool isSplashScreen = false;
 	Texture rogoUI;
 	std::unique_ptr<Sprite> splashSprite;
 
@@ -53,6 +53,7 @@ private:
 	std::unique_ptr<PostEffect> ybulr;
 #pragma endregion
 
+private:	//	ŠÖ”
 	void ScreenColorUpdate();
 	void SplashUpdate();
 	void SceneFadeInUpdate();
@@ -61,6 +62,9 @@ private:
 	void SceneUpdate();
 	void ImguiUpdate();
 
+	void FirstSceneInitialize();
+	void SceneChange();
+
 	SceneManager() {};
 	~SceneManager() {};
 public:
@@ -68,14 +72,12 @@ public:
 	SceneManager(const SceneManager& obj) = delete;
 	SceneManager& operator=(const SceneManager& obj) = delete;
 
-	void FirstSceneInitialize();
 	void Initialize();
 	void Finalize();
 	void Update();
 	void Draw();
 
 	void ChangeScreenColor(const Vector4D& color) { mainScene->SetColor(color); }
-	void SceneChange();
 	void SetNextScene(const std::string& sceneName);
 
 	Texture GetShadowMap() { return ybulr->GetTexture(); }

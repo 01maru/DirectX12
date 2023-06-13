@@ -35,20 +35,6 @@ void SceneManager::Initialize()
 
 #pragma endregion
 
-#pragma region SplashScreen
-
-	//	非同期
-	sceneInitInfo = std::async(std::launch::async, [this] {return FirstSceneInitialize(); });
-	isSplashScreen = true;
-
-	rogoUI = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/rogo.png");
-	splashSprite = std::make_unique<Sprite>();
-	splashSprite->Initialize(rogoUI);
-	splashSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
-	splashSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-
-#pragma endregion
-
 #pragma region PostEffect
 
 	mainScene = std::make_unique<PostEffect>();
@@ -68,18 +54,41 @@ void SceneManager::Initialize()
 	ybulr = std::make_unique<PostEffect>();
 	ybulr->Initialize(Window::window_width / 2, Window::window_height / 2, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
 
-	screenColor = { 0.0f,0.0f,0.0f,1.0f };
-	//	色設定
-	mainScene->SetColor(screenColor);
-
 #pragma endregion
 
 	sceneChangeCounter.Initialize(60, true, true);
 
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->Initialize();
+#endif // _DEBUG
+
+#pragma region SplashScreen
+
+#ifdef NDEBUG
+
+	//	非同期
+	sceneInitInfo = std::async(std::launch::async, [this] {return FirstSceneInitialize(); });
+	isSplashScreen = true;
+
+	rogoUI = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/rogo.png");
+	splashSprite = std::make_unique<Sprite>();
+	splashSprite->Initialize(rogoUI);
+	splashSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
+	splashSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 
 	//	画像転送
 	MyDirectX::GetInstance()->UploadTexture();
+
+#endif // NDEBUG
+
+#ifdef _DEBUG
+	
+	FirstSceneInitialize();
+
+#endif // _DEBUG
+
+
+#pragma endregion
 }
 
 void SceneManager::Finalize()
@@ -92,7 +101,11 @@ void SceneManager::Update()
 {
 	ScreenColorUpdate();
 
+#ifdef NDEBUG
+
 	SplashUpdate();
+
+#endif // NDEBUG
 
 	SceneUpdate();
 
@@ -107,6 +120,9 @@ void SceneManager::Update()
 
 void SceneManager::ScreenColorUpdate()
 {
+	//	スプラッシュスクリーンだったら
+	if (isSplashScreen) return;
+
 	sceneChangeCounter.Update();
 
 	if (sceneChangeCounter.GetIsActive()) {
@@ -155,6 +171,11 @@ void SceneManager::SplashUpdate()
 
 				sceneChangeCounter.SetIsIncrement(false);
 				sceneChangeCounter.StartCount();
+
+
+				screenColor = { 0.0f,0.0f,0.0f,1.0f };
+				//	色設定
+				mainScene->SetColor(screenColor);
 			}
 		}
 	}
@@ -305,11 +326,17 @@ void SceneManager::Draw()
 	
 	loadObj->Draw();
 
+#ifdef NDEBUG
+
 	if (isSplashScreen) {
 		splashSprite->Draw(PipelineManager::GetInstance()->GetPipeline("LoadingSprite"));
 	}
 
+#endif // NDEBUG
+
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->Draw();
+#endif // _DEBUG
 	dx->PostDraw();
 #pragma endregion
 }
