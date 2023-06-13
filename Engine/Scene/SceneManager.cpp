@@ -1,9 +1,8 @@
 #include "SceneManager.h"
 #include "Easing.h"
-#include "TextureManager.h"
 #include "ImGuiManager.h"
 #include "Window.h"
-#include "PipelineManager.h"
+#include "DirectX.h"
 
 #include "LoadingSprite.h"
 #include "SceneFactory.h"
@@ -21,17 +20,35 @@ void SceneManager::FirstSceneInitialize()
 	MyDirectX::GetInstance()->UploadTexture();
 }
 
+void SceneManager::SplashScreenInitialize()
+{
+	//	非同期
+	sceneInitInfo_ = std::async(std::launch::async, [this] {return FirstSceneInitialize(); });
+	isSplashScreen_ = true;
+
+	splashSprite_ = std::make_unique<SplashSprite>();
+	splashSprite_->Initialize();
+
+	sceneChangeCounter_.SetIsIncrement(true);
+	sceneChangeCounter_.StartCount();
+
+	//	画像転送
+	MyDirectX::GetInstance()->UploadTexture();
+}
+
 void SceneManager::Initialize()
 {
+	sceneChangeCounter_.Initialize(60, true, true);
+
 	sceneFactry_ = std::make_unique<SceneFactory>();
 	scene_.reset(sceneFactry_->CreateScene("TITLESCENE"));
 
 #pragma region Loading
 
-	endLoading = true;
-	loadObj = std::make_unique<LoadingSprite>();
-	loadObj->Initialize();
-	loadObj->SetIsLoading(!endLoading);
+	endLoading_ = true;
+	loadObj_ = std::make_unique<LoadingSprite>();
+	loadObj_->Initialize();
+	loadObj_->SetIsLoading(!endLoading_);
 
 #pragma endregion
 
@@ -56,37 +73,22 @@ void SceneManager::Initialize()
 
 #pragma endregion
 
-	sceneChangeCounter.Initialize(60, true, true);
-
 #ifdef _DEBUG
 	ImGuiManager::GetInstance()->Initialize();
 #endif // _DEBUG
 
 #pragma region SplashScreen
 
+	//	releaseだったらスプラッシュスクリーンあり
 #ifdef NDEBUG
-
-	//	非同期
-	sceneInitInfo = std::async(std::launch::async, [this] {return FirstSceneInitialize(); });
-	isSplashScreen = true;
-
-	rogoUI = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/rogo.png");
-	splashSprite = std::make_unique<Sprite>();
-	splashSprite->Initialize(rogoUI);
-	splashSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
-	splashSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-
-	//	画像転送
-	MyDirectX::GetInstance()->UploadTexture();
-
+	SplashScreenInitialize();
 #endif // NDEBUG
 
+
+	//	debugだったらスプラッシュスクリーンなし
 #ifdef _DEBUG
-	
 	FirstSceneInitialize();
-
 #endif // _DEBUG
-
 
 #pragma endregion
 }
@@ -94,114 +96,65 @@ void SceneManager::Initialize()
 void SceneManager::Finalize()
 {
 	scene_->Finalize();
-	ImGuiManager::GetInstance()->Finalize();
-}
-
-void SceneManager::Update()
-{
-	ScreenColorUpdate();
-
-#ifdef NDEBUG
-
-	SplashUpdate();
-
-#endif // NDEBUG
-
-	SceneUpdate();
-
-	loadObj->Update();
 
 #ifdef _DEBUG
 
-	ImguiUpdate();
+	ImGuiManager::GetInstance()->Finalize();
 
 #endif // _DEBUG
 }
 
 void SceneManager::ScreenColorUpdate()
 {
-	//	スプラッシュスクリーンだったら
-	if (isSplashScreen) return;
+	sceneChangeCounter_.Update();
 
-	sceneChangeCounter.Update();
-
-	if (sceneChangeCounter.GetIsActive()) {
-		float color = Easing::lerp(1.0f, 0.0f, sceneChangeCounter.GetCountPerMaxCount());
-		screenColor.x = color;
-		screenColor.y = color;
-		screenColor.z = color;
+	if (sceneChangeCounter_.GetIsActive()) {
+		float color = Easing::lerp(1.0f, 0.0f, sceneChangeCounter_.GetCountPerMaxCount());
+		screenColor_.x = color;
+		screenColor_.y = color;
+		screenColor_.z = color;
 
 		//	色設定
-		mainScene->SetColor(screenColor);
+		mainScene->SetColor(screenColor_);
 	}
 }
 
 void SceneManager::SplashUpdate()
 {
-	static bool easeInSplashScreen = true;
-	static int splashCount = 0;
+#ifdef NDEBUG
 
 	//	スプラッシュスクリーンじゃなかったら
-	if (!isSplashScreen) return;
+	if (!isSplashScreen_) return;
+
+	if (sceneChangeCounter_.GetFrameCount() == sceneChangeCounter_.GetMaxFrameCount()) splashSprite_->StartCounter();
 	
+	splashSprite_->Update();
 
-	float color = 0.0f;
-	if (splashCount == 2) color = 1.0f;
+	std::future_status loadStatus = sceneInitInfo_.wait_for(std::chrono::seconds(0));
+	if (loadStatus == std::future_status::ready && splashSprite_->SplashEnd()) {
 
-	else if (splashCount == 0 || splashCount == 4) color = 0.0f;
+		//	スプラッシュスクリーン終わり
+		isSplashScreen_ = false;
+		scene_->Update();
 
-	else color = Easing::lerp(0.0f, 1.0f, (float)sceneChangeTimer / S_SCENE_CHANGE_TIME);
+		sceneChangeCounter_.SetIsIncrement(false);
+		sceneChangeCounter_.StartCount();
 
-	splashSprite->SetColor({ 1.0f,1.0f,1.0f,color });
-	splashSprite->Update();
-
-	std::future_status loadStatus = sceneInitInfo.wait_for(std::chrono::seconds(0));
-	if (loadStatus == std::future_status::ready && !easeInSplashScreen) {
-		if (sceneChangeTimer > 0) {
-			sceneChangeTimer--;
-		}
-		else {
-			splashCount++;
-			sceneChangeTimer = S_SCENE_CHANGE_TIME;
-
-			//	スプラッシュスクリーン終わりフラグ
-			if (splashCount == 5) {
-				isSplashScreen = false;
-				scene_->Update();
-
-				sceneChangeCounter.SetIsIncrement(false);
-				sceneChangeCounter.StartCount();
-
-
-				screenColor = { 0.0f,0.0f,0.0f,1.0f };
-				//	色設定
-				mainScene->SetColor(screenColor);
-			}
-		}
+		screenColor_ = { 0.0f,0.0f,0.0f,1.0f };
+		//	色設定
+		mainScene->SetColor(screenColor_);
 	}
-	else {
-		if (sceneChangeTimer < S_SCENE_CHANGE_TIME) {
-			sceneChangeTimer++;
-		}
-		else {
-			if (splashCount != 1) {
-				sceneChangeTimer = 0;
-			}
-			else {
-				easeInSplashScreen = false;
-			}
-			splashCount++;
-		}
-	}
+
+#endif // NDEBUG
 }
 
 void SceneManager::SceneFadeInUpdate()
 {
-	if (!endLoading) return;
-	if (!sceneInitialized) return;
+	if (!endLoading_)		return;
+	if (!sceneInitialized_)	return;
 
 	//	フェードイン済み
-	bool fadedIn = sceneChangeCounter.GetFrameCount() == 0;
+	bool fadedIn = sceneChangeCounter_.GetFrameCount() == 0;
 	if (fadedIn) {
 		//	同期処理
 		scene_->Update();
@@ -210,39 +163,39 @@ void SceneManager::SceneFadeInUpdate()
 
 void SceneManager::SceneFadeOutUpdate()
 {
-	if (!endLoading) return;
-	if (sceneInitialized) return;
+	if (!endLoading_)		return;
+	if (sceneInitialized_)	return;
 
 	//	フェードアウト済み
-	bool fadedOut = sceneChangeCounter.GetFrameCount() == sceneChangeCounter.GetMaxFrameCount();
+	bool fadedOut = sceneChangeCounter_.GetFrameCount() == sceneChangeCounter_.GetMaxFrameCount();
 	if (fadedOut) {
 		//	フェードアウト済みロード画面へ
-		endLoading = false;
+		endLoading_ = false;
 		//	非同期
-		sceneInitInfo = std::async(std::launch::async, [this] {return SceneChange(); });
+		sceneInitInfo_ = std::async(std::launch::async, [this] {return SceneChange(); });
 	}
 }
 
 void SceneManager::SceneAsyncUpdate()
 {
 	//	ロード中じゃなかったら
-	if (endLoading) return;
+	if (endLoading_) return;
 
-	std::future_status loadStatus = sceneInitInfo.wait_for(std::chrono::seconds(0));
+	std::future_status loadStatus = sceneInitInfo_.wait_for(std::chrono::seconds(0));
 	if (loadStatus == std::future_status::ready) {
 		//	ロード終わりフラグ
-		endLoading = true;
-		loadObj->SetIsLoading(!endLoading);
+		endLoading_ = true;
+		loadObj_->SetIsLoading(!endLoading_);
 		//	フェードイン
-		sceneChangeCounter.SetIsIncrement(false);
-		sceneChangeCounter.StartCount();
+		sceneChangeCounter_.SetIsIncrement(false);
+		sceneChangeCounter_.StartCount();
 	}
 }
 
 void SceneManager::SceneUpdate()
 {
 	//	スプラッシュスクリーンだったら
-	if (isSplashScreen) return;
+	if (isSplashScreen_) return;
 
 	SceneFadeInUpdate();
 	SceneFadeOutUpdate();
@@ -252,11 +205,28 @@ void SceneManager::SceneUpdate()
 
 void SceneManager::ImguiUpdate()
 {
+#ifdef _DEBUG
+
 	ImGuiManager::GetInstance()->Begin();
-	if (endLoading) {
+	if (endLoading_) {
 		scene_->ImguiUpdate();
 	}
 	ImGuiManager::GetInstance()->End();
+
+#endif // _DEBUG
+}
+
+void SceneManager::Update()
+{
+	ScreenColorUpdate();
+
+	SplashUpdate();
+
+	SceneUpdate();
+
+	loadObj_->Update();
+
+	ImguiUpdate();
 }
 
 void SceneManager::Draw()
@@ -268,7 +238,7 @@ void SceneManager::Draw()
 
 	dx->PrevPostEffect(shadowEffect.get(), shadowClearColor_);
 
-	if (endLoading && !isSplashScreen) {
+	if (endLoading_ && !isSplashScreen_) {
 		scene_->DrawShadow();
 	}
 	
@@ -288,7 +258,7 @@ void SceneManager::Draw()
 	
 	dx->PrevPostEffect(mainScene.get());
 
-	if (endLoading && !isSplashScreen) {
+	if (endLoading_ && !isSplashScreen_) {
 		scene_->Draw();
 	}
 
@@ -320,16 +290,16 @@ void SceneManager::Draw()
 	FLOAT clearColor_[] = { 0.0f,0.0f,0.0f,1.0f };
 	dx->PrevDraw(clearColor_);
 
-	if (!isSplashScreen) {
+	if (!isSplashScreen_) {
 		mainScene->Draw(false, false, false, ybulrluminnce->GetTexture().GetHandle());
 	}
 	
-	loadObj->Draw();
+	loadObj_->Draw();
 
 #ifdef NDEBUG
 
-	if (isSplashScreen) {
-		splashSprite->Draw(PipelineManager::GetInstance()->GetPipeline("LoadingSprite"));
+	if (isSplashScreen_) {
+		splashSprite_->Draw();
 	}
 
 #endif // NDEBUG
@@ -352,7 +322,7 @@ void SceneManager::SceneChange()
 		scene_->Initialize();
 		//	画像転送
 		MyDirectX::GetInstance()->UploadTexture();
-		sceneInitialized = true;
+		sceneInitialized_ = true;
 		nextScene_.release();
 	}
 }
@@ -363,10 +333,10 @@ void SceneManager::SetNextScene(const std::string& sceneName)
 	
 	//	nextSceneがセットされたら
 	if (nextScene_ != nullptr) {
-		sceneInitialized = false;
-		loadObj->SetIsLoading(true);
+		sceneInitialized_ = false;
+		loadObj_->SetIsLoading(true);
 
-		sceneChangeCounter.SetIsIncrement(true);
-		sceneChangeCounter.StartCount();
+		sceneChangeCounter_.SetIsIncrement(true);
+		sceneChangeCounter_.StartCount();
 	}
 }

@@ -1,46 +1,38 @@
 #pragma once
 #include "AbstractSceneFactory.h"
+#include "IScene.h"
+#include "PostEffect.h"
 #include <future>
 
-#include "IScene.h"
-#include "Sprite.h"
-#include "Texture.h"
-#include "PostEffect.h"
-
+#include "SplashSprite.h"
 #include "ILoadingObj.h"
 #include "FrameCounter.h"
 
 class SceneManager
 {
 private:
-	//	フェードインアウトフレーム数
-	static const int S_SCENE_CHANGE_TIME = 60;
+	FrameCounter sceneChangeCounter_;
 
 	std::unique_ptr<IScene> scene_;
 	std::unique_ptr<IScene> nextScene_;
 
 	std::unique_ptr<AbstractSceneFactory> sceneFactry_;
 
-	Vector4D screenColor = { 1.0f,1.0f,1.0f,1.0f };
-
-	int sceneChangeTimer = 0;
-
-	FrameCounter sceneChangeCounter;
+	Vector4D screenColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
 #pragma region SplashScreen
 
-	bool isSplashScreen = false;
-	Texture rogoUI;
-	std::unique_ptr<Sprite> splashSprite;
+	bool isSplashScreen_ = false;
+	std::unique_ptr<SplashSprite> splashSprite_;
 
 #pragma endregion
 
 #pragma region Loading
-	std::future<void> sceneInitInfo;
-	bool endLoading = false;
-	bool sceneInitialized = true;
+	std::future<void> sceneInitInfo_;
+	bool endLoading_ = false;
+	bool sceneInitialized_ = true;
 
-	std::unique_ptr<ILoadingObj> loadObj;
+	std::unique_ptr<ILoadingObj> loadObj_;
 #pragma endregion
 
 #pragma region PostEffect
@@ -63,6 +55,7 @@ private:	//	関数
 	void ImguiUpdate();
 
 	void FirstSceneInitialize();
+	void SplashScreenInitialize();
 	void SceneChange();
 
 	SceneManager() {};

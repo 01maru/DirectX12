@@ -19,6 +19,8 @@ private:
 	bool isActive_ = false;
 
 public:
+	FrameCounter() {};
+
 	void StartCount();
 	void ResetCount();
 

@@ -15,5 +15,6 @@ public:
 	void Draw();
 
 	bool SplashEnd() { return count_->GetCount() == count_->GetMaxCount(); }
+	void StartCounter() { if (!count_->GetIsActive()) count_->StartCount(); }
 };
 
