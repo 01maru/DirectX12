@@ -36,5 +36,6 @@ void MyGame::Draw()
 
 void MyGame::Finalize()
 {
+	SceneManager::GetInstance()->Finalize();
 	Framework::Finalize();
 }

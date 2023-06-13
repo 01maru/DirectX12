@@ -97,11 +97,11 @@ void SceneManager::Finalize()
 {
 	scene_->Finalize();
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 
 	ImGuiManager::GetInstance()->Finalize();
 
-#endif // _DEBUG
+//#endif // _DEBUG
 }
 
 void SceneManager::ScreenColorUpdate()
@@ -136,6 +136,8 @@ void SceneManager::SplashUpdate()
 		//	スプラッシュスクリーン終わり
 		isSplashScreen_ = false;
 		scene_->Update();
+
+		splashSprite_->Finalize();
 
 		sceneChangeCounter_.SetIsIncrement(false);
 		sceneChangeCounter_.StartCount();
