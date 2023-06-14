@@ -1,8 +1,8 @@
-#include "MyXAudio.h"
+#include "XAudioManager.h"
 #include <fstream>
+#include <assert.h>
 
 #include "ImGuiManager.h"
-#include "Input.h"
 #include "MyMath.h"
 
 #pragma region Struct
@@ -22,29 +22,29 @@ struct FormatChunk {
 
 #pragma endregion
 
-void MyXAudio::SoundUnload(SoundData* soundData_)
+void XAudioManager::UnloadSoundData(SoundData* soundData)
 {
-	delete[] soundData_->pBuffer;
+	delete[] soundData->pBuffer;
 
-	soundData_->pBuffer = 0;
-	soundData_->bufferSize = 0;
-	soundData_->wfex = {};
+	soundData->pBuffer = 0;
+	soundData->bufferSize = 0;
+	soundData->wfex = {};
 }
 
-MyXAudio* MyXAudio::GetInstance()
+XAudioManager* XAudioManager::GetInstance()
 {
-	static MyXAudio instance;
+	static XAudioManager instance;
 	return &instance;
 }
 
-void MyXAudio::Initialize()
+void XAudioManager::Initialize()
 {
 	HRESULT result = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
 
 	result = xAudio2->CreateMasteringVoice(&masterVoice);
 }
 
-void MyXAudio::Finalize()
+void XAudioManager::Finalize()
 {
 	StopAllSound();
 	masterVoice->DestroyVoice();
@@ -52,12 +52,22 @@ void MyXAudio::Finalize()
 
 	for (auto itr = data_.begin(); itr != data_.end(); ++itr)
 	{
-		SoundUnload(&itr->second);
+		UnloadSoundData(&itr->second);
 	}
 	data_.clear();
 }
 
-void MyXAudio::Update()
+float XAudioManager::LoadVolume(const std::string& /*filename*/)
+{
+
+	return 1.0f;
+}
+
+void XAudioManager::SaveVolume()
+{
+}
+
+void XAudioManager::Update()
 {
 #ifdef _DEBUG
 
@@ -65,37 +75,46 @@ void MyXAudio::Update()
 
 	for (size_t i = 0; i < bgmsoundPtr.size(); i++)
 	{
-		bgmsoundPtr[i].ptr->SetVolume(bgmVolume * data_[bgmsoundPtr[i].soundname].volume);
+		bgmsoundPtr[i].ptr->SetVolume(bgmVolume * data_[bgmsoundPtr[i].dataKey].volume);
 	}
 	for (size_t i = 0; i < soundEffectPtr.size(); i++)
 	{
-		soundEffectPtr[i].ptr->SetVolume(seVolume * data_[soundEffectPtr[i].soundname].volume);
+		soundEffectPtr[i].ptr->SetVolume(seVolume * data_[soundEffectPtr[i].dataKey].volume);
 	}
 
 #endif // _DEBUG
 }
 
-void MyXAudio::ImguiUpdate()
+void XAudioManager::ImguiUpdate()
 {
 	ImGuiManager* imguiMan = ImGuiManager::GetInstance();
 
-	imguiMan->SetWindow("Volume");
+	imguiMan->SetWindow("VolumeManager");
 
 	imguiMan->CheckBox("IsDebug", isDebug_);
-	
+
 	if (isDebug_) {
+		imguiMan->BeginChild(Vector2D(0, 200));
 		for (auto itr = data_.begin(); itr != data_.end(); ++itr)
 		{
-			imguiMan->SetSliderFloat(itr->first.c_str(), itr->second.volume, 0.0f, 1.0f);
-		}
+			imguiMan->SetSliderFloat(itr->first.c_str(), itr->second.volume, 0.005f, 0.0f, 1.0f);
 
-		imguiMan->SetButton("Save");
+			bool playSound = imguiMan->SetButton("Play");
+			if (playSound) PlayDebugSoundWave(itr->first, Master, false, true);
+
+			bool stopSound = imguiMan->SetButton("Stop");
+			if (stopSound) StopSound(itr->first);
+		}
+		imguiMan->EndChild();
+
+		if (imguiMan->SetButton("StopAllSound")) StopDebugSound();
+		if (imguiMan->SetButton("Save")) SaveVolume();
 	}
 
 	imguiMan->EndWindow();
 }
 
-void MyXAudio::LoadSoundWave(const std::string& filename)
+void XAudioManager::LoadSoundWave(const std::string& filename)
 {
 	//	既に読み込み済みだったら
 	if (data_.count(filename) == 1) return;
@@ -137,46 +156,49 @@ void MyXAudio::LoadSoundWave(const std::string& filename)
 	soundData.wfex = format.fmt;
 	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
 	soundData.bufferSize = data.size;
+	soundData.volume = LoadVolume(filename);
 
 	//	データの挿入
 	data_.emplace(filename, soundData);
 }
 
-void MyXAudio::PlaySoundWave(const std::string& soundName, SoundType type, bool loop)
+void XAudioManager::PlayDebugSoundWave(const std::string& soundName, SoundType type, bool loop, bool isDebug)
 {
 	HRESULT result;
-	
+
 	//	音データがあったら
 	assert(data_.count(soundName) != 0);
 
 	SoundVoicePtr pSourceVoice;
 	result = xAudio2->CreateSourceVoice(&pSourceVoice.ptr, &data_[soundName].wfex, 0U, 3.0f);
 
-	pSourceVoice.soundname = soundName;
-	float typeVolume = 0.0f;
+	pSourceVoice.dataKey = soundName;
+	float typeVolume = 1.0f;
 	switch (type)
 	{
-	case MyXAudio::Master:
-		typeVolume = masterVolume;
-		break;
-	case MyXAudio::BGM:
+	case XAudioManager::BGM:
 		typeVolume = bgmVolume;
 		break;
-	case MyXAudio::SE:
+	case XAudioManager::SE:
 		typeVolume = seVolume;
 		break;
 	}
 	pSourceVoice.ptr->SetVolume(data_[soundName].volume * typeVolume);
 
 	//	配列に挿入
-	switch (type)
-	{
-	case MyXAudio::BGM:
-		bgmsoundPtr.push_back(pSourceVoice);
-		break;
-	case MyXAudio::SE:
-		soundEffectPtr.push_back(pSourceVoice);
-		break;
+	if (isDebug) {
+		debugSoundPtr_.push_back(pSourceVoice);
+	}
+	else {
+		switch (type)
+		{
+		case XAudioManager::BGM:
+			bgmsoundPtr.push_back(pSourceVoice);
+			break;
+		case XAudioManager::SE:
+			soundEffectPtr.push_back(pSourceVoice);
+			break;
+		}
 	}
 
 	XAUDIO2_BUFFER buf{};
@@ -190,21 +212,51 @@ void MyXAudio::PlaySoundWave(const std::string& soundName, SoundType type, bool 
 	result = pSourceVoice.ptr->Start();
 }
 
-void MyXAudio::VolumeUpdate(SoundType type)
+void XAudioManager::PlaySoundWave(const std::string& soundName, SoundType type, bool loop)
 {
-	Input* input = Input::GetInstance();
+	PlayDebugSoundWave(soundName, type, loop);
+}
 
-	float volume = ((input->GetKey(DIK_D) || input->GetKey(DIK_RIGHT)) - (input->GetKey(DIK_A) || input->GetKey(DIK_LEFT))) * 0.01f;
+void XAudioManager::ChangeVolume(float volume, SoundType type)
+{
+	switch (type)
+	{
+	case XAudioManager::Master:
+		masterVolume = volume;
+		masterVoice->SetVolume(masterVolume);
+		break;
+	case XAudioManager::BGM:
+		bgmVolume = volume;
+		for (size_t i = 0; i < bgmsoundPtr.size(); i++)
+		{
+			bgmsoundPtr[i].ptr->SetVolume(bgmVolume * data_[bgmsoundPtr[i].dataKey].volume);
+		}
+		break;
+	case XAudioManager::SE:
+		seVolume = volume;
+		for (size_t i = 0; i < soundEffectPtr.size(); i++)
+		{
+			soundEffectPtr[i].ptr->SetVolume(seVolume * data_[soundEffectPtr[i].dataKey].volume);
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+void XAudioManager::VolumeUpdate(SoundType type, int inputValue)
+{
+	float volume = inputValue * 0.01f;
 
 	switch (type)
 	{
-	case MyXAudio::Master:
+	case XAudioManager::Master:
 		volume += masterVolume;
 		break;
-	case MyXAudio::BGM:
+	case XAudioManager::BGM:
 		volume += bgmVolume;
 		break;
-	case MyXAudio::SE:
+	case XAudioManager::SE:
 		volume += seVolume;
 		break;
 	default:
@@ -214,33 +266,6 @@ void MyXAudio::VolumeUpdate(SoundType type)
 	volume = MyMath::mMin(1.0f, volume);
 
 	ChangeVolume(volume, type);
-}
-
-void MyXAudio::ChangeVolume(float volume, SoundType type)
-{
-	switch (type)
-	{
-	case MyXAudio::Master:
-		masterVolume = volume;
-		masterVoice->SetVolume(masterVolume);
-		break;
-	case MyXAudio::BGM:
-		bgmVolume = volume;
-		for (size_t i = 0; i < bgmsoundPtr.size(); i++)
-		{
-			bgmsoundPtr[i].ptr->SetVolume(bgmVolume * data_[bgmsoundPtr[i].soundname].volume);
-		}
-		break;
-	case MyXAudio::SE:
-		seVolume = volume;
-		for (size_t i = 0; i < soundEffectPtr.size(); i++)
-		{
-			soundEffectPtr[i].ptr->SetVolume(seVolume * data_[soundEffectPtr[i].soundname].volume);
-		}
-		break;
-	default:
-		break;
-	}
 }
 
 //void MyXAudio::ChangeAllPitchRatio(float pitch)
@@ -258,13 +283,14 @@ void MyXAudio::ChangeVolume(float volume, SoundType type)
 //	}
 //}
 
-void MyXAudio::StopAllSound()
+void XAudioManager::StopAllSound()
 {
 	StopBGM();
 	StopSE();
+	StopDebugSound();
 }
 
-void MyXAudio::StopBGM()
+void XAudioManager::StopBGM()
 {
 	for (int i = 0; i < bgmsoundPtr.size(); i++)
 	{
@@ -273,7 +299,7 @@ void MyXAudio::StopBGM()
 	bgmsoundPtr.clear();
 }
 
-void MyXAudio::StopSE()
+void XAudioManager::StopSE()
 {
 	for (int i = 0; i < soundEffectPtr.size(); i++)
 	{
@@ -282,11 +308,38 @@ void MyXAudio::StopSE()
 	soundEffectPtr.clear();
 }
 
-void MyXAudio::DeleteAllSound()
+void XAudioManager::StopSound(const std::string& soundName)
 {
-	for (auto itr = data_.begin(); itr != data_.end(); ++itr)
+	for (int i = 0; i < debugSoundPtr_.size(); i++)
 	{
-		SoundUnload(&itr->second);
+		if (debugSoundPtr_[i].dataKey != soundName) continue;
+		debugSoundPtr_[i].ptr->Stop();
+	}
+}
+
+void XAudioManager::StopDebugSound()
+{
+	for (int i = 0; i < debugSoundPtr_.size(); i++)
+	{
+		debugSoundPtr_[i].ptr->Stop();
+	}
+	debugSoundPtr_.clear();
+}
+
+void XAudioManager::DeleteAllSound()
+{
+	for (auto& data : data_)
+	{
+		UnloadSoundData(&data.second);
 	}
 	data_.clear();
+}
+
+void XAudioManager::DeleteSoundData(const std::string& soundName)
+{
+	//	音データがあったら
+	assert(data_.count(soundName) != 0);
+	
+	UnloadSoundData(&data_[soundName]);
+	data_.erase(soundName);
 }

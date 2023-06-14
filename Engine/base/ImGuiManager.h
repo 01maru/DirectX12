@@ -34,7 +34,11 @@ public:
 	void SetWindow(const std::string& windowName);
 	void EndWindow();
 	bool SetButton(const std::string& buttonName, const Vector2D& size = Vector2D());
-	void SetSliderFloat(const std::string& sliderName, float& value, float minValue, float maxValue);
+	void SetRadioButton(const std::string& buttonName, bool& flag);
+	void SetSliderFloat(const std::string& sliderName, float& value, float spd, float minValue, float maxValue);
 	void CheckBox(const std::string& name, bool& flag);
+
+	void BeginChild(const Vector2D& size = Vector2D());
+	void EndChild();
 };
 

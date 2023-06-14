@@ -4,7 +4,7 @@
 #include "TextureManager.h"
 #include "PipelineManager.h"
 #include "ParticleManager.h"
-#include "MyXAudio.h"
+#include "XAudioManager.h"
 #include "Input.h"
 #include "InputJoypad.h"
 #include "FPS.h"
@@ -50,7 +50,7 @@ void Framework::Initialize()
 
 	FPS::GetInstance()->Initialize();
 
-	MyXAudio::GetInstance()->Initialize();
+	XAudioManager::GetInstance()->Initialize();
 }
 
 void Framework::Update()
@@ -60,7 +60,7 @@ void Framework::Update()
 	Input::GetInstance()->Update();
 	InputJoypad::GetInstance()->Update();
 
-	MyXAudio::GetInstance()->Update();
+	XAudioManager::GetInstance()->Update();
 
 	//	60fpsŒÅ’è—p
 	FPS::GetInstance()->Update();
@@ -68,6 +68,6 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
-	MyXAudio::GetInstance()->Finalize();
+	XAudioManager::GetInstance()->Finalize();
 	Window::GetInstance()->Finalize();
 }

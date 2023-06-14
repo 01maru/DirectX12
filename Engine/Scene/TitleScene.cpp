@@ -7,7 +7,7 @@
 #include "Easing.h"
 #include "ImGuiManager.h"
 
-#include "MyXAudio.h"
+#include "XAudioManager.h"
 
 void TitleScene::Initialize()
 {
@@ -34,22 +34,22 @@ void TitleScene::Initialize()
 	//pressSprite->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 	//pressSprite->TransferVertex();
 #pragma endregion
-	MyXAudio::GetInstance()->PlaySoundWave("titleBGM.wav", MyXAudio::BGM, true);
+	XAudioManager::GetInstance()->PlaySoundWave("titleBGM.wav", XAudioManager::BGM, true);
 }
 
 void TitleScene::Finalize()
 {
-	MyXAudio::GetInstance()->StopAllSound();
-	MyXAudio::GetInstance()->DeleteAllSound();
+	XAudioManager::GetInstance()->StopAllSound();
+	XAudioManager::GetInstance()->DeleteAllSound();
 }
 
 void TitleScene::LoadResources()
 {
 #pragma region Sound
 	
-	MyXAudio::GetInstance()->LoadSoundWave("titleBGM.wav");
-	MyXAudio::GetInstance()->LoadSoundWave("cursorMove.wav");
-	MyXAudio::GetInstance()->LoadSoundWave("decision.wav");
+	XAudioManager::GetInstance()->LoadSoundWave("titleBGM.wav");
+	XAudioManager::GetInstance()->LoadSoundWave("cursorMove.wav");
+	XAudioManager::GetInstance()->LoadSoundWave("decision.wav");
 #pragma endregion
 
 #pragma region Texture

@@ -76,12 +76,28 @@ bool ImGuiManager::SetButton(const std::string& buttonName, const Vector2D& size
 	return ImGui::Button(buttonName.c_str(), ImVec2(size.x, size.y));
 }
 
-void ImGuiManager::SetSliderFloat(const std::string& sliderName, float& value, float minValue, float maxValue)
+void ImGuiManager::SetRadioButton(const std::string& buttonName, bool& flag)
 {
-	ImGui::SliderFloat(sliderName.c_str(), &value, minValue, maxValue);
+	flag = ImGui::RadioButton(buttonName.c_str(), !flag);
+}
+
+void ImGuiManager::SetSliderFloat(const std::string& sliderName, float& value, float spd, float minValue, float maxValue)
+{
+	//ImGui::SliderFloat(sliderName.c_str(), &value, minValue, maxValue);
+	ImGui::DragFloat(sliderName.c_str(), &value, spd, minValue, maxValue);
 }
 
 void ImGuiManager::CheckBox(const std::string& name, bool& flag)
 {
 	ImGui::Checkbox(name.c_str(), &flag);
+}
+
+void ImGuiManager::BeginChild(const Vector2D& size)
+{
+	ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(size.x, size.y), ImGuiWindowFlags_NoTitleBar);
+}
+
+void ImGuiManager::EndChild()
+{
+	ImGui::EndChild();
 }

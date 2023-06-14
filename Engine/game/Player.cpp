@@ -5,7 +5,7 @@
 #include "CollisionAttribute.h"
 #include "QueryCallBack.h"
 #include "InputJoypad.h"
-#include "MyXAudio.h"
+#include "XAudioManager.h"
 
 ICamera* Player::camera = nullptr;
 const float Player::MAX_SPD = 0.1f;

@@ -246,7 +246,7 @@
     <ClCompile Include="Engine\base\ImGuiManager.cpp">
       <Filter>ソース ファイル\lib\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Audio\MyXAudio.cpp">
+    <ClCompile Include="Engine\Audio\XAudioManager.cpp">
       <Filter>ソース ファイル\lib\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\base\Window.cpp">
@@ -485,7 +485,7 @@
     <ClInclude Include="Engine\base\DirectX.h">
       <Filter>ヘッダー ファイル\lib\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Audio\MyXAudio.h">
+    <ClInclude Include="Engine\Audio\XAudioManager.h">
       <Filter>ヘッダー ファイル\lib\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\Window.h">

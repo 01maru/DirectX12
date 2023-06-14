@@ -1,7 +1,7 @@
 #include "GameScene.h"
 #include "MyDebugCamera.h"
 #include "GameCamera.h"
-#include "MyXAudio.h"
+#include "XAudioManager.h"
 #include "NormalCamera.h"
 #include "TextureManager.h"
 #include "FbxModel.h"
@@ -75,7 +75,7 @@ void GameScene::LoadResources()
 #pragma endregion
 
 #pragma region Sound
-	MyXAudio::GetInstance()->LoadSoundWave("bgm.wav");
+	XAudioManager::GetInstance()->LoadSoundWave("bgm.wav");
 #pragma endregion
 
 }
