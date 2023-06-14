@@ -21,6 +21,15 @@ struct FormatChunk {
 	WAVEFORMATEX fmt;
 };
 
+struct VolumeData
+{
+	std::string name_;
+	float volume_ = 1.0f;
+
+	VolumeData() {};
+	VolumeData(const std::string& name, float volume) :name_(name), volume_(volume) {};
+};
+
 #pragma endregion
 
 void XAudioManager::UnloadSoundData(SoundData* soundData)
@@ -79,9 +88,6 @@ float XAudioManager::LoadVolume(const std::string& filename)
 		std::string key;
 		getline(line_stream, key, ' ');
 
-		//[//]から始まる行はコメント
-		if (key.find("//") == 0) continue;
-
 		if (key == filename) {
 			//	dataがあったら
 			line_stream >> volume;
@@ -104,6 +110,70 @@ void XAudioManager::LoadAllValumeData()
 
 void XAudioManager::SaveVolume()
 {
+	std::string filePath = "Resources/Sound/VolumeData.txt";
+
+	//ファイル開く(開けなかったら新規作成)
+	std::ifstream file;
+	file.open(filePath.c_str(), std::ios_base::app);
+
+	std::vector<VolumeData> volumeData;
+	std::vector<VolumeData> newVolumeData;
+
+	// 1行ずつ読み込む
+	std::string line;
+	while (getline(file, line)) {
+
+		// 1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream line_stream(line);
+
+		VolumeData data;
+		line_stream >> data.name_;
+
+		// 半角スペース区切りで行の先頭文字列を取得
+		std::string key;
+		getline(line_stream, key, ' ');
+
+		line_stream >> data.volume_;
+		
+		volumeData.emplace_back(data);
+	}
+
+	for (auto itr = data_.begin(); itr != data_.end(); itr++)
+	{
+		bool pushBack = true;
+		for (size_t j = 0; j < volumeData.size(); j++)
+		{
+			//	既にあったら
+			if (itr->first == volumeData[j].name_) {
+				volumeData[j].volume_ = itr->second.volume;
+				pushBack = false;
+				break;
+			}
+		}
+
+		//	存在しなかったら
+		if (pushBack) newVolumeData.emplace_back(VolumeData(itr->first, itr->second.volume));
+	}
+
+	//ファイル閉じる
+	file.close();
+
+	std::ofstream outPutFile;
+	outPutFile.open(filePath);
+
+	//	ファイルが開けなかったら
+	if (outPutFile.fail()) { assert(0); }
+
+	for (size_t i = 0; i < volumeData.size(); i++)
+	{
+		outPutFile << volumeData[i].name_ << " " << volumeData[i].volume_ << std::endl;
+	}
+	for (size_t i = 0; i < newVolumeData.size(); i++)
+	{
+		outPutFile << newVolumeData[i].name_ << " " << newVolumeData[i].volume_ << std::endl;
+	}
+
+	outPutFile.close();
 }
 
 void XAudioManager::Update()

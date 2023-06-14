@@ -1,0 +1,3 @@
+cursorMove.wav 0.18
+decision.wav 0.405
+titleBGM.wav 0.775
