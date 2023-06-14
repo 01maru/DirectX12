@@ -318,7 +318,7 @@ void XAudioManager::PlayDebugSoundWave(const std::string& soundName, SoundType t
 
 	XAUDIO2_BUFFER buf{};
 	buf.pAudioData = data_[soundName].pBuffer;
-	buf.AudioBytes = data_[soundName].bufferSize;
+	buf.AudioBytes = (UINT32)data_[soundName].bufferSize;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 	//	ÉãÅ[Évçƒê∂
 	if (loop) buf.LoopCount = XAUDIO2_LOOP_INFINITE;
@@ -359,7 +359,7 @@ void XAudioManager::ChangeVolume(float volume, SoundType type)
 	}
 }
 
-void XAudioManager::VolumeUpdate(SoundType type, int inputValue)
+void XAudioManager::VolumeUpdate(SoundType type, int32_t inputValue)
 {
 	float volume = inputValue * 0.01f;
 
@@ -407,7 +407,7 @@ void XAudioManager::StopAllSound()
 
 void XAudioManager::StopBGM()
 {
-	for (int i = 0; i < bgmPtr_.size(); i++)
+	for (size_t i = 0; i < bgmPtr_.size(); i++)
 	{
 		bgmPtr_[i].ptr->Stop();
 	}
@@ -416,7 +416,7 @@ void XAudioManager::StopBGM()
 
 void XAudioManager::StopSE()
 {
-	for (int i = 0; i < sePtr_.size(); i++)
+	for (size_t i = 0; i < sePtr_.size(); i++)
 	{
 		sePtr_[i].ptr->Stop();
 	}
@@ -425,7 +425,7 @@ void XAudioManager::StopSE()
 
 void XAudioManager::StopSound(const std::string& soundName)
 {
-	for (int i = 0; i < debugSoundPtr_.size(); i++)
+	for (size_t i = 0; i < debugSoundPtr_.size(); i++)
 	{
 		if (debugSoundPtr_[i].dataKey != soundName) continue;
 		debugSoundPtr_[i].ptr->Stop();
@@ -434,7 +434,7 @@ void XAudioManager::StopSound(const std::string& soundName)
 
 void XAudioManager::StopDebugSound()
 {
-	for (int i = 0; i < debugSoundPtr_.size(); i++)
+	for (size_t i = 0; i < debugSoundPtr_.size(); i++)
 	{
 		debugSoundPtr_[i].ptr->Stop();
 	}

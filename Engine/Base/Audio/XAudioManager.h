@@ -14,7 +14,7 @@
 struct SoundData {
 	WAVEFORMATEX wfex;
 	BYTE* pBuffer;
-	unsigned int bufferSize;
+	size_t bufferSize;
 
 	float volume = 1.0f;
 };
@@ -89,7 +89,7 @@ public:
 	void PlaySoundWave(const std::string& soundName, SoundType type, bool loop = false);
 
 	//	volumeïœçXóp(OptionÇ∆Ç©Ç≈)
-	void VolumeUpdate(SoundType type, int inputValue);
+	void VolumeUpdate(SoundType type, int32_t inputValue);
 
 	//void ChangeAllPitchRatio(float pitch);
 
