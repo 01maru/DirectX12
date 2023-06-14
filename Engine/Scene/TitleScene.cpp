@@ -95,7 +95,7 @@ void TitleScene::Update()
 
 void TitleScene::ImguiUpdate()
 {
-	ImGuiManager::GetInstance()->SetWindow("test");
+	ImGuiManager::GetInstance()->BeginWindow("test");
 	ImGuiManager::GetInstance()->SetButton("testbutton");
 	ImGuiManager::GetInstance()->EndWindow();
 }

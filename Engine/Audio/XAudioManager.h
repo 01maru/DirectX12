@@ -7,6 +7,8 @@
 
 #pragma comment(lib,"xaudio2.lib")
 
+#pragma region Struct
+
 //	âπÉfÅ[É^
 struct SoundData {
 	WAVEFORMATEX wfex;
@@ -21,6 +23,8 @@ struct SoundVoicePtr {
 	std::string dataKey;
 	IXAudio2SourceVoice* ptr = nullptr;
 };
+
+#pragma endregion
 
 class XAudioManager
 {
@@ -61,6 +65,7 @@ private:	//	ä÷êî
 	void StopSound(const std::string& soundName);
 
 	float LoadVolume(const std::string& filename);
+	void LoadAllValumeData();
 	void SaveVolume();
 
 	void PlayDebugSoundWave(const std::string& soundName, SoundType type, bool loop = false, bool isDebug = false);

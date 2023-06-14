@@ -97,6 +97,14 @@ float XAudioManager::LoadVolume(const std::string& filename)
 	return volume;
 }
 
+void XAudioManager::LoadAllValumeData()
+{
+	for (auto itr = data_.begin(); itr != data_.end(); ++itr)
+	{
+		itr->second.volume = LoadVolume(itr->first);
+	}
+}
+
 void XAudioManager::SaveVolume()
 {
 }
@@ -123,26 +131,34 @@ void XAudioManager::ImguiUpdate()
 {
 	ImGuiManager* imguiMan = ImGuiManager::GetInstance();
 
-	imguiMan->SetWindow("VolumeManager");
+	imguiMan->BeginWindow("VolumeManager", true);
+
+	if (imguiMan->BeginMenuBar()) {
+		if (imguiMan->BeginMenu("File")) {
+			if (imguiMan->MenuItem("Save")) SaveVolume();
+			if (imguiMan->MenuItem("Load")) LoadAllValumeData();
+			imguiMan->EndMenu();
+		}
+		imguiMan->EndMenuBar();
+	}
 
 	imguiMan->CheckBox("IsDebug", isDebug_);
 
 	if (isDebug_) {
 		imguiMan->BeginChild(Vector2D(0, 200));
+
 		for (auto itr = data_.begin(); itr != data_.end(); ++itr)
 		{
 			imguiMan->SetSliderFloat(itr->first.c_str(), itr->second.volume, 0.005f, 0.0f, 1.0f);
 
-			bool playSound = imguiMan->SetButton("Play");
-			if (playSound) PlayDebugSoundWave(itr->first, Master, false, true);
+			if (imguiMan->SetButton("Play")) PlayDebugSoundWave(itr->first, Master, false, true);
 
-			bool stopSound = imguiMan->SetButton("Stop");
-			if (stopSound) StopSound(itr->first);
+			imguiMan->SameLine();
+			if (imguiMan->SetButton("Stop")) StopSound(itr->first);
 		}
 		imguiMan->EndChild();
 
 		if (imguiMan->SetButton("StopAllSound")) StopDebugSound();
-		if (imguiMan->SetButton("Save")) SaveVolume();
 	}
 
 	imguiMan->EndWindow();

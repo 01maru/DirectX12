@@ -61,14 +61,52 @@ void ImGuiManager::Draw()
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList);
 }
 
-void ImGuiManager::SetWindow(const std::string& windowName)
+void ImGuiManager::BeginWindow(const std::string& windowName)
 {
 	ImGui::Begin(windowName.c_str());
+}
+
+void ImGuiManager::BeginWindow(const std::string& windowName, bool menu)
+{
+	ImGuiWindowFlags flag = 0;
+
+	if (menu) flag = ImGuiWindowFlags_MenuBar;
+	ImGui::Begin(windowName.c_str(), 0, flag);
 }
 
 void ImGuiManager::EndWindow()
 {
 	ImGui::End();
+}
+
+bool ImGuiManager::BeginMenuBar()
+{
+	return ImGui::BeginMenuBar();
+}
+
+void ImGuiManager::EndMenuBar()
+{
+	ImGui::EndMenuBar();
+}
+
+bool ImGuiManager::BeginMenu(const std::string& menuName)
+{
+	return ImGui::BeginMenu(menuName.c_str());
+}
+
+void ImGuiManager::EndMenu()
+{
+	ImGui::EndMenu();
+}
+
+bool ImGuiManager::MenuItem(const std::string& name)
+{
+	return ImGui::MenuItem(name.c_str());
+}
+
+void ImGuiManager::SameLine()
+{
+	ImGui::SameLine();
 }
 
 bool ImGuiManager::SetButton(const std::string& buttonName, const Vector2D& size)
