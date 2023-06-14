@@ -14,7 +14,7 @@ void PipelineManager::Initialize()
 #pragma region Model
 	modelPipeline.reserve(blendMordNum);
 
-	Shader objShader(L"Resources/shader/ObjVS.hlsl", L"Resources/shader/ObjPS.hlsl");
+	Shader objShader(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
 
 	D3D12_INPUT_ELEMENT_DESC modelInputLayout[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyz座標
@@ -24,7 +24,7 @@ void PipelineManager::Initialize()
 		{"BONEWEIGHTS",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
 	};
 
-	Shader silhouetteShader(L"Resources/shader/ObjVS.hlsl", L"Resources/shader/SilhouettePS.hlsl");
+	Shader silhouetteShader(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/SilhouettePS.hlsl");
 
 	modelSilhouettePipe = std::make_unique<GPipeline>();
 	modelSilhouettePipe->Init(silhouetteShader, modelInputLayout, _countof(modelInputLayout), 5,
@@ -42,7 +42,7 @@ void PipelineManager::Initialize()
 		modelpipeline_->SetBlend(i);
 	}
 
-	Shader shadowShader(L"Resources/shader/ObjShadowVS.hlsl", L"Resources/shader/ObjShadowPS.hlsl");
+	Shader shadowShader(L"Resources/Shader/ObjShadowVS.hlsl", L"Resources/Shader/ObjShadowPS.hlsl");
 
 	D3D12_INPUT_ELEMENT_DESC shadowInputLayout[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyz座標
@@ -53,7 +53,7 @@ void PipelineManager::Initialize()
 		, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R32G32_FLOAT);
 	shadowPipeline->SetBlend(GPipeline::NONE_BLEND);
 
-	Shader shadowRecieverShader(L"Resources/shader/ShadowRecieverVS.hlsl", L"Resources/shader/ShadowRecieverPS.hlsl");
+	Shader shadowRecieverShader(L"Resources/Shader/ShadowRecieverVS.hlsl", L"Resources/Shader/ShadowRecieverPS.hlsl");
 
 	D3D12_INPUT_ELEMENT_DESC shadowRecieverInputLayout[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyz座標
@@ -69,7 +69,7 @@ void PipelineManager::Initialize()
 
 #pragma region Obj2D
 	obj2DPipeline.reserve(blendMordNum);
-	Shader test2dShader(L"Resources/shader/SpriteVS.hlsl", L"Resources/shader/SpritePS.hlsl");
+	Shader test2dShader(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 
 	D3D12_INPUT_ELEMENT_DESC inputLayout2D[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyz座標
@@ -90,7 +90,7 @@ void PipelineManager::Initialize()
 
 #pragma region PostEffect
 	postEffectPipeline.reserve(blendMordNum);
-	Shader luminnceShader(L"Resources/shader/ScreenVS.hlsl", L"Resources/shader/ScreenPS.hlsl");
+	Shader luminnceShader(L"Resources/Shader/ScreenVS.hlsl", L"Resources/Shader/ScreenPS.hlsl");
 	for (int i = 0; i < blendMordNum; i++)
 	{
 		GPipeline* postEffectpipe_ = new GPipeline();
@@ -102,7 +102,7 @@ void PipelineManager::Initialize()
 		postEffectPipeline.emplace_back(postEffectpipe_);
 	}
 
-	Shader postEffect(L"Resources/shader/ScreenVS.hlsl", L"Resources/shader/ScreenShadowPS.hlsl");
+	Shader postEffect(L"Resources/Shader/ScreenVS.hlsl", L"Resources/Shader/ScreenShadowPS.hlsl");
 	postShadowPipeline.reserve(blendMordNum);
 	for (int i = 0; i < blendMordNum; i++)
 	{
@@ -115,7 +115,7 @@ void PipelineManager::Initialize()
 		postShadowPipeline.emplace_back(postEffectpipe_);
 	}
 
-	Shader luminncePostEffect(L"Resources/shader/ScreenVS.hlsl", L"Resources/shader/LuminncePS.hlsl");
+	Shader luminncePostEffect(L"Resources/Shader/ScreenVS.hlsl", L"Resources/Shader/LuminncePS.hlsl");
 	luminncePipeline.reserve(blendMordNum);
 	for (int i = 0; i < blendMordNum; i++)
 	{
@@ -130,13 +130,13 @@ void PipelineManager::Initialize()
 
 
 #pragma region Blur
-	Shader xblur(L"Resources/shader/XBlurVS.hlsl", L"Resources/shader/BlurPS.hlsl");
+	Shader xblur(L"Resources/Shader/XBlurVS.hlsl", L"Resources/Shader/BlurPS.hlsl");
 
 	xBlurPipeline = std::make_unique<GPipeline>();
 	xBlurPipeline->Init(xblur, inputLayout2D, _countof(inputLayout2D)
 		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R32G32_FLOAT);
 
-	Shader yblur(L"Resources/shader/YBlurVS.hlsl", L"Resources/shader/BlurPS.hlsl");
+	Shader yblur(L"Resources/Shader/YBlurVS.hlsl", L"Resources/Shader/BlurPS.hlsl");
 
 	yBlurPipeline = std::make_unique<GPipeline>();
 	yBlurPipeline->Init(yblur, inputLayout2D, _countof(inputLayout2D)
@@ -161,7 +161,7 @@ void PipelineManager::Initialize()
 		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uv座標
 	};
 
-	Shader Spriteshader(L"Resources/shader/SpriteVS.hlsl", L"Resources/shader/SpritePS.hlsl");
+	Shader Spriteshader(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 
 	for (int i = 0; i < blendMordNum; i++)
 	{
@@ -186,7 +186,7 @@ void PipelineManager::Initialize()
 	D3D12_INPUT_ELEMENT_DESC particleInputLayout[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyz座標
 	};
-	Shader particleShader(L"Resources/shader/ParticleVS.hlsl", L"Resources/shader/ParticlePS.hlsl", "main", L"Resources/shader/ParticleGS.hlsl");
+	Shader particleShader(L"Resources/Shader/ParticleVS.hlsl", L"Resources/Shader/ParticlePS.hlsl", "main", L"Resources/Shader/ParticleGS.hlsl");
 
 	for (int i = 0; i < blendMordNum; i++)
 	{
@@ -203,7 +203,7 @@ void PipelineManager::Initialize()
 #pragma region Grass
 	grassPipeline.reserve(blendMordNum);
 
-	Shader grassShader(L"Resources/shader/GrassParticleVS.hlsl", L"Resources/shader/GrassParticlePS.hlsl", "main", L"Resources/shader/GrassParticleGS.hlsl");
+	Shader grassShader(L"Resources/Shader/GrassParticleVS.hlsl", L"Resources/Shader/GrassParticlePS.hlsl", "main", L"Resources/Shader/GrassParticleGS.hlsl");
 
 	for (int i = 0; i < blendMordNum; i++)
 	{
