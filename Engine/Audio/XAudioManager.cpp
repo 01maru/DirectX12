@@ -1,6 +1,7 @@
 #include "XAudioManager.h"
 #include <fstream>
 #include <assert.h>
+#include <sstream>
 
 #include "ImGuiManager.h"
 #include "MyMath.h"
@@ -57,10 +58,43 @@ void XAudioManager::Finalize()
 	data_.clear();
 }
 
-float XAudioManager::LoadVolume(const std::string& /*filename*/)
+float XAudioManager::LoadVolume(const std::string& filename)
 {
+	float volume = 1.0f;
 
-	return 1.0f;
+	std::string filePath = "Resources/Sound/VolumeData.txt";
+
+	//ファイル開く
+	std::ifstream file;
+	file.open(filePath.c_str());
+
+	//開けなかったらそのままにする
+	if (!file.is_open()) { assert(0); }
+
+	// 1行ずつ読み込む
+	std::string line;
+	while (getline(file, line)) {
+
+		// 1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream line_stream(line);
+
+		// 半角スペース区切りで行の先頭文字列を取得
+		std::string key;
+		getline(line_stream, key, ' ');
+
+		//[//]から始まる行はコメント
+		if (key.find("//") == 0) continue;
+
+		if (key == filename) {
+			//	dataがあったら
+			line_stream >> volume;
+		}
+	}
+
+	//ファイル閉じる
+	file.close();
+
+	return volume;
 }
 
 void XAudioManager::SaveVolume()

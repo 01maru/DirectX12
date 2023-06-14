@@ -1,9 +1,9 @@
 #pragma once
 #include "IScene.h"
+#include "Sprite.h"
 
 #include "ICamera.h"
 
-#include "Sprite.h"
 #include "Texture.h"
 
 class TitleScene :public IScene
