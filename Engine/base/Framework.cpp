@@ -60,8 +60,6 @@ void Framework::Update()
 	Input::GetInstance()->Update();
 	InputJoypad::GetInstance()->Update();
 
-	XAudioManager::GetInstance()->Update();
-
 	//	60fpsŒÅ’è—p
 	FPS::GetInstance()->Update();
 }

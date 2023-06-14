@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <memory>
 
 #pragma comment(lib,"xaudio2.lib")
 
@@ -62,9 +61,12 @@ private:
 private:	//	ä÷êî
 	void UnloadSoundData(SoundData* soundData);
 	void ChangeVolume(float volume, SoundType type);
+
+	//	Stop
 	void StopDebugSound();
 	void StopSound(const std::string& soundName);
 
+	//	Save&Load
 	float LoadVolume(const std::string& filename);
 	void LoadAllValumeData();
 	void SaveVolume();
@@ -80,7 +82,6 @@ public:
 
 	void Initialize();
 	void Finalize();
-	void Update();
 	void ImguiUpdate();
 
 	//	load

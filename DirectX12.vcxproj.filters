@@ -306,9 +306,6 @@
     <ClCompile Include="Engine\3D\Object\Object3D.cpp">
       <Filter>ソース ファイル\lib\3D\Obj</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Object\TouchableObject.cpp">
-      <Filter>ソース ファイル\lib\3D\Obj</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Scene\GameScene.cpp">
       <Filter>ソース ファイル\Game\Scene</Filter>
     </ClCompile>
@@ -625,9 +622,6 @@
     </ClInclude>
     <ClInclude Include="Engine\2D\Sprite\DebugTextManager.h">
       <Filter>ヘッダー ファイル\lib\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Object\TouchableObject.h">
-      <Filter>ヘッダー ファイル\lib\3D\Obj</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Object\Object3D.h">
       <Filter>ヘッダー ファイル\lib\3D\Obj</Filter>

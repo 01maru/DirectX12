@@ -213,8 +213,8 @@ void SceneManager::ImguiUpdate()
 	ImGuiManager::GetInstance()->Begin();
 	if (endLoading_) {
 		scene_->ImguiUpdate();
+		XAudioManager::GetInstance()->ImguiUpdate();
 	}
-	XAudioManager::GetInstance()->ImguiUpdate();
 	ImGuiManager::GetInstance()->End();
 
 #endif // _DEBUG

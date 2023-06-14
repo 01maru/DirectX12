@@ -61,11 +61,7 @@ void XAudioManager::Finalize()
 	masterVoice_->DestroyVoice();
 	xAudio2_.Reset();
 
-	for (auto itr = data_.begin(); itr != data_.end(); ++itr)
-	{
-		UnloadSoundData(&itr->second);
-	}
-	data_.clear();
+	DeleteAllSound();
 }
 
 float XAudioManager::LoadVolume(const std::string& filename)
@@ -177,19 +173,12 @@ void XAudioManager::SaveVolume()
 	outPutFile.close();
 }
 
-void XAudioManager::Update()
+void XAudioManager::ImguiUpdate()
 {
-#ifdef _DEBUG
-
 	ChangeVolume(masterVolume_, Master);
 	ChangeVolume(bgmVolume_, BGM);
 	ChangeVolume(seVolume_, SE);
 
-#endif // _DEBUG
-}
-
-void XAudioManager::ImguiUpdate()
-{
 	ImGuiManager* imguiMan = ImGuiManager::GetInstance();
 
 	imguiMan->BeginWindow("VolumeManager", true);
@@ -342,16 +331,16 @@ void XAudioManager::ChangeVolume(float volume, SoundType type)
 		break;
 	case XAudioManager::BGM:
 		bgmVolume_ = volume;
-		for (size_t i = 0; i < bgmPtr_.size(); i++)
+		for (auto& bgm : bgmPtr_)
 		{
-			bgmPtr_[i].ptr->SetVolume(bgmVolume_ * data_[bgmPtr_[i].dataKey].volume);
+			bgm.ptr->SetVolume(bgmVolume_ * data_[bgm.dataKey].volume);
 		}
 		break;
 	case XAudioManager::SE:
 		seVolume_ = volume;
-		for (size_t i = 0; i < sePtr_.size(); i++)
+		for (auto& se : sePtr_)
 		{
-			sePtr_[i].ptr->SetVolume(seVolume_ * data_[sePtr_[i].dataKey].volume);
+			se.ptr->SetVolume(seVolume_ * data_[se.dataKey].volume);
 		}
 		break;
 	default:
@@ -410,6 +399,7 @@ void XAudioManager::StopBGM()
 	for (size_t i = 0; i < bgmPtr_.size(); i++)
 	{
 		bgmPtr_[i].ptr->Stop();
+		bgmPtr_[i].ptr->DestroyVoice();
 	}
 	bgmPtr_.clear();
 }
@@ -419,6 +409,7 @@ void XAudioManager::StopSE()
 	for (size_t i = 0; i < sePtr_.size(); i++)
 	{
 		sePtr_[i].ptr->Stop();
+		sePtr_[i].ptr->DestroyVoice();
 	}
 	sePtr_.clear();
 }
@@ -437,6 +428,7 @@ void XAudioManager::StopDebugSound()
 	for (size_t i = 0; i < debugSoundPtr_.size(); i++)
 	{
 		debugSoundPtr_[i].ptr->Stop();
+		debugSoundPtr_[i].ptr->DestroyVoice();
 	}
 	debugSoundPtr_.clear();
 }
