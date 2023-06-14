@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <memory>
 
 #pragma comment(lib,"xaudio2.lib")
 
@@ -41,22 +42,22 @@ private:
 	//	Imgui—p
 	bool isDebug_ = false;
 
-	ComPtr<IXAudio2> xAudio2;
-	IXAudio2MasteringVoice* masterVoice = nullptr;
+	ComPtr<IXAudio2> xAudio2_;
+	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
 	//	sound‚Ìƒf[ƒ^”z—ñ
 	std::map<std::string, SoundData, std::less<>> data_;
 
-	std::vector<SoundVoicePtr> soundEffectPtr;
-	std::vector<SoundVoicePtr> bgmsoundPtr;
+	std::vector<SoundVoicePtr> sePtr_;
+	std::vector<SoundVoicePtr> bgmPtr_;
 	std::vector<SoundVoicePtr> debugSoundPtr_;
 
 	//	volume
-	float bgmVolume = 1.0f;
-	float seVolume = 1.0f;
-	float masterVolume = 1.0f;
+	float masterVolume_ = 1.0f;
+	float bgmVolume_ = 1.0f;
+	float seVolume_ = 1.0f;
 
-	float pitchRatio = 1.0f;
+	float pitchRatio_ = 1.0f;
 
 private:	//	ŠÖ”
 	void UnloadSoundData(SoundData* soundData);
@@ -103,10 +104,10 @@ public:
 
 	//	Getter 
 	//	”ÍˆÍ‚Í0.0f`1.0f
-	float GetBGMVolume() { return bgmVolume; }
+	float GetBGMVolume() { return bgmVolume_; }
 	//	”ÍˆÍ‚Í0.0f`1.0f
-	float GetSEVolume() { return seVolume; }
+	float GetSEVolume() { return seVolume_; }
 	//	”ÍˆÍ‚Í0.0f`1.0f
-	float GetMasterVolume() { return masterVolume; }
+	float GetMasterVolume() { return masterVolume_; }
 };
 
