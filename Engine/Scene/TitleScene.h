@@ -20,17 +20,14 @@ private:
 	std::unique_ptr<Sprite> backSprite;
 #pragma endregion
 
-#pragma region sound
-	int titleBGM = -1;
-	int cursorMoveSound = -1;
-	int decisionSound = -1;
-#pragma endregion
-
 #pragma region Texture
 	Texture titleG;
 	Texture pressG;
 #pragma endregion
 
+private:	//	ä÷êî
+	void MatUpdate() override;
+	
 public:
 	~TitleScene() override {};
 	void Initialize() override;
@@ -40,7 +37,5 @@ public:
 	void ImguiUpdate() override;
 	void DrawShadow() override;
 	void Draw() override;
-private:
-	void MatUpdate() override;
 };
 

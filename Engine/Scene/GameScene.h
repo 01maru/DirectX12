@@ -30,8 +30,8 @@ private:
 
 	float lightColor = 1.0f;
 public:	
-	GameScene();
-	~GameScene() override;
+	GameScene() {};
+	~GameScene() override {};
 	void Initialize() override;
 	void Finalize() override;
 	void LoadResources() override;

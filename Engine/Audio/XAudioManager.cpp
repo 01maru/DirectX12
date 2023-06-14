@@ -64,12 +64,9 @@ float XAudioManager::LoadVolume(const std::string& filename)
 
 	std::string filePath = "Resources/Sound/VolumeData.txt";
 
-	//ファイル開く
+	//ファイル開く(開けなかったら新規作成)
 	std::ifstream file;
-	file.open(filePath.c_str());
-
-	//開けなかったらそのままにする
-	if (!file.is_open()) { assert(0); }
+	file.open(filePath.c_str(), std::ios_base::app);
 
 	// 1行ずつ読み込む
 	std::string line;
@@ -151,10 +148,9 @@ void XAudioManager::ImguiUpdate()
 		{
 			imguiMan->SetSliderFloat(itr->first.c_str(), itr->second.volume, 0.005f, 0.0f, 1.0f);
 
-			if (imguiMan->SetButton("Play")) PlayDebugSoundWave(itr->first, Master, false, true);
-
-			imguiMan->SameLine();
-			if (imguiMan->SetButton("Stop")) StopSound(itr->first);
+			if (imguiMan->SetButton("Play	"+ itr->first)) {
+				PlayDebugSoundWave(itr->first, Master, false, true);
+			}
 		}
 		imguiMan->EndChild();
 

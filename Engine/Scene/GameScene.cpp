@@ -13,28 +13,6 @@
 
 #include "Input.h"
 
-void GameScene::CollisionUpdate()
-{
-	//player->CollisionUpdate();
-	//collisionMan->CheckAllCollisions();
-}
-
-void GameScene::MatUpdate()
-{
-	ParticleManager::GetInstance()->MatUpdate();
-	ground->MatUpdate();
-	skydome->MatUpdate();
-}
-
-GameScene::GameScene()
-{
-}
-
-GameScene::~GameScene()
-{
-	//delete camera;
-}
-
 void GameScene::Initialize()
 {
 	camera = new MyDebugCamera();
@@ -47,10 +25,8 @@ void GameScene::Initialize()
 	
 	Particle::SetPipeline(PipelineManager::GetInstance()->GetPipeline("Particle", GPipeline::ADD_BLEND));
 	Particle::SetCamera(camera);
-}
 
-void GameScene::Finalize()
-{
+	XAudioManager::GetInstance()->PlaySoundWave("gameBGM.wav", XAudioManager::BGM, true);
 }
 
 void GameScene::LoadResources()
@@ -75,9 +51,14 @@ void GameScene::LoadResources()
 #pragma endregion
 
 #pragma region Sound
-	XAudioManager::GetInstance()->LoadSoundWave("bgm.wav");
+	XAudioManager::GetInstance()->LoadSoundWave("gameBGM.wav");
 #pragma endregion
+}
 
+void GameScene::Finalize()
+{
+	XAudioManager::GetInstance()->StopAllSound();
+	XAudioManager::GetInstance()->DeleteAllSound();
 }
 
 void GameScene::Update()
@@ -98,6 +79,19 @@ void GameScene::Update()
 	CollisionUpdate();
 
 	Light::GetInstance()->SetDirLightColor(0, Vector3D(1.0f, 1.0f, 1.0f));
+}
+
+void GameScene::CollisionUpdate()
+{
+	//player->CollisionUpdate();
+	//collisionMan->CheckAllCollisions();
+}
+
+void GameScene::MatUpdate()
+{
+	ParticleManager::GetInstance()->MatUpdate();
+	ground->MatUpdate();
+	skydome->MatUpdate();
 }
 
 void GameScene::ImguiUpdate()

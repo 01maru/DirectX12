@@ -4,9 +4,8 @@
 #include "SceneManager.h"
 #include "NormalCamera.h"
 #include "TextureManager.h"
-#include "Easing.h"
-#include "ImGuiManager.h"
 
+#include "ImGuiManager.h"
 #include "XAudioManager.h"
 
 void TitleScene::Initialize()
@@ -15,25 +14,27 @@ void TitleScene::Initialize()
 	camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
 
 	LoadResources();
+
 #pragma region Sprite
-	//backSprite = std::make_unique<Sprite>(TextureManager::GetInstance()->GetWhiteTexture());
-	//backSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
-	//backSprite->SetSize(Vector2D{ Window::window_width,Window::window_height });
-	//backSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-	//backSprite->TransferVertex();
-	//titleSprite = std::make_unique<Sprite>(titleG);
-	//titleSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,200.0f });
-	//titleSprite->SetSize(titleSize);
-	//titleSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-	//titleSprite->SetColor({ 1.0f,1.0f,1.0f,0.51f });
-	//titleSprite->TransferVertex();
-	//pressSprite = std::make_unique<Sprite>(pressG);
-	//pressSprite->SetSize(pressSize);
-	//pressSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,620.0f });
-	//pressSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-	//pressSprite->SetColor({ 1.0f,1.0f,1.0f,0.5f });
-	//pressSprite->TransferVertex();
+	backSprite = std::make_unique<Sprite>();
+	backSprite->Initialize(TextureManager::GetInstance()->GetWhiteTexture());
+	backSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
+	backSprite->SetSize(Vector2D{ Window::window_width,Window::window_height });
+	backSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
+	backSprite->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+
+	titleSprite = std::make_unique<Sprite>();
+	titleSprite->Initialize(titleG);
+	titleSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,200.0f });
+	titleSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
+
+	pressSprite = std::make_unique<Sprite>();
+	pressSprite->Initialize(pressG);
+	pressSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,620.0f });
+	pressSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 #pragma endregion
+
+	//	playBGM
 	XAudioManager::GetInstance()->PlaySoundWave("titleBGM.wav", XAudioManager::BGM, true);
 }
 
@@ -46,10 +47,10 @@ void TitleScene::Finalize()
 void TitleScene::LoadResources()
 {
 #pragma region Sound
-	
-	XAudioManager::GetInstance()->LoadSoundWave("titleBGM.wav");
-	XAudioManager::GetInstance()->LoadSoundWave("cursorMove.wav");
-	XAudioManager::GetInstance()->LoadSoundWave("decision.wav");
+	XAudioManager* xAudioMan = XAudioManager::GetInstance();
+	xAudioMan->LoadSoundWave("titleBGM.wav");
+	xAudioMan->LoadSoundWave("cursorMove.wav");
+	xAudioMan->LoadSoundWave("decision.wav");
 #pragma endregion
 
 #pragma region Texture
@@ -95,26 +96,28 @@ void TitleScene::Update()
 
 void TitleScene::ImguiUpdate()
 {
-	ImGuiManager::GetInstance()->BeginWindow("test");
-	ImGuiManager::GetInstance()->SetButton("testbutton");
+	ImGuiManager::GetInstance()->BeginWindow("TitleScene");
 	ImGuiManager::GetInstance()->EndWindow();
 }
 
-void TitleScene::DrawShadow()
-{
-
-}
+void TitleScene::DrawShadow() {}
 
 void TitleScene::Draw()
 {
-	//backSprite->Draw();
+	//	”wŒi
+	backSprite->Draw();
+	////	ƒ^ƒCƒgƒ‹
 	//titleSprite->Draw();
+	////	pressKey
 	//pressSprite->Draw();
 }
 
 void TitleScene::MatUpdate()
 {
-	//titleSprite->SetTextureRect();
-	//pressSprite->SetTextureRect();
-	//backSprite->MatUpdate();
+	//	”wŒi
+	backSprite->Update();
+	//	ƒ^ƒCƒgƒ‹
+	titleSprite->Update();
+	//	pressKey
+	pressSprite->Update();
 }

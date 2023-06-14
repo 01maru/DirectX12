@@ -12,7 +12,7 @@ float4 main(VSOutput input) : SV_TARGET
 	output += g_bokeTexture_1.Sample(smp, input.uv);
 	//output += g_bokeTexture_2.Sample(smp, input.uv);
 	//output += g_bokeTexture_3.Sample(smp, input.uv);
-	output /= 2.0f;
+	//output /= 2.0f;
 	output.a = 1.0f;
 
 	//// step-1 基準テクセル+近傍8テクセルの平均を計算する
