@@ -185,17 +185,6 @@ void XAudioManager::Update()
 	ChangeVolume(bgmVolume_, BGM);
 	ChangeVolume(seVolume_, SE);
 
-	//if (!isDebug_) return;
-
-	//for (size_t i = 0; i < bgmPtr_.size(); i++)
-	//{
-	//	bgmPtr_[i].ptr->SetVolume(bgmVolume_ * data_[bgmPtr_[i].dataKey].volume);
-	//}
-	//for (size_t i = 0; i < sePtr_.size(); i++)
-	//{
-	//	sePtr_[i].ptr->SetVolume(seVolume_ * data_[sePtr_[i].dataKey].volume);
-	//}
-
 #endif // _DEBUG
 }
 
