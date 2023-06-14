@@ -42,7 +42,7 @@ void SceneManager::Initialize()
 	sceneChangeCounter_.Initialize(60, true, true);
 
 	sceneFactry_ = std::make_unique<SceneFactory>();
-	scene_.reset(sceneFactry_->CreateScene("TITLESCENE"));
+	scene_ = sceneFactry_->CreateScene("TITLESCENE");
 
 #pragma region Loading
 
@@ -333,7 +333,7 @@ void SceneManager::SceneChange()
 
 void SceneManager::SetNextScene(const std::string& sceneName)
 {
-	nextScene_.reset(sceneFactry_->CreateScene(sceneName));
+	nextScene_ = sceneFactry_->CreateScene(sceneName);
 	
 	//	nextScene‚ªƒZƒbƒg‚³‚ê‚½‚ç
 	if (nextScene_ != nullptr) {

@@ -5,16 +5,16 @@
 #include "GameScene.h"
 #pragma endregion
 
-IScene* SceneFactory::CreateScene(const std::string& sceneName)
+std::unique_ptr<IScene> SceneFactory::CreateScene(const std::string& sceneName)
 {
-    IScene* newScene = nullptr;
+    std::unique_ptr<IScene> newScene;
 
     if (sceneName == "TITLESCENE") {
-        newScene = new TitleScene();
+        newScene = std::make_unique<TitleScene>();
     }
     else if(sceneName == "GAMESCENE") {
-        newScene = new GameScene();
+        newScene = std::make_unique<GameScene>();
     }
 
-    return newScene;
+    return std::move(newScene);
 }
