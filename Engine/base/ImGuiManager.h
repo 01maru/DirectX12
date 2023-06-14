@@ -10,8 +10,9 @@ class ImGuiManager
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	ComPtr<ID3D12DescriptorHeap> srvHeap;
+	ComPtr<ID3D12DescriptorHeap> srvHeap_;
 
+private:	//	ä÷êî
 	ImGuiManager() {};
 	~ImGuiManager() {};
 public:
@@ -31,22 +32,45 @@ public:
 	//	ï`âÊèàóù
 	void Draw();
 
+#pragma region Window
+
 	void BeginWindow(const std::string& windowName);
 	void BeginWindow(const std::string& windowName, bool menu);
 	void EndWindow();
 
+#pragma endregion
+
+#pragma region Menu
+
+	//	return isActive;
 	bool BeginMenuBar();
 	void EndMenuBar();
+
+	//	return isActive;
 	bool BeginMenu(const std::string& menuName);
 	void EndMenu();
+
+	//	MenuButton
 	bool MenuItem(const std::string& name);
+
+#pragma endregion
+
+#pragma region Input
+
 	void SameLine();
 	bool SetButton(const std::string& buttonName, const Vector2D& size = Vector2D());
 	void SetRadioButton(const std::string& buttonName, bool& flag);
 	void SetSliderFloat(const std::string& sliderName, float& value, float spd, float minValue, float maxValue);
 	void CheckBox(const std::string& name, bool& flag);
 
-	void BeginChild(const Vector2D& size = Vector2D());
+#pragma endregion
+
+#pragma region Scroll
+
+	//	return isActive;
+	bool BeginChild(const Vector2D& size = Vector2D());
 	void EndChild();
+
+#pragma endregion
 };
 

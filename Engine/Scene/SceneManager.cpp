@@ -98,11 +98,11 @@ void SceneManager::Finalize()
 {
 	scene_->Finalize();
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 
 	ImGuiManager::GetInstance()->Finalize();
 
-//#endif // _DEBUG
+#endif // _DEBUG
 }
 
 void SceneManager::ScreenColorUpdate()

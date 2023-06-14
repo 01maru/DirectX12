@@ -21,12 +21,12 @@ void ImGuiManager::Initialize()
 	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	desc.NumDescriptors = 1;
 	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	HRESULT result = dx->GetDev()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&srvHeap));
+	HRESULT result = dx->GetDev()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&srvHeap_));
 	assert(SUCCEEDED(result));
 	ImGui_ImplDX12_Init(dx->GetDev(), 2,
-		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, srvHeap.Get(),
-		srvHeap->GetCPUDescriptorHandleForHeapStart(),
-		srvHeap->GetGPUDescriptorHandleForHeapStart());
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, srvHeap_.Get(),
+		srvHeap_->GetCPUDescriptorHandleForHeapStart(),
+		srvHeap_->GetGPUDescriptorHandleForHeapStart());
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontDefault();
@@ -55,7 +55,7 @@ void ImGuiManager::Draw()
 {
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
 
-	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap_.Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList);
@@ -130,9 +130,9 @@ void ImGuiManager::CheckBox(const std::string& name, bool& flag)
 	ImGui::Checkbox(name.c_str(), &flag);
 }
 
-void ImGuiManager::BeginChild(const Vector2D& size)
+bool ImGuiManager::BeginChild(const Vector2D& size)
 {
-	ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(size.x, size.y), ImGuiWindowFlags_NoTitleBar);
+	return ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(size.x, size.y), ImGuiWindowFlags_NoTitleBar);
 }
 
 void ImGuiManager::EndChild()
