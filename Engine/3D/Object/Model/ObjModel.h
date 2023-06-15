@@ -9,6 +9,7 @@ protected:
 private:
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
+	void AddIndices(const std::vector<uint16_t>& indices, Mesh* mesh);
 public:
 	ObjModel(const char* filename, bool smoothing = false);
 	~ObjModel() override;

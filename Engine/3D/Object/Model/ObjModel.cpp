@@ -22,6 +22,24 @@ void ObjModel::BoneTransform(float /*TimeInSeconds*/, std::vector<Matrix>& /*tra
 	//	objなのでboneなし
 }
 
+void ObjModel::AddIndices(const std::vector<uint16_t>& indices, Mesh* mesh)
+{
+	if (indices.size() == 3)
+	{
+		mesh->AddIndex(indices[0]);
+		mesh->AddIndex(indices[2]);
+		mesh->AddIndex(indices[1]);
+	}
+	else {
+		mesh->AddIndex(indices[0]);
+		mesh->AddIndex(indices[2]);
+		mesh->AddIndex(indices[1]);
+		mesh->AddIndex(indices[3]);
+		mesh->AddIndex(indices[5]);
+		mesh->AddIndex(indices[4]);
+	}
+}
+
 void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 {
 	std::vector<unsigned short> vertexIndices, uvIndices, normalIndices;
@@ -154,7 +172,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 					mesh->AddSmoothData(indexPos, (unsigned short)mesh->GetVertexCount() - 1);
 				}
 
-				if (indexNum >= 3)	//	三角面化されていないとき
+				if (indexNum >= 3)	//	一面のindex数が3を越えたら(4つ以上は想定外)
 				{
 					indices.emplace_back((unsigned short)(indexCount - 1));
 					indices.emplace_back((unsigned short)indexCount);
@@ -169,20 +187,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			}
 
 			//	AddIndex
-			if (indices.size() == 3)
-			{
-				mesh->AddIndex(indices[0]);
-				mesh->AddIndex(indices[2]);
-				mesh->AddIndex(indices[1]);
-			}
-			else {
-				mesh->AddIndex(indices[0]);
-				mesh->AddIndex(indices[2]);
-				mesh->AddIndex(indices[1]);
-				mesh->AddIndex(indices[3]);
-				mesh->AddIndex(indices[5]);
-				mesh->AddIndex(indices[4]);
-			}
+			AddIndices(indices, mesh);
 		}
 	}
 
@@ -195,6 +200,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 
 void ObjModel::LoadMaterial(const std::string& directoryPath, const std::string& filename)
 {
+	//	fileOpen
 	std::ifstream file;
 	file.open(directoryPath + filename);
 	if (file.fail()) { assert(0); }
@@ -222,32 +228,38 @@ void ObjModel::LoadMaterial(const std::string& directoryPath, const std::string&
 			// 新しいマテリアルを生成
 			material = Material::Create();
 			// マテリアル名読み込み
-			line_stream >> material->name;
+			if (material) {
+				line_stream >> material->name;
+			}
 		}
 
-		if (key == "Ka") {
-			line_stream >> material->ambient.x;
-			line_stream >> material->ambient.y;
-			line_stream >> material->ambient.z;
-		}
+		if (material)
+		{
+			if (key == "Ka") {
+				line_stream >> material->ambient.x;
+				line_stream >> material->ambient.y;
+				line_stream >> material->ambient.z;
+			}
 
-		if (key == "Kd") {
-			line_stream >> material->diffuse.x;
-			line_stream >> material->diffuse.y;
-			line_stream >> material->diffuse.z;
-		}
+			if (key == "Kd") {
+				line_stream >> material->diffuse.x;
+				line_stream >> material->diffuse.y;
+				line_stream >> material->diffuse.z;
+			}
 
-		if (key == "Ks") {
-			line_stream >> material->specular.x;
-			line_stream >> material->specular.y;
-			line_stream >> material->specular.z;
-		}
+			if (key == "Ks") {
+				line_stream >> material->specular.x;
+				line_stream >> material->specular.y;
+				line_stream >> material->specular.z;
+			}
 
-		if (key == "map_Kd") {
-			line_stream >> material->textureFilename;
+			//	画像セット
+			if (key == "map_Kd") {
+				line_stream >> material->textureFilename;
 
-			string filepath = directoryPath + material->textureFilename;
-			MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, material->wfilepath, _countof(material->wfilepath));
+				string filepath = directoryPath + material->textureFilename;
+				MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, material->wfilepath, _countof(material->wfilepath));
+			}
 		}
 	}
 	file.close();

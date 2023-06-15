@@ -34,7 +34,7 @@ void GameScene::LoadResources()
 #pragma region Model
 	modelSkydome = std::make_unique<ObjModel>("skydome");
 	modelGround = std::make_unique<ObjModel>("ground");
-	modelCube = std::make_unique<ObjModel>("cube4");
+	modelCube = std::make_unique<ObjModel>("objCube");
 #pragma endregion
 	//	“V‹…
 	skydome.reset(Object3D::Create(modelSkydome.get()));
