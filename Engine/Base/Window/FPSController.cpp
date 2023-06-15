@@ -1,4 +1,4 @@
-#include "FPSController.h"
+ï»¿#include "FPSController.h"
 #include <thread>
 
 FPSController* FPSController::GetInstance()
@@ -11,22 +11,22 @@ void FPSController::Initialize()
 {
 	reference_ = std::chrono::steady_clock::now();
 
-	//	‰Šú’l 0.0f,ƒTƒCƒY sFPSLIST_MAX_SIZE
+	//	åˆæœŸå€¤ 0.0f,ã‚µã‚¤ã‚º sFPSLIST_MAX_SIZE
 	fpsList_.resize(sFPSLIST_MAX_SIZE, 0.0f);
 }
 
 void FPSController::CalcFps()
 {
-	//	ŒÃ‚¢î•ñ‚ğíœ&‡Œv’l‚©‚çˆø‚­
+	//	å¤ã„æƒ…å ±ã‚’å‰Šé™¤&åˆè¨ˆå€¤ã‹ã‚‰å¼•ã
 	totalFps_ -= fpsList_.front();
 	fpsList_.pop_front();
 
-	//	ÅV‚Ìî•ñ‚ğŒvZ&’Ç‰Á
+	//	æœ€æ–°ã®æƒ…å ±ã‚’è¨ˆç®—&è¿½åŠ 
 	float nowFps = 1000000.0f / std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - reference_).count();
 	fpsList_.push_back(nowFps);
 	totalFps_ += nowFps;
 
-	//	Œ»İ‚Ì•½‹Ï’lŒvZ
+	//	ç¾åœ¨ã®å¹³å‡å€¤è¨ˆç®—
 	fpsValue_ = totalFps_ / sFPSLIST_MAX_SIZE;
 }
 
@@ -37,13 +37,13 @@ void FPSController::Update()
 	//	1/65sec
 	const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 65.0f));
 
-	//	Œ»İ‚ÌŠÔæ“¾
+	//	ç¾åœ¨ã®æ™‚é–“å–å¾—
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-	//	Œo‰ßŠÔæ“¾
+	//	çµŒéæ™‚é–“å–å¾—
 	std::chrono::microseconds elapsed =
 		std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
 
-	//	ˆ—‚ª‘¬‚©‚Á‚½‚çsleep
+	//	å‡¦ç†ãŒé€Ÿã‹ã£ãŸã‚‰sleep
 	if (elapsed < kMinCheckTime) {
 		while (std::chrono::steady_clock::now() - reference_ < kMinCheckTime) {
 			std::this_thread::sleep_for(std::chrono::microseconds(1));
@@ -52,6 +52,6 @@ void FPSController::Update()
 
 	CalcFps();
 
-	//	Œ»İŠÔ‚Ì‹L˜^
+	//	ç¾åœ¨æ™‚é–“ã®è¨˜éŒ²
 	reference_ = std::chrono::steady_clock::now();
 }

@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 class ImGuiController
 {
 private:
 	bool activeVolumeManager_ = false;
 
-private:	//	�֐�
+private:	//	関数
 	ImGuiController() {};
 	~ImGuiController() {};
 

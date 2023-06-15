@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 #include <chrono>
 #include <list>
 
 class FPSController
 {
 private:
-	//	List‚ÌƒTƒCƒY
+	//	Listã®ã‚µã‚¤ã‚º
 	static const int sFPSLIST_MAX_SIZE = 60;
 
-	//	sFPSLIST_MAX_SIZEƒtƒŒ[ƒ€•ª‚Ìfps•Û‘¶—pƒŠƒXƒg
+	//	sFPSLIST_MAX_SIZEãƒ•ãƒ¬ãƒ¼ãƒ åˆ†ã®fpsä¿å­˜ç”¨ãƒªã‚¹ãƒˆ
 	std::list<float> fpsList_;
-	//	fpsList_‚Ì‡Œv’l
+	//	fpsList_ã®åˆè¨ˆå€¤
 	float totalFps_ = 0.0f;
-	//	fpsList_‚Ì•½‹Ï’l(•\¦—p)
+	//	fpsList_ã®å¹³å‡å€¤(è¡¨ç¤ºç”¨)
 	float fpsValue_ = 0.0f;
 
 	std::chrono::steady_clock::time_point reference_;

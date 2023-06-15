@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <wrl.h>
 #include <d3d12.h>
 #include <string>
@@ -12,24 +12,24 @@ private:
 
 	ComPtr<ID3D12DescriptorHeap> srvHeap_;
 
-private:	//	ŠÖ”
+private:	//	é–¢æ•°
 	ImGuiManager() {};
 	~ImGuiManager() {};
 public:
 	static ImGuiManager* GetInstance();
-	//	ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^–³Œø
+	//	ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ç„¡åŠ¹
 	ImGuiManager(const ImGuiManager& obj) = delete;
-	//	‘ã“ü‰‰Zq–³Œø
+	//	ä»£å…¥æ¼”ç®—å­ç„¡åŠ¹
 	ImGuiManager& operator=(const ImGuiManager& obj) = delete;
 
 	void Initialize();
 	void Finalize();
 	
-	//	XV‘Oˆ—
+	//	æ›´æ–°å‰å‡¦ç†
 	void Begin();
-	//	XVŒãˆ—
+	//	æ›´æ–°å¾Œå‡¦ç†
 	void End();
-	//	•`‰æˆ—
+	//	æç”»å‡¦ç†
 	void Draw();
 
 #pragma region Window

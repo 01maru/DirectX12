@@ -1,4 +1,4 @@
-#include "ImGuiManager.h"
+﻿#include "ImGuiManager.h"
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx12.h>
 #include "Window.h"
@@ -44,8 +44,6 @@ void ImGuiManager::Begin()
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-
-	ImGui::ShowMetricsWindow();
 }
 
 void ImGuiManager::End()
