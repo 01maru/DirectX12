@@ -5,7 +5,7 @@
 
 void MyDebugCamera::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
 {
-	SetProjectionMatrix(Window::window_width, Window::window_height, MyMath::ConvertToRad(90.0f));
+	SetProjectionMatrix(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, MyMath::ConvertToRad(90.0f));
 
 	eye = eye_;
 	target = target_;

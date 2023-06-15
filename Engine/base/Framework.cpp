@@ -1,27 +1,26 @@
-#include "Framework.h"
+ï»¿#include "Framework.h"
 #include "ParticleManager.h"
 #include "DebugTextManager.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
-#include "ParticleManager.h"
-#include "XAudioManager.h"
 #include "Input.h"
 #include "InputJoypad.h"
+
+#include "XAudioManager.h"
 #include "FPSController.h"
-#include "Sprite.h"
 
 void Framework::Run()
 {
-	//	‰Šú‰»
+	//	åˆæœŸåŒ–
 	Initialize();
 
-	//	ƒQ[ƒ€ƒ‹[ƒv
-	while (gameroopFlag)
+	//	ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—
+	while (gameroopFlag_)
 	{
-		//	XV
+		//	æ›´æ–°
 		Update();
 
-		//	•`‰æ
+		//	æç”»
 		Draw();
 	}
 
@@ -30,7 +29,7 @@ void Framework::Run()
 
 void Framework::Initialize()
 {
-	//	winApi‰Šú‰»
+	//	winApiåˆæœŸåŒ–
 	Window::GetInstance()->Initialize();
 
 	TextureManager::GetInstance()->Initialize();
@@ -39,7 +38,7 @@ void Framework::Initialize()
 
 	PipelineManager::GetInstance()->Initialize();
 
-	//	ƒ[ƒhŽ¸”s‚µ‚½Û‚Ì”’FƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh
+	//	ãƒ­ãƒ¼ãƒ‰å¤±æ•—ã—ãŸéš›ã®ç™½è‰²ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰
 	TextureManager::GetInstance()->SetWhiteTexHandle();
 
 	Input::GetInstance()->Initialize();
@@ -55,12 +54,12 @@ void Framework::Initialize()
 
 void Framework::Update()
 {
-	gameroopFlag = !(Window::GetInstance()->MsgUpdate() || Input::GetInstance()->GetTrigger(DIK_ESCAPE));
+	gameroopFlag_ = !(Window::GetInstance()->MsgUpdate() || Input::GetInstance()->GetTrigger(DIK_ESCAPE));
 
 	Input::GetInstance()->Update();
 	InputJoypad::GetInstance()->Update();
 
-	//	60fpsŒÅ’è—p
+	//	60fpså›ºå®š
 	FPSController::GetInstance()->Update();
 }
 

@@ -57,21 +57,21 @@ void SceneManager::Initialize()
 #pragma region PostEffect
 
 	mainScene = std::make_unique<PostEffect>();
-	mainScene->Initialize(Window::window_width, Window::window_height, 1.0f, DXGI_FORMAT_R11G11B10_FLOAT);
+	mainScene->Initialize(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 1.0f, DXGI_FORMAT_R11G11B10_FLOAT);
 	luminnce = std::make_unique<PostEffect>();
-	luminnce->Initialize(Window::window_width, Window::window_height, 5.0f, DXGI_FORMAT_R11G11B10_FLOAT);
+	luminnce->Initialize(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 5.0f, DXGI_FORMAT_R11G11B10_FLOAT);
 	xbulrluminnce = std::make_unique<PostEffect>();
-	xbulrluminnce->Initialize(Window::window_width / 2, Window::window_height, 5.0f, DXGI_FORMAT_R11G11B10_FLOAT);
+	xbulrluminnce->Initialize(Window::sWIN_WIDTH / 2, Window::sWIN_HEIGHT, 5.0f, DXGI_FORMAT_R11G11B10_FLOAT);
 	ybulrluminnce = std::make_unique<PostEffect>();
-	ybulrluminnce->Initialize(Window::window_width / 2, Window::window_height / 2, 5.0f, DXGI_FORMAT_R11G11B10_FLOAT);
+	ybulrluminnce->Initialize(Window::sWIN_WIDTH / 2, Window::sWIN_HEIGHT / 2, 5.0f, DXGI_FORMAT_R11G11B10_FLOAT);
 
 	shadowEffect = std::make_unique<PostEffect>();
-	shadowEffect->Initialize(Window::window_width, Window::window_height, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
+	shadowEffect->Initialize(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
 	
 	xbulr = std::make_unique<PostEffect>();
-	xbulr->Initialize(Window::window_width / 2, Window::window_height, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
+	xbulr->Initialize(Window::sWIN_WIDTH / 2, Window::sWIN_HEIGHT, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
 	ybulr = std::make_unique<PostEffect>();
-	ybulr->Initialize(Window::window_width / 2, Window::window_height / 2, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
+	ybulr->Initialize(Window::sWIN_WIDTH / 2, Window::sWIN_HEIGHT / 2, 1.0f, DXGI_FORMAT_R32G32_FLOAT);
 
 #pragma endregion
 

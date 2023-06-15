@@ -18,19 +18,19 @@ void TitleScene::Initialize()
 #pragma region Sprite
 	backSprite = std::make_unique<Sprite>();
 	backSprite->Initialize(TextureManager::GetInstance()->GetWhiteTexture());
-	backSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
-	backSprite->SetSize(Vector2D{ Window::window_width,Window::window_height });
+	backSprite->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,Window::sWIN_HEIGHT / 2.0f });
+	backSprite->SetSize(Vector2D{ Window::sWIN_WIDTH,Window::sWIN_HEIGHT });
 	backSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 	backSprite->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 
 	titleSprite = std::make_unique<Sprite>();
 	titleSprite->Initialize(titleG);
-	titleSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,200.0f });
+	titleSprite->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,200.0f });
 	titleSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 
 	pressSprite = std::make_unique<Sprite>();
 	pressSprite->Initialize(pressG);
-	pressSprite->SetPosition(Vector2D{ Window::window_width / 2.0f,620.0f });
+	pressSprite->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,620.0f });
 	pressSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 #pragma endregion
 

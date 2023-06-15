@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 
 class Framework
 {
 protected:
-	//	ƒQ[ƒ€ƒ‹[ƒv—pƒtƒ‰ƒO
-	bool gameroopFlag = true;
+	//	ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—ç”¨ãƒ•ãƒ©ã‚°
+	bool gameroopFlag_ = true;
 public:
 	virtual ~Framework() = default;
 

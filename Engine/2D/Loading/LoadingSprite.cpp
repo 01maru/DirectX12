@@ -10,7 +10,7 @@ void LoadingSprite::Initialize()
 
 	loadSprite_ = std::make_unique<Sprite>();
 	loadSprite_->Initialize(loadTex_);
-	loadSprite_->SetPosition(Vector2D{ Window::window_width - 96,Window::window_height - 98 });
+	loadSprite_->SetPosition(Vector2D{ Window::sWIN_WIDTH - 96,Window::sWIN_HEIGHT - 98 });
 	loadSprite_->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 	loadSprite_->SetSize(Vector2D{ 64,64 });
 }

@@ -133,8 +133,8 @@ Matrix Create2DTransformMatrix()
 {
     Matrix ans;
 
-    ans.m[0][0] = 2.0f / Window::window_width;
-    ans.m[1][1] = -2.0f / Window::window_height;
+    ans.m[0][0] = 2.0f / Window::sWIN_WIDTH;
+    ans.m[1][1] = -2.0f / Window::sWIN_HEIGHT;
     ans.m[3][0] = -1.0f;
     ans.m[3][1] = 1.0f;
 

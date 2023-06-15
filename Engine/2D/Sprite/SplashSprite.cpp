@@ -13,7 +13,7 @@ void SplashSprite::Initialize()
 
 	splashSprite_ = std::make_unique<Sprite>();
 	splashSprite_->Initialize(rogoTex_);
-	splashSprite_->SetPosition(Vector2D{ Window::window_width / 2.0f,Window::window_height / 2.0f });
+	splashSprite_->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,Window::sWIN_HEIGHT / 2.0f });
 	splashSprite_->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
 }
 

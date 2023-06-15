@@ -77,7 +77,7 @@ void GameScene::Update()
 	sprite->Update();
 	ParticleManager::GetInstance()->Update();
 
-	//DebugTextManager::GetInstance()->Print("test", { 0,Window::window_height/2.0f }, 5);
+	//DebugTextManager::GetInstance()->Print("test", { 0,Window::sWIN_HEIGHT/2.0f }, 5);
 #pragma endregion
 	MatUpdate();
 	CollisionUpdate();

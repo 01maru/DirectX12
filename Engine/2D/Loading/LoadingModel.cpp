@@ -13,7 +13,7 @@ void LoadingModel::Initialize()
 	loadObj.reset(Object3D::Create(loadModel.get()));
 	loadObj->SetColor({ 1.0f,1.0f,1.0f });
 	loadObj->SetScale({ 50.0f,50.0f,50.0f });
-	loadObj->SetPosition({ Window::window_width / 2.0f - 100.0f,-Window::window_height / 2.0f + 50.0f,0.0f });
+	loadObj->SetPosition({ Window::sWIN_WIDTH / 2.0f - 100.0f,-Window::sWIN_HEIGHT / 2.0f + 50.0f,0.0f });
 
 	camera = std::make_unique<ObjCamera2D>();
 }

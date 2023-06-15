@@ -6,7 +6,7 @@ ObjCamera2D::ObjCamera2D()
 	target = { 0.0f,0.0f,0.0f };
 	up = { 0.0f,1.0f,0.0f };
 
-	matProjection = MyMath::OrthoLH(Window::window_width, Window::window_height, 0.1f, 1000.0f);
+	matProjection = MyMath::OrthoLH(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 0.1f, 1000.0f);
 
 	MatUpdate();
 

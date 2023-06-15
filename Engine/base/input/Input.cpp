@@ -77,8 +77,8 @@ void Input::Update()
 	if (rockCursor) {
 		GetWindowRect(Window::GetInstance()->GetHwnd(), rec);
 		Vector2D center((float)(rec->right + rec->left) / 2, (float)(rec->bottom + rec->top) / 2);
-		float width = Window::window_width / 2.0f;
-		float height = Window::window_height / 2.0f;
+		float width = Window::sWIN_WIDTH / 2.0f;
+		float height = Window::sWIN_HEIGHT / 2.0f;
 		rec->left = (LONG)(center.x - width);
 		rec->right = (LONG)(center.x + width);
 		rec->top = (LONG)(center.y - height);

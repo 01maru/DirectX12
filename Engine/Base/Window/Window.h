@@ -1,25 +1,25 @@
-#pragma once
+ï»¿#pragma once
 #define NOMINMAX
 #include <Windows.h>
 
 class Window
 {
 public:
-	// ƒEƒBƒ“ƒhƒEƒTƒCƒY
-	static const int window_width = 1280; // ‰¡•
-	static const int window_height = 720; // c•
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º
+	static const int sWIN_WIDTH = 1280; // æ¨ªå¹…
+	static const int sWIN_HEIGHT = 720; // ç¸¦å¹…
 private:
-	// ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚Ìİ’è
-	WNDCLASSEX w{};
-	// ƒEƒBƒ“ƒhƒEƒIƒuƒWƒFƒNƒg‚Ì¶¬
-	HWND hwnd;
-	// ƒƒbƒZ[ƒW
-	MSG msg{};
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®è¨­å®š
+	WNDCLASSEX w_{};
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç”Ÿæˆ
+	HWND hwnd_;
+	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+	MSG msg_{};
 
 	Window() {};
 	~Window() {};
 public:
-	// ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 	static Window* GetInstance();
@@ -32,7 +32,7 @@ public:
 	bool EndLoop();
 
 	//	getter
-	const HWND& GetHwnd() const { return hwnd; }
-	const WNDCLASSEX& GetWND() const { return w;}
+	const HWND& GetHwnd() const { return hwnd_; }
+	const WNDCLASSEX& GetWND() const { return w_;}
 };
 

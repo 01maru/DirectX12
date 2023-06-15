@@ -221,8 +221,8 @@ void MyDirectX::Initialize()
 #pragma region 深度バッファ
 	D3D12_RESOURCE_DESC depthResourceDesc{};
 	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	depthResourceDesc.Width = Window::window_width;
-	depthResourceDesc.Height = Window::window_height;
+	depthResourceDesc.Width = Window::sWIN_WIDTH;
+	depthResourceDesc.Height = Window::sWIN_HEIGHT;
 	depthResourceDesc.DepthOrArraySize = 1;
 	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	depthResourceDesc.SampleDesc.Count = 1;
@@ -266,9 +266,9 @@ void MyDirectX::Initialize()
 #pragma endregion fence
 
 	//	ビューポート
-	viewPort.InitializeVP(Window::window_width, Window::window_height, 0, 0, 0.0f, 1.0f);
+	viewPort.InitializeVP(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 0, 0, 0.0f, 1.0f);
 	// シザー矩形
-	viewPort.InitializeSR(0, Window::window_width, 0, Window::window_height);
+	viewPort.InitializeSR(0, Window::sWIN_WIDTH, 0, Window::sWIN_HEIGHT);
 }
 
 void MyDirectX::SetResourceBarrier(D3D12_RESOURCE_BARRIER& desc, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, ID3D12Resource* pResource)
