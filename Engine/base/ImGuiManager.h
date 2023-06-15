@@ -65,6 +65,8 @@ public:
 
 #pragma endregion
 
+	void LabelText(const std::string& name, const std::string& text, float value);
+
 #pragma region Scroll
 
 	//	return isActive;

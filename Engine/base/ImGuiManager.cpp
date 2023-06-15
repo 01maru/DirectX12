@@ -44,6 +44,8 @@ void ImGuiManager::Begin()
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+
+	ImGui::ShowMetricsWindow();
 }
 
 void ImGuiManager::End()
@@ -128,6 +130,11 @@ void ImGuiManager::SetSliderFloat(const std::string& sliderName, float& value, f
 void ImGuiManager::CheckBox(const std::string& name, bool& flag)
 {
 	ImGui::Checkbox(name.c_str(), &flag);
+}
+
+void ImGuiManager::LabelText(const std::string& name, const std::string& text, float value)
+{
+	ImGui::LabelText(name.c_str(), text.c_str(), value);
 }
 
 bool ImGuiManager::BeginChild(const Vector2D& size)

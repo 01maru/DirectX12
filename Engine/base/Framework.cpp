@@ -7,7 +7,7 @@
 #include "XAudioManager.h"
 #include "Input.h"
 #include "InputJoypad.h"
-#include "FPS.h"
+#include "FPSController.h"
 #include "Sprite.h"
 
 void Framework::Run()
@@ -48,7 +48,7 @@ void Framework::Initialize()
 
 	DebugTextManager::GetInstance()->Initialize();
 
-	FPS::GetInstance()->Initialize();
+	FPSController::GetInstance()->Initialize();
 
 	XAudioManager::GetInstance()->Initialize();
 }
@@ -61,7 +61,7 @@ void Framework::Update()
 	InputJoypad::GetInstance()->Update();
 
 	//	60fpsŒÅ’è—p
-	FPS::GetInstance()->Update();
+	FPSController::GetInstance()->Update();
 }
 
 void Framework::Finalize()

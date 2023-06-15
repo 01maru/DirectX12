@@ -360,7 +360,7 @@
     <ClCompile Include="Engine\Game\Grass.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Base\Window\FPS.cpp">
+    <ClCompile Include="Engine\Base\Window\FPSController.cpp">
       <Filter>ソース ファイル\lib\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\Input\InputManager.cpp">
@@ -587,7 +587,7 @@
     <ClInclude Include="Engine\Game\Grass.h">
       <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Base\Window\FPS.h">
+    <ClInclude Include="Engine\Base\Window\FPSController.h">
       <Filter>ヘッダー ファイル\lib\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\Input\InputManager.h">

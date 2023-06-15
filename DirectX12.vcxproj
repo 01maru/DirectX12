@@ -24,7 +24,7 @@
     <ClCompile Include="Engine\3D\Object\Object3D.cpp" />
     <ClCompile Include="Engine\Game\Wind.cpp" />
     <ClCompile Include="Engine\3D\Light\CircleShadow.cpp" />
-    <ClCompile Include="Engine\Base\Window\FPS.cpp" />
+    <ClCompile Include="Engine\Base\Window\FPSController.cpp" />
     <ClCompile Include="Engine\Collider\Collision.cpp" />
     <ClCompile Include="Engine\Collider\CollisionAttribute.cpp" />
     <ClCompile Include="Engine\Collider\CollisionInfo.cpp" />
@@ -99,7 +99,7 @@
     <ClInclude Include="Engine\3D\Object\Object2D.h" />
     <ClInclude Include="Engine\3D\Object\Object3D.h" />
     <ClInclude Include="Engine\Game\Wind.h" />
-    <ClInclude Include="Engine\Base\Window\FPS.h" />
+    <ClInclude Include="Engine\Base\Window\FPSController.h" />
     <ClInclude Include="Engine\Math\FrameCounter.h" />
     <ClInclude Include="Engine\Scene\Base\AbstractSceneFactory.h" />
     <ClInclude Include="Engine\3D\Light\CircleShadow.h" />
