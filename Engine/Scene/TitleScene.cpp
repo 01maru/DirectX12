@@ -96,10 +96,6 @@ void TitleScene::Update()
 
 void TitleScene::ImguiUpdate()
 {
-	ImGuiManager::GetInstance()->BeginWindow("TitleScene");
-	ImGuiManager::GetInstance()->LabelText("", "FPS:%4.2f", FPSController::GetInstance()->GetFPS());
-
-	ImGuiManager::GetInstance()->EndWindow();
 }
 
 void TitleScene::DrawShadow() {}

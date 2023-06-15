@@ -80,6 +80,7 @@
     <ClCompile Include="Engine\Base\Input\InputMouse.cpp" />
     <ClCompile Include="Engine\2D\Loading\LoadingModel.cpp" />
     <ClCompile Include="Engine\2D\Loading\LoadingSprite.cpp" />
+    <ClCompile Include="ImGuiController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\3D\Object\Model\ObjModel.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Engine\2D\Loading\LoadingModel.h" />
     <ClInclude Include="Engine\2D\Loading\LoadingSprite.h" />
     <ClInclude Include="Engine\2D\Sprite\SplashSprite.h" />
+    <ClInclude Include="ImGuiController.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

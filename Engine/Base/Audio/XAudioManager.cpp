@@ -6,6 +6,8 @@
 #include "ImGuiManager.h"
 #include "MyMath.h"
 
+#include "ImGuiController.h"
+
 #pragma region Struct
 
 struct ChunkHeader {
@@ -175,6 +177,8 @@ void XAudioManager::SaveVolume()
 
 void XAudioManager::ImguiUpdate()
 {
+	if (!ImGuiController::GetInstance()->GetActiveVolumeManager()) return;
+
 	ChangeVolume(masterVolume_, Master);
 	ChangeVolume(bgmVolume_, BGM);
 	ChangeVolume(seVolume_, SE);

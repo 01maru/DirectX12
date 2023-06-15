@@ -7,6 +7,7 @@
 #include "LoadingSprite.h"
 #include "SceneFactory.h"
 #include "XAudioManager.h"
+#include "ImGuiController.h"
 
 SceneManager* SceneManager::GetInstance()
 {
@@ -211,6 +212,8 @@ void SceneManager::ImguiUpdate()
 #ifdef _DEBUG
 
 	ImGuiManager::GetInstance()->Begin();
+	ImGuiController::GetInstance()->Update();
+
 	if (endLoading_) {
 		scene_->ImguiUpdate();
 		XAudioManager::GetInstance()->ImguiUpdate();
