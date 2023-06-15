@@ -281,7 +281,7 @@
 //		//	uv”½“]
 //		uv->y = 1 - uv->y;
 //
-//		FBXVertex vertex = {};
+//		ModelVertex vertex = {};
 //		vertex.pos = Vector3D(position->x, position->y, -position->z);
 //		vertex.normal = Vector3D(normal->x, normal->y, normal->z);
 //		vertex.uv = Vector2D(uv->x, uv->y);

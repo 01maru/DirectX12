@@ -1,40 +1,40 @@
 #pragma once
 #include "VertIdxBuff.h"
 #include "Material.h"
-#include "DirectX.h"
 #include <unordered_map>
 
 class Mesh :public VertIdxBuff
 {
 private:
-    static MyDirectX* dx;
-private:
-    std::vector<FBXVertex> vertices; // 頂点データの配列
-    std::vector<uint16_t> indices; // インデックスの配列
+    std::vector<ModelVertex> vertices;        // 頂点データ配列
+    std::vector<uint16_t> indices;          // インデックス配列
+    std::string diffuseMap;                 // テクスチャのファイルパス
     Material* mtl = nullptr;
     std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData;
-    std::string diffuseMap; // テクスチャのファイルパス
+
+private:
+    void SetVertices() override;
 
 public:
-    void CreateBuff();
+    void Initialzie();
     void Draw();
     void DrawShadowReciever();
     void CalcSmoothedNormals();
 
-    void SetMaterial(Material* material) { mtl = material; }
-
+    //  Getter
     Material* GetMaterial() { return mtl; }
     size_t GetVertexCount() { return vertices.size(); }
-
-    inline const std::vector<FBXVertex>& GetVertices() { return vertices; }
+    inline const std::vector<ModelVertex>& GetVertices() { return vertices; }
     inline const std::vector<unsigned short>& GetIndices() { return indices; }
 
-    void AddIndex(unsigned short index) { indices.emplace_back(index); }
-    void AddVertex(const FBXVertex& vertex) { vertices.emplace_back(vertex); }
+    //  Setter
+    void SetMaterial(Material* material) { mtl = material; }
     void SetBone(int vertexID, UINT boneIndex, float weight);
-    void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex) { smoothData[indexPosition].emplace_back(indexVertex); }
     void SetTextureFilePath(const std::string& filePath);
-private:
-    void SetVertices() override;
+
+    //  Add
+    void AddIndex(unsigned short index) { indices.emplace_back(index); }
+    void AddVertex(const ModelVertex& vertex) { vertices.emplace_back(vertex); }
+    void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex) { smoothData[indexPosition].emplace_back(indexVertex); }
 };
 

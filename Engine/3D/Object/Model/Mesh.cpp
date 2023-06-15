@@ -2,19 +2,21 @@
 #include "TextureManager.h"
 #include <cassert>
 
-MyDirectX* Mesh::dx = MyDirectX::GetInstance();
-
-void Mesh::CreateBuff()
+void Mesh::Initialzie()
 {
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
 	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * indices.size());
-	BuffInitialize(dx->GetDev(), sizeVB, sizeIB, &indices.front(), (int)indices.size());
+
+	BuffInitialize(MyDirectX::GetInstance()->GetDev(), sizeVB, sizeIB, &indices.front(), (int)indices.size());
+	//VertIdxBuff::Initialize(sizeVB, indices);
 }
 
 void Mesh::Draw()
 {
-	ID3D12GraphicsCommandList* cmdList = dx->GetCmdList();
-	BuffUpdate(cmdList);
+	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
+
+	VertIdxBuff::IASetVertIdxBuff();
+
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(mtl->GetTextureHandle()));
 
 	ID3D12Resource* constBuff = mtl->GetMaterialConstBuff();
@@ -25,8 +27,10 @@ void Mesh::Draw()
 
 void Mesh::DrawShadowReciever()
 {
-	ID3D12GraphicsCommandList* cmdList = dx->GetCmdList();
-	BuffUpdate(cmdList);
+	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
+
+	VertIdxBuff::IASetVertIdxBuff();
+
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(mtl->GetTextureHandle()));
 
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
@@ -34,8 +38,7 @@ void Mesh::DrawShadowReciever()
 
 void Mesh::CalcSmoothedNormals()
 {
-	auto itr = smoothData.begin();
-	for (; itr != smoothData.end(); ++itr) {
+	for (auto itr = smoothData.begin(); itr != smoothData.end(); ++itr) {
 		std::vector<unsigned short>& v = itr->second;
 
 		Vector3D normal;
@@ -72,7 +75,7 @@ void Mesh::SetVertices()
 {
 	//	GPUメモリの値書き換えよう
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
-	FBXVertex* vertMap = nullptr;
+	ModelVertex* vertMap = nullptr;
 	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して

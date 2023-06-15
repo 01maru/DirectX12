@@ -10,7 +10,7 @@ void MeshCollider::ConstructTriangles(IModel* /*model*/)
 
 	for (; itr != meshes.cend(); ++itr) {
 		Mesh* mesh = *itr;
-		const std::vector<FBXVertex>& vertices = mesh->GetVertices();
+		const std::vector<ModelVertex>& vertices = mesh->GetVertices();
 		const std::vector<unsigned short>& indices = mesh->GetIndices();
 
 		size_t triangleNum = indices.size() / 3;

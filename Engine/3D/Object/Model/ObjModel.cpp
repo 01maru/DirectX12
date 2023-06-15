@@ -161,7 +161,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 				index_stream >> indexNormal;
 
 				//	AddVertex
-				FBXVertex vertex{};
+				ModelVertex vertex{};
 				vertex.pos = temp_poss[indexPos - 1];
 				vertex.normal = temp_normals[indexNormal - 1];
 				vertex.uv = temp_uvs[indexUV - 1];
@@ -205,6 +205,7 @@ void ObjModel::LoadMaterial(const std::string& directoryPath, const std::string&
 	file.open(directoryPath + filename);
 	if (file.fail()) { assert(0); }
 
+	//	複数マテリアルに対応するために初期値nullptr
 	Material* material = nullptr;
 	string line;
 	while (getline(file, line))

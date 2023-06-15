@@ -14,7 +14,7 @@ struct Vertex
 	Vector2D uv;
 };
 
-struct FBXVertex
+struct ModelVertex
 {
 	Vector3D pos;
 	Vector3D normal;

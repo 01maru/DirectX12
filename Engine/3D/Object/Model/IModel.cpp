@@ -5,7 +5,7 @@ void IModel::Initialize(const char* filename, bool smoothing)
 	LoadModel(filename, smoothing);
 
 	for (auto& m : meshes) {
-		m->CreateBuff();
+		m->Initialzie();
 	}
 
 	for (auto& m : materials) {
