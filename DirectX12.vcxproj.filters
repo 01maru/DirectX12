@@ -201,9 +201,6 @@
     <ClCompile Include="Engine\Math\Quaternion.cpp">
       <Filter>ソース ファイル\lib\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Game\Player.cpp">
-      <Filter>ソース ファイル\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Collider\CollisionInfo.cpp">
       <Filter>ソース ファイル\lib\Engine\Collider</Filter>
     </ClCompile>
@@ -433,9 +430,6 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\Camera\Base\ICamera.h">
       <Filter>ヘッダー ファイル\lib\3D\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Game\Player.h">
-      <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Collider\CollisionInfo.h">
       <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>

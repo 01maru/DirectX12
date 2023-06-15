@@ -51,7 +51,6 @@
     <ClCompile Include="Engine\Game\MyGame.cpp" />
     <ClCompile Include="Engine\Math\MyMath.cpp" />
     <ClCompile Include="Engine\Base\Audio\XAudioManager.cpp" />
-    <ClCompile Include="Engine\Game\Player.cpp" />
     <ClCompile Include="Engine\3D\Light\PointLight.cpp" />
     <ClCompile Include="Engine\Math\Quaternion.cpp" />
     <ClCompile Include="Engine\Collider\QueryCallBack.cpp" />
@@ -131,7 +130,6 @@
     <ClInclude Include="Engine\Game\MyGame.h" />
     <ClInclude Include="Engine\Math\MyMath.h" />
     <ClInclude Include="Engine\Base\Audio\XAudioManager.h" />
-    <ClInclude Include="Engine\Game\Player.h" />
     <ClInclude Include="Engine\3D\Light\PointLight.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Engine\Collider\QueryCallBack.h" />

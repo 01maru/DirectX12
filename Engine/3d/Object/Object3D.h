@@ -53,7 +53,7 @@ private:
 protected:
 	MyMath::ObjMatrix mat;
 	Vector4D color = { 1.0f,1.0f,1.0f,1.0f };
-	BaseCollider* collider = nullptr;
+	//BaseCollider* collider = nullptr;
 	
 public:
 	Object3D() = default;
@@ -75,7 +75,7 @@ public:
 	static void SetCamera(ICamera* camera_);
 	void SetModel(IModel* model_);
 	void SetCollider(BaseCollider* collider_);
-	BaseCollider* GetCollider() { return collider; }
+	//BaseCollider* GetCollider() { return collider; }
 	void SetAttribute(unsigned short attribute);
 
 	void SetColor(const Vector4D& color_) { color = color_; }
