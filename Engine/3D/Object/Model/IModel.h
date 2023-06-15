@@ -1,12 +1,6 @@
 #pragma once
-#include "MyMath.h"
-#include "DirectX.h"
-#include "GPipeline.h"
-#include "VertIdxBuff.h"
 #include "Material.h"
-#include "Light.h"
 #include "Mesh.h"
-#include <assimp/Importer.hpp>
 #include <map>
 
 struct BoneInfo
@@ -20,20 +14,23 @@ class IModel
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	static MyDirectX* dx;
 	//	boneの最大数
 	static const int MAX_BONE_INDICES = 4;
 
 	//	メッシュ
-	std::vector<Mesh*> meshes;
+	std::vector<std::unique_ptr<Mesh>> meshes;
 	//	マテリアル
-	std::unordered_map<std::string, Material*> materials;
+	std::unordered_map<std::string, std::unique_ptr<Material>> materials;
 
 	//	boneの情報
 	Matrix globalInverseTransform;
 	std::map<std::string, UINT> boneMapping;
 	UINT numBones = 0;
 	std::vector<BoneInfo> boneInfo;
+
+protected:
+	virtual void LoadModel(const std::string& modelname, bool smoothing) = 0;
+
 public:
 	virtual ~IModel() = default;
 	//	ファイル名とスムージングするか
@@ -43,11 +40,9 @@ public:
 
 	virtual void BoneTransform(float TimeInSeconds, std::vector<Matrix>& transforms) = 0;
 	void AddMaterial(Material* material) { materials.emplace(material->name, material); }
-protected:
-	virtual void LoadModel(const std::string& modelname, bool smoothing) = 0;
-public:
+
 	//　Getter
-	inline const std::vector<Mesh*>& GetMeshes() { return meshes; }
+	//const std::vector<Mesh*>& GetMeshes() { return meshes; }
 	const Matrix& GetModelTransform() { return globalInverseTransform; }
 	UINT GetNumBones() { return numBones; }
 	std::vector<BoneInfo> GetBoneInfo() { return boneInfo; }

@@ -1,13 +1,4 @@
 #include "IModel.h"
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include "Quaternion.h"
-using namespace std;
-
-MyDirectX* IModel::dx = MyDirectX::GetInstance();
 
 void IModel::Initialize(const char* filename, bool smoothing)
 {

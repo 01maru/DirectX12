@@ -1,10 +1,10 @@
 #include "MeshCollider.h"
 #include "Collision.h"
 
-void MeshCollider::ConstructTriangles(IModel* model)
+void MeshCollider::ConstructTriangles(IModel* /*model*/)
 {
 	triangles.clear();
-	const std::vector<Mesh*>& meshes = model->GetMeshes();
+	std::vector<Mesh*> meshes/* = model->GetMeshes()*/;
 	int start = 0;
 	std::vector<Mesh*>::const_iterator itr = meshes.cbegin();
 

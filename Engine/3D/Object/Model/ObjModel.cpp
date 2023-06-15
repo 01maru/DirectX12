@@ -1,6 +1,7 @@
 #include "ObjModel.h"
 #include <sstream>
 #include <fstream>
+#include <assert.h>
 
 using namespace std;
 
@@ -11,14 +12,8 @@ ObjModel::ObjModel(const char* filename, bool smoothing)
 
 ObjModel::~ObjModel()
 {
-	for (auto m : meshes) {
-		delete m;
-	}
 	meshes.clear();
 
-	for (auto m : materials) {
-		delete m.second;
-	}
 	materials.clear();
 }
 
@@ -34,14 +29,17 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 	std::vector<Vector2D> temp_uvs;
 	std::vector<Vector3D> temp_normals;
 
-	std::ifstream file_;
-	const string filename = modelname + ".obj";
+	//	filePath
 	const string directoryPath = "Resources/Model/" + modelname + "/";
+	const string filename = modelname + ".obj";
+
+	//	FileOpen
+	std::ifstream file_;
 	file_.open(directoryPath + filename);
 	assert(!file_.fail());
 
 	meshes.emplace_back(new Mesh);
-	Mesh* mesh = meshes.back();
+	Mesh* mesh = meshes.back().get();
 	int indexCount = 0;
 
 	string line;
@@ -51,12 +49,14 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 		string key;
 		getline(line_stream, key, ' ');
 
+		//	material
 		if (key == "mtllib") {
 			string filename_;
 			line_stream >> filename_;
 			LoadMaterial(directoryPath, filename_);
 		}
-
+		
+		//	materialの割り当て
 		if (key == "usemtl")
 		{
 			if (mesh->GetMaterial() == nullptr) {
@@ -67,14 +67,14 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 				// マテリアル名で検索し、マテリアルを割り当てる
 				auto itr = materials.find(materialName);
 				if (itr != materials.end()) {
-					mesh->SetMaterial(itr->second);
+					mesh->SetMaterial(itr->second.get());
 				}
 			}
 		}
 
 		if (key == "o") {
 
-			// カレントメッシュの情報が揃っているなら
+			// メッシュの情報が揃っているなら
 			if (mesh->GetVertexCount() > 0) {
 				// 頂点法線の平均によるエッジの平滑化
 				if (smoothing) {
@@ -82,7 +82,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 				}
 				// 次のメッシュ生成
 				meshes.emplace_back(new Mesh);
-				mesh = meshes.back();
+				mesh = meshes.back().get();
 				indexCount = 0;
 			}
 
@@ -94,6 +94,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			//mesh->SetName(groupName);
 		}
 
+		//	Vertex
 		if (key == "v") {
 			Vector3D pos;
 			line_stream >> pos.x;
@@ -104,6 +105,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			temp_poss.emplace_back(pos);
 		}
 
+		//	UV
 		if (key == "vt") {
 			Vector2D uv;
 			line_stream >> uv.x;
@@ -113,6 +115,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			temp_uvs.emplace_back(uv);
 		}
 
+		//	Normal
 		if (key == "vn") {
 			Vector3D normal;
 			line_stream >> normal.x;
@@ -122,6 +125,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			temp_normals.emplace_back(normal);
 		}
 
+		//	face
 		if (key == "f") {
 			int indexNum = 0;
 			std::vector<uint16_t> indices;
@@ -129,6 +133,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			string index_string;
 			while (getline(line_stream, index_string, ' '))
 			{
+				//	頂点ごとのIndex情報取得
 				std::istringstream index_stream(index_string);
 				unsigned short indexPos, indexNormal, indexUV;
 				index_stream >> indexPos;
@@ -137,6 +142,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 				index_stream.seekg(1, ios_base::cur);
 				index_stream >> indexNormal;
 
+				//	AddVertex
 				FBXVertex vertex{};
 				vertex.pos = temp_poss[indexPos - 1];
 				vertex.normal = temp_normals[indexNormal - 1];
@@ -148,10 +154,8 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 					mesh->AddSmoothData(indexPos, (unsigned short)mesh->GetVertexCount() - 1);
 				}
 
-				if (indexNum >= 3) {
-					//mesh->AddIndex((unsigned short)indexCount - 1);
-					//mesh->AddIndex((unsigned short)indexCount);
-					//mesh->AddIndex((unsigned short)indexCount - 3);
+				if (indexNum >= 3)	//	三角面化されていないとき
+				{
 					indices.emplace_back((unsigned short)(indexCount - 1));
 					indices.emplace_back((unsigned short)indexCount);
 					indices.emplace_back((unsigned short)(indexCount - 3));
@@ -163,6 +167,8 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 				indexNum++;
 				indexCount++;
 			}
+
+			//	AddIndex
 			if (indices.size() == 3)
 			{
 				mesh->AddIndex(indices[0]);

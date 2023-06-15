@@ -15,6 +15,7 @@ private:
 #pragma region Model
 	std::unique_ptr<IModel> modelSkydome;
 	std::unique_ptr<IModel> modelGround;
+	std::unique_ptr<IModel> modelCube;
 #pragma endregion
 
 #pragma region Sprite
@@ -27,6 +28,7 @@ private:
 #pragma endregion
 	std::unique_ptr<Object3D> skydome;
 	std::unique_ptr<Object3D> ground;
+	std::unique_ptr<Object3D> cube;
 
 	float lightColor = 1.0f;
 public:	

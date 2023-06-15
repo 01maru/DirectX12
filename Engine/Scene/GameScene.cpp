@@ -34,11 +34,15 @@ void GameScene::LoadResources()
 #pragma region Model
 	modelSkydome = std::make_unique<ObjModel>("skydome");
 	modelGround = std::make_unique<ObjModel>("ground");
+	modelCube = std::make_unique<ObjModel>("cube4");
 #pragma endregion
 	//	天球
 	skydome.reset(Object3D::Create(modelSkydome.get()));
 	//	地面
 	ground.reset(Object3D::Create(modelGround.get()));
+	//	Cube
+	cube.reset(Object3D::Create(modelCube.get()));
+	cube->SetScale({ 5.0f,5.0f,5.0f });
 #pragma region Texture
 	reimuG = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/reimu.png");
 	grassG = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/grass.png");
@@ -92,6 +96,8 @@ void GameScene::MatUpdate()
 	ParticleManager::GetInstance()->MatUpdate();
 	ground->MatUpdate();
 	skydome->MatUpdate();
+
+	cube->MatUpdate();
 }
 
 void GameScene::ImguiUpdate()
@@ -107,8 +113,10 @@ void GameScene::Draw()
 	//	天球
 	skydome->Draw();
 	//	地面
-	ground->Draw();
-	sprite->Draw();
+	//ground->Draw();
+	cube->Draw();
+
+	//sprite->Draw();
 
 	//DebugTextManager::GetInstance()->Draw();
 	ParticleManager::GetInstance()->Draw();
