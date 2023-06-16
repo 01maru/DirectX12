@@ -3,10 +3,9 @@
 #include <assert.h>
 #include <sstream>
 
+#include "ImGuiController.h"
 #include "ImGuiManager.h"
 #include "MyMath.h"
-
-#include "ImGuiController.h"
 
 #pragma region Struct
 
