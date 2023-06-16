@@ -1,33 +1,28 @@
 ﻿#pragma once
 #include <dinput.h>
-#include <cassert>
 #include <wrl.h>
-#include "Vector2D.h"
+#include <stdint.h>
 
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 
 class InputKeyboard
 {
-public:
-	enum MouseButton {
-		LeftClick = 0,
-		RightClick,
-		WheelClick,
-	};
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	BYTE key[256] = {};
-	BYTE prev[256] = {};
-	ComPtr<IDirectInputDevice8> keyboard = nullptr;
+	ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
 
-public:
+	int8_t key_[256] = {};
+	int8_t prev_[256] = {};
+
+public:		//	関数
 	void Initialize(IDirectInput8* directInput);
 	void Update();
 
-	bool GetKey(int _key);
-	bool GetTrigger(int _key);
-	bool ReleaseKey(int _key);
+	//	Getter
+	bool GetKey(int key);
+	bool GetTrigger(int key);
+	bool GetRelease(int key);
 };
 

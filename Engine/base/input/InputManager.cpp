@@ -3,6 +3,7 @@
 
 #include "ImGuiManager.h"
 #include "ImGuiController.h"
+#include <cassert>
 
 InputManager* InputManager::GetInstance()
 {

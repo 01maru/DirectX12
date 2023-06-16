@@ -1,5 +1,6 @@
 ﻿#include "InputKeyboard.h"
 #include "Window.h"
+#include <cassert>
 
 void InputKeyboard::Initialize(IDirectInput8* directInput)
 {
@@ -7,13 +8,13 @@ void InputKeyboard::Initialize(IDirectInput8* directInput)
 	HRESULT result;
 
 	//	デバイス生成(キーボード以外も可能)
-	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
+	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard_, NULL);
 	assert(SUCCEEDED(result));
 	//	入力形成のセット
-	result = keyboard->SetDataFormat(&c_dfDIKeyboard);
+	result = keyboard_->SetDataFormat(&c_dfDIKeyboard);
 	assert(SUCCEEDED(result));
 	//	排他制御のレベルセット
-	result = keyboard->SetCooperativeLevel(
+	result = keyboard_->SetCooperativeLevel(
 		win->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 }
@@ -21,28 +22,28 @@ void InputKeyboard::Initialize(IDirectInput8* directInput)
 void InputKeyboard::Update()
 {
 	//	前フレームの情報取得
-	for (size_t i = 0; i < sizeof(key); i++)
+	for (size_t i = 0; i < sizeof(key_); i++)
 	{
-		prev[i] = key[i];
+		prev_[i] = key_[i];
 	}
 
 	//	キー情報取得
-	keyboard->Acquire();
+	keyboard_->Acquire();
 	//	全キーの入力情報取得
-	keyboard->GetDeviceState(sizeof(key), key);
+	keyboard_->GetDeviceState(sizeof(key_), key_);
 }
 
-bool InputKeyboard::GetKey(int _key)
+bool InputKeyboard::GetKey(int key)
 {
-	return key[_key];
+	return key_[key];
 }
 
-bool InputKeyboard::GetTrigger(int _key)
+bool InputKeyboard::GetTrigger(int key)
 {
-	return key[_key] && !prev[_key];
+	return key_[key] && !prev_[key];
 }
 
-bool InputKeyboard::ReleaseKey(int _key)
+bool InputKeyboard::GetRelease(int key)
 {
-	return prev[_key] && !key[_key];
+	return prev_[key] && !key_[key];
 }
