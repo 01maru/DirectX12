@@ -31,7 +31,7 @@ void Window::Initialize()
 	w_.cbSize = sizeof(WNDCLASSEX);
 	w_.lpfnWndProc = (WNDPROC)WindowProc;		// ウィンドウプロシージャを設定
 	w_.lpszClassName = L"DirectXGame";			// ウィンドウクラス名
-	w_.hInstance = GetModuleHandle(nullptr);		// ウィンドウハンドル
+	w_.hInstance = GetModuleHandle(nullptr);	// ウィンドウハンドル
 	w_.hCursor = LoadCursor(NULL, IDC_ARROW);	// カーソル指定
 
 	// ウィンドウクラスをOSに登録する
@@ -69,8 +69,8 @@ bool Window::MsgUpdate()
 {
 	if (PeekMessage(&msg_, nullptr, 0, 0, PM_REMOVE))
 	{
-		TranslateMessage(&msg_);			// キー入力メッセージの処理
-		DispatchMessage(&msg_);			// プロシージャにメッセージを送る
+		TranslateMessage(&msg_);	// キー入力メッセージの処理
+		DispatchMessage(&msg_);		// プロシージャにメッセージを送る
 	}
 
 	return EndLoop();

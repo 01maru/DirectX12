@@ -11,9 +11,9 @@
 
 //	音データ
 struct SoundData {
-	WAVEFORMATEX wfex;
-	BYTE* pBuffer;
-	size_t bufferSize;
+	WAVEFORMATEX wfex{};
+	BYTE* pBuffer = nullptr;
+	size_t bufferSize = 0;
 
 	float volume = 1.0f;
 };
