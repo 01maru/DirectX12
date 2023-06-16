@@ -1,7 +1,14 @@
-#pragma once
+﻿#pragma once
+#include "InputMouse.h"
+#include <memory>
 
 class InputManager
 {
+private:
+	bool activeMouseImGui_ = false;
+	std::unique_ptr<InputMouse> mouse_;
+
+private:
 	InputManager() {};
 	~InputManager() {};
 public:
@@ -11,5 +18,9 @@ public:
 
 	void Initialize();
 	void Update();
+	void ImGuiUpdate();
+
+	//	Getter
+	const InputMouse* GetMouse() { return mouse_.get(); }
 };
 

@@ -16,6 +16,7 @@ void ImGuiController::Update()
 	man->LabelText("", "FPS:%4.2f", FPSController::GetInstance()->GetFPS());
 
 	man->CheckBox("VolumeManager", activeVolumeManager_);
+	man->CheckBox("InputManager", activeInputManager_);
 
 	man->EndWindow();
 }

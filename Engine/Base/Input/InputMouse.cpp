@@ -1,6 +1,8 @@
-#include "InputMouse.h"
+ï»¿#include "InputMouse.h"
 #include "Window.h"
 #include <cassert>
+
+#include "ImGuiManager.h"
 
 void InputMouse::Initialize()
 {
@@ -10,93 +12,133 @@ void InputMouse::Initialize()
 		win->GetWND().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput_, nullptr);
 	assert(SUCCEEDED(result));
 
-	//	ƒfƒoƒCƒX¶¬(ƒL[ƒ{[ƒhˆÈŠO‚à‰Â”\)
+	//	ãƒ‡ãƒã‚¤ã‚¹ç”Ÿæˆ(ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ä»¥å¤–ã‚‚å¯èƒ½)
 	result = directInput_->CreateDevice(GUID_SysMouse, &mouse_, NULL);
 	assert(SUCCEEDED(result));
 
-	//	“ü—ÍŒ`¬‚ÌƒZƒbƒg
+	//	å…¥åŠ›å½¢æˆã®ã‚»ãƒƒãƒˆ
 	result = mouse_->SetDataFormat(&c_dfDIMouse);
 	assert(SUCCEEDED(result));
 
-	//	”r‘¼§Œä‚ÌƒŒƒxƒ‹ƒZƒbƒg
+	//	æŽ’ä»–åˆ¶å¾¡ã®ãƒ¬ãƒ™ãƒ«ã‚»ãƒƒãƒˆ
 	result = mouse_->SetCooperativeLevel(
 		win->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 }
 
+void InputMouse::LockCursor()
+{
+	if (!isLockCursor_) return;
+
+	RECT rec;
+	//	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®å¤§ãã•å–å¾—
+	GetWindowRect(Window::GetInstance()->GetHwnd(), &rec);
+
+	Vector2D center((float)(rec.right + rec.left) / 2.0f, (float)(rec.bottom + rec.top) / 2.0f);
+	float width = Window::sWIN_WIDTH / 2.0f;
+	float height = Window::sWIN_HEIGHT / 2.0f;
+	rec.left = (LONG)(center.x - width);
+	rec.right = (LONG)(center.x + width);
+	rec.top = (LONG)(center.y - height);
+	rec.bottom = (LONG)(center.y + height);
+
+	SetCursorPos((int)center.x, (int)center.y);
+	//	ç¯„å›²æŒ‡å®š
+	ClipCursor(&rec);
+
+	//	UpdateCursor
+	prevCursor_ = center;
+	cursor_ = center;
+}
+
+void InputMouse::UnLockCursor()
+{
+	if (isLockCursor_) return;
+
+	//	ã‚«ãƒ¼ã‚½ãƒ«ã®æƒ…å ±
+	POINT cursor;
+	//	ScreenLeftTop(0, 0)
+	GetCursorPos(&cursor);
+	//	WindowLeftTop(0, 0)
+	ScreenToClient(Window::GetInstance()->GetHwnd(), &cursor);
+
+	//	ç¯„å›²æŒ‡å®šã—ãªã„
+	ClipCursor(NULL);
+
+	//	UpdateCursor
+	cursor_.x = (float)cursor.x;
+	cursor_.y = (float)cursor.y;
+}
+
 void InputMouse::SetInputInfo()
 {
-	//	ƒ}ƒEƒX‘S‘Ì‚Ìî•ñ
+	//	ãƒžã‚¦ã‚¹å…¨ä½“ã®æƒ…å ±
 	mouse_->Acquire();
 	mouse_->Poll();
 	mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &click_);
 
-	//	ƒJ[ƒ\ƒ‹‚Ìî•ñ
-	POINT cursor;
-	GetCursorPos(&cursor);
+	LockCursor();
+	UnLockCursor();
 
-	cursor_.x = (float)cursor.x;
-	cursor_.y = (float)cursor.y;
-
-	if (isRockCursor_) {
-		RockCursor();
-	}
-	else {
-		//	”ÍˆÍŽw’è‚µ‚È‚¢
-		ClipCursor(NULL);
-		ScreenToClient(Window::GetInstance()->GetHwnd(), &cursor);
-	}
+	cursorMoveLen_ = cursor_ - prevCursor_;
 }
 
 void InputMouse::Update()
 {
-	//	‘OƒtƒŒ[ƒ€‚Ìî•ñ
+	//	å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®æƒ…å ±
 	prevClick_ = click_;
 	prevCursor_ = cursor_;
 
 	SetInputInfo();
+
+	ShowCursor(showCursor_);
 }
 
-void InputMouse::RockCursor()
+void InputMouse::ImGuiUpdate()
 {
-	RECT rec;
-	//	ƒEƒBƒ“ƒhƒE‚Ì‘å‚«‚³Žæ“¾
-	GetWindowRect(Window::GetInstance()->GetHwnd(), &rec);
+	ImGuiManager* imgui = ImGuiManager::GetInstance();
 
-	Vector2D center((float)(rec.right + rec.left) / 2.0f, (float)(rec.bottom + rec.top) / 2.0f);
-	float width  = Window::sWIN_WIDTH / 2.0f;
-	float height = Window::sWIN_HEIGHT / 2.0f;
-	rec.left   = (LONG)(center.x - width);
-	rec.right  = (LONG)(center.x + width);
-	rec.top    = (LONG)(center.y - height);
-	rec.bottom = (LONG)(center.y + height);
+	imgui->BeginChild();
 
-	prevCursor_ = center;
+	imgui->Text("CursorPos  : (%.f, %.f)", cursor_.x, cursor_.y);
+	imgui->Text("CursorMove : (%d, %d)", cursorMoveLen_.x, cursorMoveLen_.y);
 
-	SetCursorPos((int)center.x, (int)center.y);
-	//	ƒJ[ƒ\ƒ‹•\Ž¦‚µ‚È‚¢
-	ShowCursor(false);
-	//	”ÍˆÍŽw’è
-	ClipCursor(&rec);
+	imgui->Text("LeftClick  : %s\nTrigger : %s\nRelease : %s\n"
+		, GetClick(LeftClick)		 ? "True" : "False"
+		, GetClickTrigger(LeftClick) ? "True" : "False"
+		, GetClickRelease(LeftClick) ? "True" : "False");
+	imgui->Text("RightClick  : %s\nTrigger : %s\nRelease : %s\n"
+		, GetClick(RightClick)		  ? "True" : "False"
+		, GetClickTrigger(RightClick) ? "True" : "False"
+		, GetClickRelease(RightClick) ? "True" : "False");
+	imgui->Text("WheelClick  : %s\nTrigger : %s\nRelease : %s\n"
+		, GetClick(WheelClick)		  ? "True" : "False"
+		, GetClickTrigger(WheelClick) ? "True" : "False"
+		, GetClickRelease(WheelClick) ? "True" : "False");
+	imgui->Text("SideClick  : %s\nTrigger : %s\nRelease : %s\n"
+		, GetClick(SideClick)		 ? "True" : "False"
+		, GetClickTrigger(SideClick) ? "True" : "False"
+		, GetClickRelease(SideClick) ? "True" : "False");
+	imgui->Text("WheelMove  : %d", click_.lZ);
+	
+	imgui->Text("ShowCursor : %s", showCursor_ ? "True" : "False");
+
+	imgui->Text("LockCursor : %s", isLockCursor_ ? "True" : "False");
+
+	imgui->EndChild();
 }
 
-bool InputMouse::Click(int type)
+bool InputMouse::GetClick(MouseButton type)
 {
 	return (click_.rgbButtons[type] & (0x80));
-
 }
 
-bool InputMouse::ClickTrigger(int type)
+bool InputMouse::GetClickTrigger(MouseButton type)
 {
 	return (click_.rgbButtons[type] & (0x80)) && !(prevClick_.rgbButtons[type] & (0x80));
 }
 
-//void InputMouse::SetCursorPos(Vector2D& pos)
-//{
-//	pos = cursor;
-//}
-
-LONG InputMouse::Wheel()
+bool InputMouse::GetClickRelease(MouseButton type)
 {
-	return click_.lZ;
+	return !(click_.rgbButtons[type] & (0x80)) && (prevClick_.rgbButtons[type] & (0x80));
 }

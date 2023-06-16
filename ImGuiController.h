@@ -4,6 +4,7 @@ class ImGuiController
 {
 private:
 	bool activeVolumeManager_ = false;
+	bool activeInputManager_ = false;
 
 private:	//	関数
 	ImGuiController() {};
@@ -18,5 +19,6 @@ public:
 
 	//	Getter
 	bool GetActiveVolumeManager() { return activeVolumeManager_; }
+	bool GetActiveInputManager() { return activeInputManager_; }
 };
 

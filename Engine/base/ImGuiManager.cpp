@@ -135,6 +135,14 @@ void ImGuiManager::LabelText(const std::string& name, const std::string& text, f
 	ImGui::LabelText(name.c_str(), text.c_str(), value);
 }
 
+void ImGuiManager::Text(const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	ImGui::TextV(fmt, args);
+	va_end(args);
+}
+
 bool ImGuiManager::BeginChild(const Vector2D& size)
 {
 	return ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(size.x, size.y), ImGuiWindowFlags_NoTitleBar);

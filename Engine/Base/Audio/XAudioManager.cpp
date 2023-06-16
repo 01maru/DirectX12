@@ -1,4 +1,4 @@
-#include "XAudioManager.h"
+ï»¿#include "XAudioManager.h"
 #include <fstream>
 #include <assert.h>
 #include <sstream>
@@ -28,7 +28,7 @@ struct VolumeData
 	std::string name_;
 	float volume_ = 1.0f;
 
-	//	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	VolumeData() {};
 	VolumeData(const std::string& name, float volume) :name_(name), volume_(volume) {};
 };
@@ -72,28 +72,28 @@ float XAudioManager::LoadVolume(const std::string& filename)
 
 	std::string filePath = "Resources/Sound/VolumeData.txt";
 
-	//ƒtƒ@ƒCƒ‹ŠJ‚­(ŠJ‚¯‚È‚©‚Á‚½‚çV‹Kì¬)
+	//ãƒ•ã‚¡ã‚¤ãƒ«é–‹ã(é–‹ã‘ãªã‹ã£ãŸã‚‰æ–°è¦ä½œæˆ)
 	std::ifstream file;
 	file.open(filePath.c_str(), std::ios_base::app);
 
-	// 1s‚¸‚Â“Ç‚İ‚Ş
+	// 1è¡Œãšã¤èª­ã¿è¾¼ã‚€
 	std::string line;
 	while (getline(file, line)) {
 
-		// 1s•ª‚Ì•¶š—ñ‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·‚µ‚Ä‰ğÍ‚µ‚â‚·‚­‚·‚é
+		// 1è¡Œåˆ†ã®æ–‡å­—åˆ—ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«å¤‰æ›ã—ã¦è§£æã—ã‚„ã™ãã™ã‚‹
 		std::istringstream line_stream(line);
 
-		// ”¼ŠpƒXƒy[ƒX‹æØ‚è‚Ås‚Ìæ“ª•¶š—ñ‚ğæ“¾
+		// åŠè§’ã‚¹ãƒšãƒ¼ã‚¹åŒºåˆ‡ã‚Šã§è¡Œã®å…ˆé ­æ–‡å­—åˆ—ã‚’å–å¾—
 		std::string key;
 		getline(line_stream, key, ' ');
 
 		if (key == filename) {
-			//	data‚ª‚ ‚Á‚½‚ç
+			//	dataãŒã‚ã£ãŸã‚‰
 			line_stream >> volume;
 		}
 	}
 
-	//ƒtƒ@ƒCƒ‹•Â‚¶‚é
+	//ãƒ•ã‚¡ã‚¤ãƒ«é–‰ã˜ã‚‹
 	file.close();
 
 	return volume;
@@ -111,24 +111,24 @@ void XAudioManager::SaveVolume()
 {
 	std::string filePath = "Resources/Sound/VolumeData.txt";
 
-	//ƒtƒ@ƒCƒ‹ŠJ‚­(ŠJ‚¯‚È‚©‚Á‚½‚çV‹Kì¬)
+	//ãƒ•ã‚¡ã‚¤ãƒ«é–‹ã(é–‹ã‘ãªã‹ã£ãŸã‚‰æ–°è¦ä½œæˆ)
 	std::ifstream file;
 	file.open(filePath.c_str(), std::ios_base::app);
 
 	std::vector<VolumeData> volumeData;
 	std::vector<VolumeData> newVolumeData;
 
-	// 1s‚¸‚Â“Ç‚İ‚Ş
+	// 1è¡Œãšã¤èª­ã¿è¾¼ã‚€
 	std::string line;
 	while (getline(file, line)) {
 
-		// 1s•ª‚Ì•¶š—ñ‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·‚µ‚Ä‰ğÍ‚µ‚â‚·‚­‚·‚é
+		// 1è¡Œåˆ†ã®æ–‡å­—åˆ—ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«å¤‰æ›ã—ã¦è§£æã—ã‚„ã™ãã™ã‚‹
 		std::istringstream line_stream(line);
 
 		VolumeData data;
 		line_stream >> data.name_;
 
-		// ”¼ŠpƒXƒy[ƒX‹æØ‚è‚Ås‚Ìæ“ª•¶š—ñ‚ğæ“¾
+		// åŠè§’ã‚¹ãƒšãƒ¼ã‚¹åŒºåˆ‡ã‚Šã§è¡Œã®å…ˆé ­æ–‡å­—åˆ—ã‚’å–å¾—
 		std::string key;
 		getline(line_stream, key, ' ');
 
@@ -142,7 +142,7 @@ void XAudioManager::SaveVolume()
 		bool pushBack = true;
 		for (size_t j = 0; j < volumeData.size(); j++)
 		{
-			//	Šù‚É‚ ‚Á‚½‚ç
+			//	æ—¢ã«ã‚ã£ãŸã‚‰
 			if (itr->first == volumeData[j].name_) {
 				volumeData[j].volume_ = itr->second.volume;
 				pushBack = false;
@@ -150,17 +150,17 @@ void XAudioManager::SaveVolume()
 			}
 		}
 
-		//	‘¶İ‚µ‚È‚©‚Á‚½‚ç
+		//	å­˜åœ¨ã—ãªã‹ã£ãŸã‚‰
 		if (pushBack) newVolumeData.emplace_back(VolumeData(itr->first, itr->second.volume));
 	}
 
-	//ƒtƒ@ƒCƒ‹•Â‚¶‚é
+	//ãƒ•ã‚¡ã‚¤ãƒ«é–‰ã˜ã‚‹
 	file.close();
 
 	std::ofstream outPutFile;
 	outPutFile.open(filePath);
 
-	//	ƒtƒ@ƒCƒ‹‚ªŠJ‚¯‚È‚©‚Á‚½‚ç
+	//	ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ãªã‹ã£ãŸã‚‰
 	if (outPutFile.fail()) { assert(0); }
 
 	for (size_t i = 0; i < volumeData.size(); i++)
@@ -224,7 +224,7 @@ void XAudioManager::ImguiUpdate()
 
 void XAudioManager::LoadSoundWave(const std::string& filename)
 {
-	//	Šù‚É“Ç‚İ‚İÏ‚İ‚¾‚Á‚½‚ç
+	//	æ—¢ã«èª­ã¿è¾¼ã¿æ¸ˆã¿ã ã£ãŸã‚‰
 	if (data_.count(filename) == 1) return;
 
 	std::ifstream file;
@@ -266,7 +266,7 @@ void XAudioManager::LoadSoundWave(const std::string& filename)
 	soundData.bufferSize = data.size;
 	soundData.volume = LoadVolume(filename);
 
-	//	ƒf[ƒ^‚Ì‘}“ü
+	//	ãƒ‡ãƒ¼ã‚¿ã®æŒ¿å…¥
 	data_.emplace(filename, soundData);
 }
 
@@ -274,7 +274,7 @@ void XAudioManager::PlayDebugSoundWave(const std::string& soundName, SoundType t
 {
 	HRESULT result;
 
-	//	‰¹ƒf[ƒ^‚ª‚ ‚Á‚½‚ç
+	//	éŸ³ãƒ‡ãƒ¼ã‚¿ãŒã‚ã£ãŸã‚‰
 	assert(data_.count(soundName) != 0);
 
 	SoundVoicePtr pSourceVoice;
@@ -293,7 +293,7 @@ void XAudioManager::PlayDebugSoundWave(const std::string& soundName, SoundType t
 	}
 	pSourceVoice.ptr->SetVolume(data_[soundName].volume * typeVolume);
 
-	//	”z—ñ‚É‘}“ü
+	//	é…åˆ—ã«æŒ¿å…¥
 	if (isDebug) {
 		debugSoundPtr_.push_back(pSourceVoice);
 	}
@@ -313,7 +313,7 @@ void XAudioManager::PlayDebugSoundWave(const std::string& soundName, SoundType t
 	buf.pAudioData = data_[soundName].pBuffer;
 	buf.AudioBytes = (UINT32)data_[soundName].bufferSize;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
-	//	ƒ‹[ƒvÄ¶
+	//	ãƒ«ãƒ¼ãƒ—å†ç”Ÿ
 	if (loop) buf.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	result = pSourceVoice.ptr->SubmitSourceBuffer(&buf);
@@ -448,7 +448,7 @@ void XAudioManager::DeleteAllSound()
 
 void XAudioManager::DeleteSoundData(const std::string& soundName)
 {
-	//	‰¹ƒf[ƒ^‚ª‚ ‚Á‚½‚ç
+	//	éŸ³ãƒ‡ãƒ¼ã‚¿ãŒã‚ã£ãŸã‚‰
 	assert(data_.count(soundName) != 0);
 	
 	UnloadSoundData(&data_[soundName]);

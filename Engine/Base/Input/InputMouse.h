@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <dinput.h>
 #include <wrl.h>
 #include "Vector2D.h"
@@ -10,32 +10,46 @@ public:
 		LeftClick = 0,
 		RightClick,
 		WheelClick,
+		SideClick,
 	};
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+	ComPtr<IDirectInput8> directInput_;
+	ComPtr<IDirectInputDevice8> mouse_;
+
 	DIMOUSESTATE click_ = {};
 	DIMOUSESTATE prevClick_ = {};
 
-	ComPtr<IDirectInput8> directInput_;
-	ComPtr<IDirectInputDevice8> mouse_;
 	Vector2D cursor_;
 	Vector2D prevCursor_;
-	bool isRockCursor_ = false;
+	Vector2D cursorMoveLen_;
+	bool isLockCursor_ = false;
+	bool showCursor_ = true;
 
-	//	���͂̏��ݒ�
+private:	//	関数
+	//	入力の情報設定
 	void SetInputInfo();
-	void RockCursor();
+	void LockCursor();
+	void UnLockCursor();
 public:
 	void Initialize();
 	void Update();
+	void ImGuiUpdate();
 
-	bool Click(int type);
-	bool ClickTrigger(int type);
+	//	Getter
+	bool GetClick(MouseButton type);
+	bool GetClickTrigger(MouseButton type);
+	bool GetClickRelease(MouseButton type);
+	const Vector2D& GetCursor() { return cursor_; }
+	const Vector2D& GetPrevCursor() { return prevCursor_; }
+	//	1フレームでのカーソルの移動量
+	const Vector2D& GetMoveCursor() { return cursorMoveLen_; }
+	//	ホイール回転
+	size_t GetWheel() { return click_.lZ; }
 
-	Vector2D GetCursor() { return cursor_; }
-	Vector2D GetPrevCursor() { return prevCursor_; }
-	void RockCursor(bool isRock) { isRockCursor_ = isRock; }
-	LONG Wheel();
+	//	Setter
+	void SetShowCursor(bool showCursor) { showCursor_ = showCursor; }
+	void SetLockCursor(bool lockCursor) { isLockCursor_ = lockCursor; }
 };
 

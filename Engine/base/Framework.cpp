@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "InputJoypad.h"
 
+#include "InputManager.h"
 #include "XAudioManager.h"
 #include "FPSController.h"
 
@@ -43,6 +44,8 @@ void Framework::Initialize()
 
 	Input::GetInstance()->Initialize();
 
+	InputManager::GetInstance()->Initialize();
+
 	ParticleManager::GetInstance()->Initialize();
 
 	DebugTextManager::GetInstance()->Initialize();
@@ -58,6 +61,7 @@ void Framework::Update()
 
 	Input::GetInstance()->Update();
 	InputJoypad::GetInstance()->Update();
+	InputManager::GetInstance()->Update();
 
 	//	60fps固定
 	FPSController::GetInstance()->Update();

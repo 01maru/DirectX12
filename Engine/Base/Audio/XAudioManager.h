@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <xaudio2.h>
 #include <wrl.h>
 #include <vector>
@@ -9,7 +9,7 @@
 
 #pragma region Struct
 
-//	‰¹ƒf[ƒ^
+//	éŸ³ãƒ‡ãƒ¼ã‚¿
 struct SoundData {
 	WAVEFORMATEX wfex;
 	BYTE* pBuffer;
@@ -18,7 +18,7 @@ struct SoundData {
 	float volume = 1.0f;
 };
 
-//	Ä¶’†‚Ì‰¹ƒf[ƒ^
+//	å†ç”Ÿä¸­ã®éŸ³ãƒ‡ãƒ¼ã‚¿
 struct SoundVoicePtr {
 	std::string dataKey;
 	IXAudio2SourceVoice* ptr = nullptr;
@@ -31,20 +31,20 @@ class XAudioManager
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
-	//	‰¹—Ê’²ß—pEnum
+	//	éŸ³é‡èª¿ç¯€ç”¨Enum
 	enum SoundType {
 		Master,
 		BGM,
 		SE,
 	};
 private:
-	//	Imgui—p
+	//	Imguiç”¨
 	bool isDebug_ = false;
 
 	ComPtr<IXAudio2> xAudio2_;
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-	//	sound‚Ìƒf[ƒ^”z—ñ
+	//	soundã®ãƒ‡ãƒ¼ã‚¿é…åˆ—
 	std::map<std::string, SoundData, std::less<>> data_;
 
 	std::vector<SoundVoicePtr> sePtr_;
@@ -58,7 +58,7 @@ private:
 
 	float pitchRatio_ = 1.0f;
 
-private:	//	ŠÖ”
+private:	//	é–¢æ•°
 	void UnloadSoundData(SoundData* soundData);
 	void ChangeVolume(float volume, SoundType type);
 
@@ -89,7 +89,7 @@ public:
 	//	play
 	void PlaySoundWave(const std::string& soundName, SoundType type, bool loop = false);
 
-	//	volume•ÏX—p(Option‚Æ‚©‚Å)
+	//	volumeå¤‰æ›´ç”¨(Optionã¨ã‹ã§)
 	void VolumeUpdate(SoundType type, int32_t inputValue);
 
 	//void ChangeAllPitchRatio(float pitch);
@@ -104,11 +104,11 @@ public:
 	void DeleteSoundData(const std::string& soundName);
 
 	//	Getter 
-	//	”ÍˆÍ‚Í0.0f`1.0f
+	//	ç¯„å›²ã¯0.0fï½1.0f
 	float GetBGMVolume() { return bgmVolume_; }
-	//	”ÍˆÍ‚Í0.0f`1.0f
+	//	ç¯„å›²ã¯0.0fï½1.0f
 	float GetSEVolume() { return seVolume_; }
-	//	”ÍˆÍ‚Í0.0f`1.0f
+	//	ç¯„å›²ã¯0.0fï½1.0f
 	float GetMasterVolume() { return masterVolume_; }
 };
 

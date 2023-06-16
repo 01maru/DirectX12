@@ -66,6 +66,7 @@ public:
 #pragma endregion
 
 	void LabelText(const std::string& name, const std::string& text, float value);
+	void Text(const char* fmt, ...);
 
 #pragma region Scroll
 

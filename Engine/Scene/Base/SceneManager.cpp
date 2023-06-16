@@ -1,9 +1,10 @@
-#include "SceneManager.h"
+ï»¿#include "SceneManager.h"
 #include "Easing.h"
 #include "ImGuiManager.h"
 #include "Window.h"
 #include "DirectX.h"
 
+#include "InputManager.h"
 #include "LoadingSprite.h"
 #include "SceneFactory.h"
 #include "XAudioManager.h"
@@ -18,13 +19,13 @@ SceneManager* SceneManager::GetInstance()
 void SceneManager::FirstSceneInitialize()
 {
 	scene_->Initialize();
-	//	‰æ‘œ“]‘—
+	//	ç”»åƒè»¢é€
 	MyDirectX::GetInstance()->UploadTexture();
 }
 
 void SceneManager::SplashScreenInitialize()
 {
-	//	”ñ“¯Šú
+	//	éžåŒæœŸ
 	sceneInitInfo_ = std::async(std::launch::async, [this] {return FirstSceneInitialize(); });
 	isSplashScreen_ = true;
 
@@ -34,7 +35,7 @@ void SceneManager::SplashScreenInitialize()
 	sceneChangeCounter_.SetIsIncrement(true);
 	sceneChangeCounter_.StartCount();
 
-	//	‰æ‘œ“]‘—
+	//	ç”»åƒè»¢é€
 	MyDirectX::GetInstance()->UploadTexture();
 }
 
@@ -81,13 +82,13 @@ void SceneManager::Initialize()
 
 #pragma region SplashScreen
 
-	//	release‚¾‚Á‚½‚çƒXƒvƒ‰ƒbƒVƒ…ƒXƒNƒŠ[ƒ“‚ ‚è
+	//	releaseã ã£ãŸã‚‰ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚ã‚Š
 #ifdef NDEBUG
 	SplashScreenInitialize();
 #endif // NDEBUG
 
 
-	//	debug‚¾‚Á‚½‚çƒXƒvƒ‰ƒbƒVƒ…ƒXƒNƒŠ[ƒ“‚È‚µ
+	//	debugã ã£ãŸã‚‰ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãªã—
 #ifdef _DEBUG
 	FirstSceneInitialize();
 #endif // _DEBUG
@@ -116,7 +117,7 @@ void SceneManager::ScreenColorUpdate()
 		screenColor_.y = color;
 		screenColor_.z = color;
 
-		//	FÝ’è
+		//	è‰²è¨­å®š
 		mainScene->SetColor(screenColor_);
 	}
 }
@@ -125,7 +126,7 @@ void SceneManager::SplashUpdate()
 {
 #ifdef NDEBUG
 
-	//	ƒXƒvƒ‰ƒbƒVƒ…ƒXƒNƒŠ[ƒ“‚¶‚á‚È‚©‚Á‚½‚ç
+	//	ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã˜ã‚ƒãªã‹ã£ãŸã‚‰
 	if (!isSplashScreen_) return;
 
 	if (sceneChangeCounter_.GetFrameCount() == sceneChangeCounter_.GetMaxFrameCount()) splashSprite_->StartCounter();
@@ -135,7 +136,7 @@ void SceneManager::SplashUpdate()
 	std::future_status loadStatus = sceneInitInfo_.wait_for(std::chrono::seconds(0));
 	if (loadStatus == std::future_status::ready && splashSprite_->SplashEnd()) {
 
-		//	ƒXƒvƒ‰ƒbƒVƒ…ƒXƒNƒŠ[ƒ“I‚í‚è
+		//	ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ã‚¹ã‚¯ãƒªãƒ¼ãƒ³çµ‚ã‚ã‚Š
 		isSplashScreen_ = false;
 		scene_->Update();
 
@@ -145,7 +146,7 @@ void SceneManager::SplashUpdate()
 		sceneChangeCounter_.StartCount();
 
 		screenColor_ = { 0.0f,0.0f,0.0f,1.0f };
-		//	FÝ’è
+		//	è‰²è¨­å®š
 		mainScene->SetColor(screenColor_);
 	}
 
@@ -157,10 +158,10 @@ void SceneManager::SceneFadeInUpdate()
 	if (!endLoading_)		return;
 	if (!sceneInitialized_)	return;
 
-	//	ƒtƒF[ƒhƒCƒ“Ï‚Ý
+	//	ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³æ¸ˆã¿
 	bool fadedIn = sceneChangeCounter_.GetFrameCount() == 0;
 	if (fadedIn) {
-		//	“¯Šúˆ—
+		//	åŒæœŸå‡¦ç†
 		scene_->Update();
 	}
 }
@@ -170,27 +171,27 @@ void SceneManager::SceneFadeOutUpdate()
 	if (!endLoading_)		return;
 	if (sceneInitialized_)	return;
 
-	//	ƒtƒF[ƒhƒAƒEƒgÏ‚Ý
+	//	ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆæ¸ˆã¿
 	bool fadedOut = sceneChangeCounter_.GetFrameCount() == sceneChangeCounter_.GetMaxFrameCount();
 	if (fadedOut) {
-		//	ƒtƒF[ƒhƒAƒEƒgÏ‚Ýƒ[ƒh‰æ–Ê‚Ö
+		//	ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆæ¸ˆã¿ãƒ­ãƒ¼ãƒ‰ç”»é¢ã¸
 		endLoading_ = false;
-		//	”ñ“¯Šú
+		//	éžåŒæœŸ
 		sceneInitInfo_ = std::async(std::launch::async, [this] {return SceneChange(); });
 	}
 }
 
 void SceneManager::SceneAsyncUpdate()
 {
-	//	ƒ[ƒh’†‚¶‚á‚È‚©‚Á‚½‚ç
+	//	ãƒ­ãƒ¼ãƒ‰ä¸­ã˜ã‚ƒãªã‹ã£ãŸã‚‰
 	if (endLoading_) return;
 
 	std::future_status loadStatus = sceneInitInfo_.wait_for(std::chrono::seconds(0));
 	if (loadStatus == std::future_status::ready) {
-		//	ƒ[ƒhI‚í‚èƒtƒ‰ƒO
+		//	ãƒ­ãƒ¼ãƒ‰çµ‚ã‚ã‚Šãƒ•ãƒ©ã‚°
 		endLoading_ = true;
 		loadObj_->SetIsLoading(!endLoading_);
-		//	ƒtƒF[ƒhƒCƒ“
+		//	ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³
 		sceneChangeCounter_.SetIsIncrement(false);
 		sceneChangeCounter_.StartCount();
 	}
@@ -198,7 +199,7 @@ void SceneManager::SceneAsyncUpdate()
 
 void SceneManager::SceneUpdate()
 {
-	//	ƒXƒvƒ‰ƒbƒVƒ…ƒXƒNƒŠ[ƒ“‚¾‚Á‚½‚ç
+	//	ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã ã£ãŸã‚‰
 	if (isSplashScreen_) return;
 
 	SceneFadeInUpdate();
@@ -213,6 +214,8 @@ void SceneManager::ImguiUpdate()
 
 	ImGuiManager::GetInstance()->Begin();
 	ImGuiController::GetInstance()->Update();
+
+	InputManager::GetInstance()->ImGuiUpdate();
 
 	if (endLoading_) {
 		scene_->ImguiUpdate();
@@ -327,7 +330,7 @@ void SceneManager::SceneChange()
 
 		scene_.reset(nextScene_.get());
 		scene_->Initialize();
-		//	‰æ‘œ“]‘—
+		//	ç”»åƒè»¢é€
 		MyDirectX::GetInstance()->UploadTexture();
 		sceneInitialized_ = true;
 		nextScene_.release();
@@ -338,7 +341,7 @@ void SceneManager::SetNextScene(const std::string& sceneName)
 {
 	nextScene_ = sceneFactry_->CreateScene(sceneName);
 	
-	//	nextScene‚ªƒZƒbƒg‚³‚ê‚½‚ç
+	//	nextSceneãŒã‚»ãƒƒãƒˆã•ã‚ŒãŸã‚‰
 	if (nextScene_ != nullptr) {
 		sceneInitialized_ = false;
 		loadObj_->SetIsLoading(true);
