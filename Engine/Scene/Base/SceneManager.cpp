@@ -1,14 +1,14 @@
 ﻿#include "SceneManager.h"
 #include "Easing.h"
 #include "ImGuiManager.h"
-#include "Window.h"
 #include "DirectX.h"
-
+#include "ImGuiController.h"
 #include "InputManager.h"
+#include "XAudioManager.h"
 #include "LoadingSprite.h"
 #include "SceneFactory.h"
-#include "XAudioManager.h"
-#include "ImGuiController.h"
+
+#include "Window.h"
 
 SceneManager* SceneManager::GetInstance()
 {

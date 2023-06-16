@@ -428,7 +428,7 @@
     <ClInclude Include="Engine\Math\Easing.h">
       <Filter>ヘッダー ファイル\lib\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Collider\IScene.h">
+    <ClInclude Include="Engine\Scene\Base\IScene.h">
       <Filter>ヘッダー ファイル\lib\Engine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Scene\Base\SceneManager.h">

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "AbstractSceneFactory.h"
 #include "IScene.h"
 #include "PostEffect.h"
@@ -45,7 +45,7 @@ private:
 	std::unique_ptr<PostEffect> ybulr;
 #pragma endregion
 
-private:	//	�֐�
+private:	//	関数
 	void ScreenColorUpdate();
 	void SplashUpdate();
 	void SceneFadeInUpdate();

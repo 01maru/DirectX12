@@ -120,7 +120,7 @@
     <ClInclude Include="Engine\3D\Camera\Base\ICamera.h" />
     <ClInclude Include="Engine\Collider\BaseCollider.h" />
     <ClInclude Include="Engine\Base\ImGuiManager.h" />
-    <ClInclude Include="Engine\Collider\IScene.h" />
+    <ClInclude Include="Engine\Scene\Base\IScene.h" />
     <ClInclude Include="Engine\3D\Light\Light.h" />
     <ClInclude Include="Engine\Collider\MeshCollider.h" />
     <ClInclude Include="Engine\3D\Camera\Base\MyDebugCamera.h" />

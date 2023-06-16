@@ -1,6 +1,6 @@
-#include "SceneFactory.h"
+ï»¿#include "SceneFactory.h"
 
-#pragma region Scene‚ğ’Ç‰Á‚·‚é‚½‚Ñ‚É‚»‚ÌScene‚ğinclude
+#pragma region Sceneã‚’è¿½åŠ ã™ã‚‹ãŸã³ã«ãã®Sceneã‚’include
 #include "TitleScene.h"
 #include "GameScene.h"
 #pragma endregion
