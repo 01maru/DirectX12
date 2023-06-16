@@ -5,7 +5,8 @@ class Framework
 protected:
 	//	ゲームループ用フラグ
 	bool gameroopFlag_ = true;
-public:
+
+public:		//	関数
 	virtual ~Framework() = default;
 
 	void Run();
