@@ -1,5 +1,5 @@
 #include "MyDebugCamera.h"
-#include "Input.h"
+#include "InputManager.h"
 #include "MyMath.h"
 #include <cmath>
 
@@ -23,15 +23,16 @@ void MyDebugCamera::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
 
 void MyDebugCamera::Update()
 {
-	Input* input = Input::GetInstance();
+	InputKeyboard* keyboard = InputManager::GetInstance()->GetKeyboard();
+	InputMouse* mouse = InputManager::GetInstance()->GetMouse();
 
-	Vector2D moveCursor = input->GetCursor() - input->GetPrevCursor();
+	Vector2D moveCursor = mouse->GetCursor() - mouse->GetPrevCursor();
 	float cursorDisPrev = moveCursor.GetLength();
 	moveCursor.Normalize();
 
 #pragma region SetMode
-	if (input->ClickTrigger(Input::WheelClick)) {
-		if (input->GetKey(DIK_LSHIFT) || input->GetKey(DIK_RSHIFT))	//	shiftが押されてたら
+	if (mouse->GetClickTrigger(InputMouse::WheelClick)) {
+		if (keyboard->GetKey(DIK_LSHIFT) || keyboard->GetKey(DIK_RSHIFT))	//	shiftが押されてたら
 		{
 			//	平行移動
 			mode = TranslationMove;
@@ -45,7 +46,7 @@ void MyDebugCamera::Update()
 
 #pragma region SetDisEyeTarget
 	//	キー入力
-	disEyeTarget += -input->Wheel() * (disEyeTarget * 0.001f);
+	disEyeTarget -= mouse->GetWheel() * (disEyeTarget * 0.001f);
 	//	範囲設定
 	float minDis_ = 10.0f;	//	最小値
 	disEyeTarget = MyMath::mMax(disEyeTarget, minDis_);
@@ -58,7 +59,7 @@ void MyDebugCamera::Update()
 	case MyDebugCamera::NoMove:
 		break;
 	case MyDebugCamera::TranslationMove:
-		if (input->Click(Input::WheelClick)) {
+		if (mouse->GetClick(InputMouse::WheelClick)) {
 			//	左右移動
 			target -= rightVec * (float)(moveCursor.x) * spd;
 			//	上下移動
@@ -66,7 +67,7 @@ void MyDebugCamera::Update()
 		}
 		break;
 	case MyDebugCamera::RotationMove:
-		if (input->Click(Input::WheelClick)) {
+		if (mouse->GetClick(InputMouse::WheelClick)) {
 			moveCursor /= 1000;
 			moveCursor *= cursorDisPrev;
 			if (up.y < 0) {
@@ -79,7 +80,7 @@ void MyDebugCamera::Update()
 		break;
 	}
 	//	前後移動
-	target += -frontVec * (float)(input->GetKey(DIK_Z) - input->GetKey(DIK_X)) * spd;
+	target += -frontVec * (float)(keyboard->GetKey(DIK_Z) - keyboard->GetKey(DIK_X)) * spd;
 
 	//	範囲　0　>　cursorPos　>　PIx2　に設定
 	if (cursorPos.x >= MyMath::PIx2) cursorPos.x -= MyMath::PIx2;

@@ -4,16 +4,13 @@
 
 #include "ImGuiManager.h"
 
-void InputMouse::Initialize()
+void InputMouse::Initialize(IDirectInput8* directInput)
 {
 	Window* win = Window::GetInstance();
-
-	HRESULT result = DirectInput8Create(
-		win->GetWND().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput_, nullptr);
-	assert(SUCCEEDED(result));
+	HRESULT result;
 
 	//	デバイス生成(キーボード以外も可能)
-	result = directInput_->CreateDevice(GUID_SysMouse, &mouse_, NULL);
+	result = directInput->CreateDevice(GUID_SysMouse, &mouse_, NULL);
 	assert(SUCCEEDED(result));
 
 	//	入力形成のセット

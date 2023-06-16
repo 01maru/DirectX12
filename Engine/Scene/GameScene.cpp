@@ -11,7 +11,7 @@
 #include "DebugTextManager.h"
 #include "SceneManager.h"
 
-#include "Input.h"
+#include "InputManager.h"
 
 void GameScene::Initialize()
 {
@@ -68,7 +68,7 @@ void GameScene::Finalize()
 void GameScene::Update()
 {
 #pragma region XVˆ—
-	if (Input::GetInstance()->GetTrigger(DIK_B)) {
+	if (InputManager::GetInstance()->GetKeyboard()->GetTrigger(DIK_B)) {
 		SceneManager::GetInstance()->SetNextScene("TITLESCENE");
 	}
 

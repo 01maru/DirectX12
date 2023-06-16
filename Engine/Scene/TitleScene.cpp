@@ -1,6 +1,5 @@
 #include "TitleScene.h"
-#include "Input.h"
-#include "InputJoypad.h"
+#include "InputManager.h"
 #include "SceneManager.h"
 #include "NormalCamera.h"
 #include "TextureManager.h"
@@ -62,7 +61,7 @@ void TitleScene::LoadResources()
 void TitleScene::Update()
 {
 	timer++;
-	if (Input::GetInstance()->GetTrigger(DIK_B)) {
+	if (InputManager::GetInstance()->GetKeyboard()->GetTrigger(DIK_B)) {
 		SceneManager::GetInstance()->SetNextScene("GAMESCENE");
 	}
 	//int scalespd = 30;

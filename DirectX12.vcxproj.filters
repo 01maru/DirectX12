@@ -192,7 +192,7 @@
     <ClCompile Include="Engine\Base\Input\InputJoypad.cpp">
       <Filter>ソース ファイル\lib\Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Base\Input\Input.cpp">
+    <ClCompile Include="Engine\Base\Input\InputKeyboard.cpp">
       <Filter>ソース ファイル\lib\Engine\Input</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\Camera\Base\MyDebugCamera.cpp">
@@ -413,7 +413,7 @@
     <ClInclude Include="Engine\Base\Input\InputJoypad.h">
       <Filter>ヘッダー ファイル\lib\Engine\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Base\Input\Input.h">
+    <ClInclude Include="Engine\Base\Input\InputKeyboard.h">
       <Filter>ヘッダー ファイル\lib\Engine\Input</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\Matrix.h">

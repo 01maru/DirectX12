@@ -3,7 +3,6 @@
 #include "DebugTextManager.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
-#include "Input.h"
 
 #include "InputManager.h"
 #include "XAudioManager.h"
@@ -41,8 +40,6 @@ void Framework::Initialize()
 	//	ロード失敗した際の白色テクスチャのロード
 	TextureManager::GetInstance()->SetWhiteTexHandle();
 
-	Input::GetInstance()->Initialize();
-
 	InputManager::GetInstance()->Initialize();
 
 	ParticleManager::GetInstance()->Initialize();
@@ -56,9 +53,8 @@ void Framework::Initialize()
 
 void Framework::Update()
 {
-	gameroopFlag_ = !(Window::GetInstance()->MsgUpdate() || Input::GetInstance()->GetTrigger(DIK_ESCAPE));
+	gameroopFlag_ = !(Window::GetInstance()->MsgUpdate() || InputManager::GetInstance()->GetKeyboard()->GetTrigger(DIK_ESCAPE));
 
-	Input::GetInstance()->Update();
 	InputManager::GetInstance()->Update();
 
 	//	60fps固定

@@ -2,7 +2,6 @@
 #include "DirectX.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
-#include "Input.h"
 
 void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT format)
 {

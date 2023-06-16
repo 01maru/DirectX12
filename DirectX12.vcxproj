@@ -44,7 +44,7 @@
     <ClCompile Include="Engine\Collider\MeshCollider.cpp" />
     <ClCompile Include="Engine\3D\Camera\Base\MyDebugCamera.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\GPipeline.cpp" />
-    <ClCompile Include="Engine\Base\Input\Input.cpp" />
+    <ClCompile Include="Engine\Base\Input\InputKeyboard.cpp" />
     <ClCompile Include="Engine\Base\Input\InputJoypad.cpp" />
     <ClCompile Include="Engine\3D\Light\DistanceFog.cpp" />
     <ClCompile Include="Engine\Math\Matrix.cpp" />
@@ -125,7 +125,7 @@
     <ClInclude Include="Engine\Collider\MeshCollider.h" />
     <ClInclude Include="Engine\3D\Camera\Base\MyDebugCamera.h" />
     <ClInclude Include="Engine\Base\Pipeline\GPipeline.h" />
-    <ClInclude Include="Engine\Base\Input\Input.h" />
+    <ClInclude Include="Engine\Base\Input\InputKeyboard.h" />
     <ClInclude Include="Engine\Base\Input\InputJoypad.h" />
     <ClInclude Include="Engine\Math\Matrix.h" />
     <ClInclude Include="Engine\Game\MyGame.h" />

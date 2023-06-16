@@ -17,7 +17,6 @@ public:
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	ComPtr<IDirectInput8> directInput_;
 	ComPtr<IDirectInputDevice8> mouse_;
 
 	DIMOUSESTATE click_ = {};
@@ -38,7 +37,7 @@ private:	//	関数
 	void ImGuiUpdateCursor(ImGuiManager* imgui);
 	void ImGuiUpdateClick(ImGuiManager* imgui);
 public:
-	void Initialize();
+	void Initialize(IDirectInput8* directInput);
 	void Update();
 	void ImGuiUpdate();
 
