@@ -53,6 +53,9 @@ public:
 	//	MenuButton
 	bool MenuItem(const std::string& name);
 
+	bool TreeNode(const std::string& name);
+	void TreePop();
+
 #pragma endregion
 
 #pragma region Input
@@ -61,6 +64,7 @@ public:
 	bool SetButton(const std::string& buttonName, const Vector2D& size = Vector2D());
 	void SetRadioButton(const std::string& buttonName, bool& flag);
 	void SetSliderFloat(const std::string& sliderName, float& value, float spd, float minValue, float maxValue);
+	void SetSliderInt(const std::string& sliderName, int& value, float spd, size_t minValue, size_t maxValue);
 	void CheckBox(const std::string& name, bool& flag);
 
 #pragma endregion

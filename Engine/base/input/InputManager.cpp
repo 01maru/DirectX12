@@ -13,11 +13,15 @@ void InputManager::Initialize()
 {
 	mouse_ = std::make_unique<InputMouse>();
 	mouse_->Initialize();
+
+	joypad_ = std::make_unique<InputJoypad>();
 }
 
 void InputManager::Update()
 {
 	mouse_->Update();
+
+	joypad_->Update();
 }
 
 void InputManager::ImGuiUpdate()
@@ -28,8 +32,9 @@ void InputManager::ImGuiUpdate()
 
 	imgui->BeginWindow("InputManager");
 
-	imgui->CheckBox("Mouse", activeMouseImGui_);
-	if (activeMouseImGui_)	mouse_->ImGuiUpdate();
+	mouse_->ImGuiUpdate();
+
+	joypad_->ImGuiUpdate();
 
 	imgui->EndWindow();
 }

@@ -4,7 +4,6 @@
 #include "TextureManager.h"
 #include "PipelineManager.h"
 #include "Input.h"
-#include "InputJoypad.h"
 
 #include "InputManager.h"
 #include "XAudioManager.h"
@@ -60,7 +59,6 @@ void Framework::Update()
 	gameroopFlag_ = !(Window::GetInstance()->MsgUpdate() || Input::GetInstance()->GetTrigger(DIK_ESCAPE));
 
 	Input::GetInstance()->Update();
-	InputJoypad::GetInstance()->Update();
 	InputManager::GetInstance()->Update();
 
 	//	60fps固定

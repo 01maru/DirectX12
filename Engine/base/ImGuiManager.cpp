@@ -104,6 +104,16 @@ bool ImGuiManager::MenuItem(const std::string& name)
 	return ImGui::MenuItem(name.c_str());
 }
 
+bool ImGuiManager::TreeNode(const std::string& name)
+{
+	return ImGui::TreeNode(name.c_str());
+}
+
+void ImGuiManager::TreePop()
+{
+	ImGui::TreePop();
+}
+
 void ImGuiManager::SameLine()
 {
 	ImGui::SameLine();
@@ -123,6 +133,11 @@ void ImGuiManager::SetSliderFloat(const std::string& sliderName, float& value, f
 {
 	//ImGui::SliderFloat(sliderName.c_str(), &value, minValue, maxValue);
 	ImGui::DragFloat(sliderName.c_str(), &value, spd, minValue, maxValue);
+}
+
+void ImGuiManager::SetSliderInt(const std::string& sliderName, int& value, float spd, size_t minValue, size_t maxValue)
+{
+	ImGui::DragInt(sliderName.c_str(), &value, spd, (int)minValue, (int)maxValue);
 }
 
 void ImGuiManager::CheckBox(const std::string& name, bool& flag)

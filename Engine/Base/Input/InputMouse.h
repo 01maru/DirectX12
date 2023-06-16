@@ -3,6 +3,8 @@
 #include <wrl.h>
 #include "Vector2D.h"
 
+class ImGuiManager;
+
 class InputMouse
 {
 public:
@@ -32,6 +34,9 @@ private:	//	関数
 	void SetInputInfo();
 	void LockCursor();
 	void UnLockCursor();
+
+	void ImGuiUpdateCursor(ImGuiManager* imgui);
+	void ImGuiUpdateClick(ImGuiManager* imgui);
 public:
 	void Initialize();
 	void Update();

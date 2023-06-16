@@ -94,38 +94,60 @@ void InputMouse::Update()
 	ShowCursor(showCursor_);
 }
 
-void InputMouse::ImGuiUpdate()
+void InputMouse::ImGuiUpdateCursor(ImGuiManager* imgui)
 {
-	ImGuiManager* imgui = ImGuiManager::GetInstance();
-
-	imgui->BeginChild();
+	if (!imgui->TreeNode("Cursor")) return;
 
 	imgui->Text("CursorPos  : (%.f, %.f)", cursor_.x, cursor_.y);
 	imgui->Text("CursorMove : (%d, %d)", cursorMoveLen_.x, cursorMoveLen_.y);
 
-	imgui->Text("LeftClick  : %s\nTrigger : %s\nRelease : %s\n"
-		, GetClick(LeftClick)		 ? "True" : "False"
-		, GetClickTrigger(LeftClick) ? "True" : "False"
-		, GetClickRelease(LeftClick) ? "True" : "False");
-	imgui->Text("RightClick  : %s\nTrigger : %s\nRelease : %s\n"
-		, GetClick(RightClick)		  ? "True" : "False"
-		, GetClickTrigger(RightClick) ? "True" : "False"
-		, GetClickRelease(RightClick) ? "True" : "False");
-	imgui->Text("WheelClick  : %s\nTrigger : %s\nRelease : %s\n"
-		, GetClick(WheelClick)		  ? "True" : "False"
-		, GetClickTrigger(WheelClick) ? "True" : "False"
-		, GetClickRelease(WheelClick) ? "True" : "False");
-	imgui->Text("SideClick  : %s\nTrigger : %s\nRelease : %s\n"
-		, GetClick(SideClick)		 ? "True" : "False"
-		, GetClickTrigger(SideClick) ? "True" : "False"
-		, GetClickRelease(SideClick) ? "True" : "False");
-	imgui->Text("WheelMove  : %d", click_.lZ);
-	
 	imgui->Text("ShowCursor : %s", showCursor_ ? "True" : "False");
 
 	imgui->Text("LockCursor : %s", isLockCursor_ ? "True" : "False");
 
-	imgui->EndChild();
+	imgui->TreePop();
+}
+
+void InputMouse::ImGuiUpdateClick(ImGuiManager* imgui)
+{
+	if (!imgui->TreeNode("Click")) return;
+
+	imgui->Text("LeftClick  : %s\nTrigger : %s\nRelease : %s\n"
+		, GetClick(LeftClick) ? "True" : "False"
+		, GetClickTrigger(LeftClick) ? "True" : "False"
+		, GetClickRelease(LeftClick) ? "True" : "False");
+
+	imgui->Text("RightClick  : %s\nTrigger : %s\nRelease : %s\n"
+		, GetClick(RightClick) ? "True" : "False"
+		, GetClickTrigger(RightClick) ? "True" : "False"
+		, GetClickRelease(RightClick) ? "True" : "False");
+
+	imgui->Text("WheelClick  : %s\nTrigger : %s\nRelease : %s\n"
+		, GetClick(WheelClick) ? "True" : "False"
+		, GetClickTrigger(WheelClick) ? "True" : "False"
+		, GetClickRelease(WheelClick) ? "True" : "False");
+
+	imgui->Text("SideClick  : %s\nTrigger : %s\nRelease : %s\n"
+		, GetClick(SideClick) ? "True" : "False"
+		, GetClickTrigger(SideClick) ? "True" : "False"
+		, GetClickRelease(SideClick) ? "True" : "False");
+
+	imgui->Text("WheelMove  : %d", click_.lZ);
+
+	imgui->TreePop();
+}
+
+void InputMouse::ImGuiUpdate()
+{
+	ImGuiManager* imgui = ImGuiManager::GetInstance();
+
+	if (!imgui->TreeNode("Mouse")) return;
+
+	ImGuiUpdateCursor(imgui);
+
+	ImGuiUpdateClick(imgui);
+
+	imgui->TreePop();
 }
 
 bool InputMouse::GetClick(MouseButton type)
