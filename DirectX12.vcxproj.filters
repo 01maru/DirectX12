@@ -175,6 +175,12 @@
     <Filter Include="ソース ファイル\lib\3D\Camera">
       <UniqueIdentifier>{188ae459-f43d-4c22-9439-90a18e6fad50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\lib\Engine\ImGui">
+      <UniqueIdentifier>{e306d696-4662-49b3-9bd7-506fcf281fda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\lib\Engine\ImGui">
+      <UniqueIdentifier>{27a2c090-6dd2-4a4f-a34d-97cb7645620c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Math\Matrix.cpp">
@@ -235,9 +241,6 @@
       <Filter>ソース ファイル\lib\Engine\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\DirectX.cpp">
-      <Filter>ソース ファイル\lib\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Base\ImGuiManager.cpp">
       <Filter>ソース ファイル\lib\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\Audio\XAudioManager.cpp">
@@ -400,7 +403,10 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiController.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\lib\Engine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Base\ImGuiManager.cpp">
+      <Filter>ソース ファイル\lib\Engine\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -629,17 +635,17 @@
     <ClInclude Include="Engine\3D\Camera\ObjCamera2D.h">
       <Filter>ヘッダー ファイル\lib\3D\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Base\ImGuiManager.h">
-      <Filter>ヘッダー ファイル\lib\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Math\FrameCounter.h">
       <Filter>ヘッダー ファイル\lib\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\Sprite\SplashSprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Base\ImGuiManager.h">
+      <Filter>ヘッダー ファイル\lib\Engine\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="ImGuiController.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\lib\Engine\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
