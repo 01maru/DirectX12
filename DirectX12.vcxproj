@@ -22,7 +22,6 @@
     <ClCompile Include="Engine\3D\Object\Model\IModel.cpp" />
     <ClCompile Include="Engine\3D\Object\Object2D.cpp" />
     <ClCompile Include="Engine\3D\Object\Object3D.cpp" />
-    <ClCompile Include="Engine\Game\Wind.cpp" />
     <ClCompile Include="Engine\3D\Light\CircleShadow.cpp" />
     <ClCompile Include="Engine\Base\Window\FPSController.cpp" />
     <ClCompile Include="Engine\Collider\Collision.cpp" />
@@ -74,7 +73,6 @@
     <ClCompile Include="Engine\Scene\TitleScene.cpp" />
     <ClCompile Include="Engine\3D\Light\VolumeLight.cpp" />
     <ClCompile Include="Engine\3D\Object\Model\FbxModel.cpp" />
-    <ClCompile Include="Engine\Game\Grass.cpp" />
     <ClCompile Include="Engine\Base\Input\InputManager.cpp" />
     <ClCompile Include="Engine\2D\Loading\ILoadingObj.cpp" />
     <ClCompile Include="Engine\Base\Input\InputMouse.cpp" />
@@ -99,7 +97,6 @@
     <ClInclude Include="Engine\3D\Object\Model\IModel.h" />
     <ClInclude Include="Engine\3D\Object\Object2D.h" />
     <ClInclude Include="Engine\3D\Object\Object3D.h" />
-    <ClInclude Include="Engine\Game\Wind.h" />
     <ClInclude Include="Engine\Base\Window\FPSController.h" />
     <ClInclude Include="Engine\Math\FrameCounter.h" />
     <ClInclude Include="Engine\Scene\Base\AbstractSceneFactory.h" />
@@ -159,7 +156,6 @@
     <ClInclude Include="Engine\3D\Object\Model\ObjModel.h" />
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h" />
     <ClInclude Include="Engine\2D\Texture\Texture.h" />
-    <ClInclude Include="Engine\Game\Grass.h" />
     <ClInclude Include="Engine\Base\Input\InputManager.h" />
     <ClInclude Include="Engine\2D\Loading\ILoadingObj.h" />
     <ClInclude Include="Engine\Base\Input\InputMouse.h" />

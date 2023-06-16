@@ -324,9 +324,6 @@
     <ClCompile Include="Engine\3D\Light\VolumeLight.cpp">
       <Filter>ソース ファイル\lib\Engine\Light</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Game\Wind.cpp">
-      <Filter>ソース ファイル\Game</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -365,9 +362,6 @@
     </ClCompile>
     <ClCompile Include="Engine\2D\Texture\TextureManager.cpp">
       <Filter>ソース ファイル\lib\2D\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Game\Grass.cpp">
-      <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\Window\FPSController.cpp">
       <Filter>ソース ファイル\lib\Engine</Filter>
@@ -557,9 +551,6 @@
     <ClInclude Include="Engine\3D\Light\VolumeLight.h">
       <Filter>ヘッダー ファイル\lib\Engine\Light</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Game\Wind.h">
-      <Filter>ヘッダー ファイル\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Scene\GameScene.h">
       <Filter>ヘッダー ファイル\Game\Scene</Filter>
     </ClInclude>
@@ -598,9 +589,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Base\Pipeline\PipelineManager.h">
       <Filter>ヘッダー ファイル\lib\Engine\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Game\Grass.h">
-      <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\Window\FPSController.h">
       <Filter>ヘッダー ファイル\lib\Engine</Filter>
