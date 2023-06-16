@@ -1,5 +1,6 @@
-#include "MyGame.h"
+ï»¿#include "MyGame.h"
 #include "SceneManager.h"
+
 #include "Light.h"
 #include "Object3D.h"
 
@@ -8,7 +9,7 @@ void MyGame::Initialize()
 	Framework::Initialize();
 
 	Light* light = Light::GetInstance();
-	//	ƒ‰ƒCƒg‚Ì‰Šú‰»
+	//	ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–
 	light->Initialize();
 
 #pragma region SetLight

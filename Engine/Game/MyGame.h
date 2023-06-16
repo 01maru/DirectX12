@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Framework.h"
 
 class MyGame :public Framework
