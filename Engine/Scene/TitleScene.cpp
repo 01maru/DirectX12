@@ -1,47 +1,9 @@
-#include "TitleScene.h"
+ï»¿#include "TitleScene.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "NormalCamera.h"
 #include "TextureManager.h"
-
-#include "ImGuiManager.h"
 #include "XAudioManager.h"
-#include "FPSController.h"
-void TitleScene::Initialize()
-{
-	camera = std::make_unique<NormalCamera>();
-	camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
-
-	LoadResources();
-
-#pragma region Sprite
-	backSprite = std::make_unique<Sprite>();
-	backSprite->Initialize(TextureManager::GetInstance()->GetWhiteTexture());
-	backSprite->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,Window::sWIN_HEIGHT / 2.0f });
-	backSprite->SetSize(Vector2D{ Window::sWIN_WIDTH,Window::sWIN_HEIGHT });
-	backSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-	backSprite->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-
-	titleSprite = std::make_unique<Sprite>();
-	titleSprite->Initialize(titleG);
-	titleSprite->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,200.0f });
-	titleSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-
-	pressSprite = std::make_unique<Sprite>();
-	pressSprite->Initialize(pressG);
-	pressSprite->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,620.0f });
-	pressSprite->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
-#pragma endregion
-
-	//	playBGM
-	XAudioManager::GetInstance()->PlaySoundWave("titleBGM.wav", XAudioManager::BGM, true);
-}
-
-void TitleScene::Finalize()
-{
-	XAudioManager::GetInstance()->StopAllSound();
-	XAudioManager::GetInstance()->DeleteAllSound();
-}
 
 void TitleScene::LoadResources()
 {
@@ -58,37 +20,57 @@ void TitleScene::LoadResources()
 #pragma endregion
 }
 
+void TitleScene::Initialize()
+{
+	camera = std::make_unique<NormalCamera>();
+	camera->Initialize(Vector3D(0.0f, 0.0f, -10.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f));
+
+	LoadResources();
+
+#pragma region Sprite
+	backSprite_ = std::make_unique<Sprite>();
+	backSprite_->Initialize(TextureManager::GetInstance()->GetWhiteTexture());
+	backSprite_->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,Window::sWIN_HEIGHT / 2.0f });
+	backSprite_->SetSize(Vector2D{ Window::sWIN_WIDTH,Window::sWIN_HEIGHT });
+	backSprite_->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
+	backSprite_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+
+	titleSprite_ = std::make_unique<Sprite>();
+	titleSprite_->Initialize(titleG);
+	titleSprite_->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,200.0f });
+	titleSprite_->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
+
+	pressSprite_ = std::make_unique<Sprite>();
+	pressSprite_->Initialize(pressG);
+	pressSprite_->SetPosition(Vector2D{ Window::sWIN_WIDTH / 2.0f,620.0f });
+	pressSprite_->SetAnchorPoint(Vector2D{ 0.5f,0.5f });
+#pragma endregion
+
+	//	playBGM
+	XAudioManager::GetInstance()->PlaySoundWave("titleBGM.wav", XAudioManager::BGM, true);
+}
+
+void TitleScene::Finalize()
+{
+	XAudioManager::GetInstance()->StopAllSound();
+	XAudioManager::GetInstance()->DeleteAllSound();
+}
+
+void TitleScene::MatUpdate()
+{
+	//	èƒŒæ™¯
+	backSprite_->Update();
+	//	ã‚¿ã‚¤ãƒˆãƒ«
+	titleSprite_->Update();
+	//	pressKey
+	pressSprite_->Update();
+}
+
 void TitleScene::Update()
 {
-	timer++;
 	if (InputManager::GetInstance()->GetKeyboard()->GetTrigger(DIK_B)) {
 		SceneManager::GetInstance()->SetNextScene("GAMESCENE");
 	}
-	//int scalespd = 30;
-	//if (endScene) {
-	//	Vector2D size = pressSize;
-	//	int t = timer;
-	//	while (t > scalespd) t -= scalespd;
-	//	size *= (1.0f + (float)Easing::EaseOut(0.0f, 0.1f, t / (float)scalespd, 4));
-	//	pressSprite->SetSize(size);
-	//	pressSprite->TransferVertex();
-
-	//	if (timer >= 60) {
-	//		SceneManager::GetInstance()->SetNextScene("GAMESCENE");
-	//	}
-	//}
-	//else {
-	//	Vector2D size = pressSize;
-	//	size *= (1.0f + cosf(timer / (float)scalespd) * 0.1f);
-	//	pressSprite->SetSize(size);
-	//	pressSprite->TransferVertex();
-
-	//	//	press
-	//	if (Input::GetInstance()->GetTrigger(DIK_SPACE)) {
-	//		endScene = true;
-	//		timer = 0;
-	//	}
-	//}
 
 	MatUpdate();
 }
@@ -101,20 +83,10 @@ void TitleScene::DrawShadow() {}
 
 void TitleScene::Draw()
 {
-	//	”wŒi
-	backSprite->Draw();
-	////	ƒ^ƒCƒgƒ‹
-	//titleSprite->Draw();
+	//	èƒŒæ™¯
+	backSprite_->Draw();
+	////	ã‚¿ã‚¤ãƒˆãƒ«
+	//titleSprite_->Draw();
 	////	pressKey
-	//pressSprite->Draw();
-}
-
-void TitleScene::MatUpdate()
-{
-	//	”wŒi
-	backSprite->Update();
-	//	ƒ^ƒCƒgƒ‹
-	titleSprite->Update();
-	//	pressKey
-	pressSprite->Update();
+	//pressSprite_->Draw();
 }

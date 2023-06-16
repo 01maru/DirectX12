@@ -1,23 +1,21 @@
-#pragma once
+﻿#pragma once
 #include "IScene.h"
 #include "Sprite.h"
 
 #include "ICamera.h"
-
 #include "Texture.h"
 
 class TitleScene :public IScene
 {
 private:
-	int timer = 0;
-	bool endScene = false;
-
 	std::unique_ptr<ICamera> camera;
 
 #pragma region Sprite
-	std::unique_ptr<Sprite> titleSprite;
-	std::unique_ptr<Sprite> pressSprite;
-	std::unique_ptr<Sprite> backSprite;
+
+	std::unique_ptr<Sprite> titleSprite_;
+	std::unique_ptr<Sprite> pressSprite_;
+	std::unique_ptr<Sprite> backSprite_;
+
 #pragma endregion
 
 #pragma region Texture
@@ -25,7 +23,7 @@ private:
 	Texture pressG;
 #pragma endregion
 
-private:	//	�֐�
+private:	//	関数
 	void MatUpdate() override;
 	
 public:

@@ -1,9 +1,9 @@
-#pragma once
+﻿#pragma once
 #include "IScene.h"
-
 #include "IModel.h"
-#include "Sprite.h"
 #include "Object3D.h"
+#include "Sprite.h"
+
 #include "ICamera.h"
 #include "Texture.h"
 
@@ -12,37 +12,44 @@ class GameScene :public IScene
 private:
 	ICamera* camera = nullptr;
 
+#pragma region Obj3D
+
+	std::unique_ptr<Object3D> skydome_;
+	std::unique_ptr<Object3D> ground_;
+	std::unique_ptr<Object3D> cube_;
+
+#pragma endregion
+
 #pragma region Model
-	std::unique_ptr<IModel> modelSkydome;
-	std::unique_ptr<IModel> modelGround;
-	std::unique_ptr<IModel> modelCube;
+
+	std::unique_ptr<IModel> modelSkydome_;
+	std::unique_ptr<IModel> modelGround_;
+	std::unique_ptr<IModel> modelCube_;
+
 #pragma endregion
 
 #pragma region Sprite
-	std::unique_ptr<Sprite> sprite;
+
+	std::unique_ptr<Sprite> sprite_;
+
 #pragma endregion
-	int bgmSound = -1;
+	
 #pragma region Texture
 	Texture reimuG;
 	Texture grassG;
 #pragma endregion
-	std::unique_ptr<Object3D> skydome;
-	std::unique_ptr<Object3D> ground;
-	std::unique_ptr<Object3D> cube;
 
-	float lightColor = 1.0f;
+private:	//	関数
+	void MatUpdate() override;
+
 public:	
-	GameScene() {};
 	~GameScene() override {};
 	void Initialize() override;
-	void Finalize() override;
 	void LoadResources() override;
+	void Finalize() override;
 	void Update() override;
 	void ImguiUpdate() override;
 	void DrawShadow() override;
 	void Draw() override;
-private:
-	void CollisionUpdate();
-	void MatUpdate() override;
 };
 
