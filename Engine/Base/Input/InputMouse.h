@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <dinput.h>
 #include <wrl.h>
+#include <stdint.h>
 #include "Vector2D.h"
 
 class ImGuiManager;
@@ -50,7 +51,7 @@ public:
 	//	1フレームでのカーソルの移動量
 	const Vector2D& GetMoveCursor() { return cursorMoveLen_; }
 	//	ホイール回転
-	size_t GetWheel() { return click_.lZ; }
+	int32_t GetWheel() { return click_.lZ; }
 
 	//	Setter
 	void SetShowCursor(bool showCursor) { showCursor_ = showCursor; }
