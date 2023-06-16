@@ -6,7 +6,7 @@ class FPSController
 {
 private:
 	//	Listのサイズ
-	static const int sFPSLIST_MAX_SIZE = 60;
+	static const size_t sFPSLIST_MAX_SIZE = 60;
 
 	//	sFPSLIST_MAX_SIZEフレーム分のfps保存用リスト
 	std::list<float> fpsList_;
