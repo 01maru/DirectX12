@@ -1,6 +1,7 @@
 #include "Particle.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
+#include <cassert>
 
 #include "ConstBuffStruct.h"
 

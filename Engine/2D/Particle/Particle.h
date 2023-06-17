@@ -3,6 +3,7 @@
 #include "GPipeline.h"
 #include "VertIdxBuff.h"
 #include "ICamera.h"
+#include "DirectX.h"
 
 #include "ConstBuff.h"
 

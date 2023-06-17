@@ -1,12 +1,12 @@
 #include "GPipeline.h"
-#include <vector>
+#include "Shader.h"
 #include "DirectX.h"
-#include "PostEffect.h"
-
-MyDirectX* GPipeline::dx = MyDirectX::GetInstance();
+#include <cassert>
+#include <vector>
 
 void GPipeline::Update(D3D_PRIMITIVE_TOPOLOGY primitive)
 {
+	MyDirectX* dx = MyDirectX::GetInstance();
 	// パイプラインステートとルートシグネチャの設定コマンド
 	dx->GetCmdList()->SetPipelineState(state.Get());
 	dx->GetCmdList()->IASetPrimitiveTopology(primitive);
@@ -14,7 +14,7 @@ void GPipeline::Update(D3D_PRIMITIVE_TOPOLOGY primitive)
 
 void GPipeline::Setting()
 {
-	dx->GetCmdList()->SetGraphicsRootSignature(rootSignature.Get());
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootSignature(rootSignature.Get());
 }
 
 void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, int constBuffNum, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord, D3D12_CULL_MODE cullmord, D3D12_DEPTH_WRITE_MASK depth_write_mask, bool isDeep, DXGI_FORMAT format, int textureNum)
@@ -72,7 +72,7 @@ void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT 
 	pipelineDesc.pRootSignature = rootSignature.Get();
 
 	// パイプランステートの生成
-	result = dx->GetDev()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&state));
+	result = MyDirectX::GetInstance()->GetDev()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&state));
 	assert(SUCCEEDED(result));
 }
 
@@ -189,7 +189,7 @@ void GPipeline::SetRootSignature(UINT rootParamNum, int textureNum)
 		rootSigBlob.ReleaseAndGetAddressOf(),
 		errorBlob.ReleaseAndGetAddressOf());
 	assert(SUCCEEDED(result));
-	result = dx->GetDev()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
+	result = MyDirectX::GetInstance()->GetDev()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
 		IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 #pragma endregion
@@ -212,7 +212,7 @@ void GPipeline::SetBlend(int mord)
 	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	Blend(blenddesc, mord);
-	HRESULT result = dx->GetDev()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&state));
+	HRESULT result = MyDirectX::GetInstance()->GetDev()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&state));
 	assert(SUCCEEDED(result));
 	for (int i = 0; i < 2 - 1; i++)
 	{

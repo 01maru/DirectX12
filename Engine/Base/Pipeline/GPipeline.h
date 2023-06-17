@@ -1,13 +1,10 @@
 #pragma once
-#include "Shader.h"
 #include <d3d12.h>
-#include <dxgi1_6.h>
-#include <cassert>
 #include <wrl.h>
-#include "DirectX.h"
 
 #pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
+
+class Shader;
 
 class GPipeline
 {
@@ -22,7 +19,6 @@ public:
 	};
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	static MyDirectX* dx;
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	ComPtr<ID3D12RootSignature> rootSignature;

@@ -2,6 +2,7 @@
 #include "BaseCollider.h"
 #include "Collision.h"
 #include "MeshCollider.h"
+#include <cassert>
 
 CollisionManager* CollisionManager::GetInstance()
 {

@@ -1,5 +1,6 @@
 #include "Object2D.h"
 #include "TextureManager.h"
+#include <cassert>
 
 MyDirectX* Object2D::dx = MyDirectX::GetInstance();
 GPipeline* Object2D::pipeline = nullptr;

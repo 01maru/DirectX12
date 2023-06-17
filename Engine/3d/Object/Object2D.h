@@ -2,6 +2,7 @@
 #include "VertIdxBuff.h"
 #include "GPipeline.h"
 #include "ICamera.h"
+#include "DirectX.h"
 
 class Object2D:public VertIdxBuff
 {

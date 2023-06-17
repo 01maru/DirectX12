@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include "PipelineManager.h"
 #include "Window.h"
+#include <cassert>
 
 Matrix Sprite::sMAT_2DTRANSFORM = Create2DTransformMatrix();
 

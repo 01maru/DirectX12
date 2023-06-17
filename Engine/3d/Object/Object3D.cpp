@@ -7,6 +7,7 @@
 #include "PipelineManager.h"
 #include "TextureManager.h"
 #include "SceneManager.h"
+#include <cassert>
 
 #include "ConstBuffStruct.h"
 
