@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "MyMath.h"
 #include <vector>
+#include <iostream>
 
 namespace CBuff {
 	struct CBuffColorMaterial;

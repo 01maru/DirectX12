@@ -107,12 +107,12 @@ void Sprite::SetVerticesUV()
 	ID3D12Resource* texBuff = handle_.GetResourceBuff();
 
 	if (texBuff) {
-		D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
+		D3D12_RESOURCE_DESC resDesc = texBuff->GetDesc();
 
-		float tex_left = textureLeftTop_.x / (float)resDesc_.Width;
-		float tex_right = (textureLeftTop_.x + textureSize_.x) / (float)resDesc_.Width;
-		float tex_top = textureLeftTop_.y / (float)resDesc_.Height;
-		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / (float)resDesc_.Height;
+		float tex_left = textureLeftTop_.x / (float)resDesc.Width;
+		float tex_right = (textureLeftTop_.x + textureSize_.x) / (float)resDesc.Width;
+		float tex_top = textureLeftTop_.y / (float)resDesc.Height;
+		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / (float)resDesc.Height;
 
 		vertices_[LB].uv = { tex_left,tex_bottom };
 		vertices_[LT].uv = { tex_left,tex_top };
@@ -148,21 +148,21 @@ void Sprite::TransferVertex()
 	//	GPUメモリの値書き換えよう
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
 	ScreenVertex* vertMap = nullptr;
-	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	HRESULT result = vertBuff_->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
 	for (int i = 0; i < vertices_.size(); i++) {
 		vertMap[i] = vertices_[i]; // 座標をコピー
 	}
 	// 繋がりを解除
-	vertBuff->Unmap(0, nullptr);
+	vertBuff_->Unmap(0, nullptr);
 }
 
 void Sprite::SetVertices()
 {
 	TransferVertex();
 	// 頂点1つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(vertices_[0]);
+	vbView_.StrideInBytes = sizeof(vertices_[0]);
 }
 
 void Sprite::AdjustTextureSize()
@@ -170,9 +170,9 @@ void Sprite::AdjustTextureSize()
 	ID3D12Resource* texBuff = handle_.GetResourceBuff();
 	assert(texBuff);
 
-	D3D12_RESOURCE_DESC resDesc_ = texBuff->GetDesc();
-	textureSize_.x = static_cast<float>(resDesc_.Width);
-	textureSize_.y = static_cast<float>(resDesc_.Height);
+	D3D12_RESOURCE_DESC resDesc = texBuff->GetDesc();
+	textureSize_.x = static_cast<float>(resDesc.Width);
+	textureSize_.y = static_cast<float>(resDesc.Height);
 }
 
 void Sprite::SetPosition(const Vector2D& position)

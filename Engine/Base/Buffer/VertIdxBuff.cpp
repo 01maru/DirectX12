@@ -1,17 +1,16 @@
-#include "VertIdxBuff.h"
+ï»¿#include "VertIdxBuff.h"
 #include "DirectX.h"
-#include <wrl.h>
-#include <vector>
 #include <cassert>
 
-void VertIdxBuff::BuffUpdate(ID3D12GraphicsCommandList* cmdList)
+void VertIdxBuff::SetResDesc(UINT size)
 {
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìİ’èƒRƒ}ƒ“ƒh
-	cmdList->IASetVertexBuffers(0, 1, &vbView);
-	//	ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[İ’èƒRƒ}ƒ“ƒh
-	if (ibExist) {
-		cmdList->IASetIndexBuffer(&ibView);
-	}
+	resDesc_.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc_.Width = size; // é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿å…¨ä½“ã®ã‚µã‚¤ã‚º
+	resDesc_.Height = 1;
+	resDesc_.DepthOrArraySize = 1;
+	resDesc_.MipLevels = 1;
+	resDesc_.SampleDesc.Count = 1;		//	ã‚¢ãƒ³ãƒã‚¨ã‚¤ãƒªã‚¢ã‚·ãƒ³ã‚°ç”¨ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	resDesc_.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 }
 
 void VertIdxBuff::Initialize(uint32_t sizeVB, const std::vector<uint32_t>& indices)
@@ -24,35 +23,27 @@ void VertIdxBuff::Initialize(uint32_t sizeVB, const std::vector<uint32_t>& indic
 		ID3D12Device* dev = MyDirectX::GetInstance()->GetDev();
 		D3D12_HEAP_PROPERTIES heapProp{};
 
-		//	ƒq[ƒv‚Ìİ’è
-		heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPU‚Ö‚Ì“]‘——p(CPU‚©‚çƒAƒNƒZƒX‚Å‚«‚é)		
+		//	ãƒ’ãƒ¼ãƒ—ã®è¨­å®š
+		heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUã¸ã®è»¢é€ç”¨(CPUã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹)		
 
-		ibExist = true;
+		ibActive_ = true;
 
 		uint32_t sizeIB = static_cast<uint32_t>(sizeof(uint32_t) * indices.size());
 		SetResDesc(sizeIB);
 		result = dev->CreateCommittedResource(
-			&heapProp, // ƒq[ƒvİ’è
+			&heapProp, // ãƒ’ãƒ¼ãƒ—è¨­å®š
 			D3D12_HEAP_FLAG_NONE,
-			&resDesc, // ƒŠƒ\[ƒXİ’è
+			&resDesc_, // ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
-			IID_PPV_ARGS(&indexBuff));
+			IID_PPV_ARGS(&indexBuff_));
 		assert(SUCCEEDED(result));
-		//	ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒ}ƒbƒsƒ“ƒO
-		uint32_t* indexMap = nullptr;
-		result = indexBuff->Map(0, nullptr, (void**)&indexMap);
-		assert(SUCCEEDED(result));
-		// ‘S’¸“_‚É‘Î‚µ‚Ä
-		for (int i = 0; i < indices.size(); i++) {
-			indexMap[i] = indices[i]; // À•W‚ğƒRƒs[
-		}
-		// Œq‚ª‚è‚ğ‰ğœ
-		indexBuff->Unmap(0, nullptr);
-		//	ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[ì¬
-		ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
-		ibView.Format = DXGI_FORMAT_R16_UINT;
-		ibView.SizeInBytes = sizeIB;
+		//	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒãƒƒãƒ”ãƒ³ã‚°
+		SetIndices(indices);
+		//	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ä½œæˆ
+		ibView_.BufferLocation = indexBuff_->GetGPUVirtualAddress();
+		ibView_.Format = DXGI_FORMAT_R16_UINT;
+		ibView_.SizeInBytes = sizeIB;
 	}
 #pragma endregion
 }
@@ -62,90 +53,104 @@ void VertIdxBuff::Initialize(uint32_t sizeVB)
 	ID3D12Device* dev = MyDirectX::GetInstance()->GetDev();
 	D3D12_HEAP_PROPERTIES heapProp{};
 
-	//	ƒq[ƒv‚Ìİ’è
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPU‚Ö‚Ì“]‘——p(CPU‚©‚çƒAƒNƒZƒX‚Å‚«‚é)
+	//	ãƒ’ãƒ¼ãƒ—ã®è¨­å®š
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUã¸ã®è»¢é€ç”¨(CPUã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹)
 
 #pragma region VB
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	SetResDesc(sizeVB);
 
-	//	GPU‘¤‚Éƒƒ‚ƒŠŠm•Û
+	//	GPUå´ã«ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	HRESULT result = dev->CreateCommittedResource(
-		&heapProp,							// ƒq[ƒvİ’è
+		&heapProp,							// ãƒ’ãƒ¼ãƒ—è¨­å®š
 		D3D12_HEAP_FLAG_NONE,
-		&resDesc,							// ƒŠƒ\[ƒXİ’è
+		&resDesc_,							// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&vertBuff));
+		IID_PPV_ARGS(&vertBuff_));
 	assert(SUCCEEDED(result));
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìì¬(GPU‚Å—˜—p‚·‚é‚½‚ß)
-	// GPU‰¼‘zƒAƒhƒŒƒX
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	// ’¸“_ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-	vbView.SizeInBytes = sizeVB;
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã®ä½œæˆ(GPUã§åˆ©ç”¨ã™ã‚‹ãŸã‚)
+	// GPUä»®æƒ³ã‚¢ãƒ‰ãƒ¬ã‚¹
+	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+	vbView_.SizeInBytes = sizeVB;
 
 	SetVertices();
 #pragma endregion
+}
+
+void VertIdxBuff::SetIndices(const std::vector<uint32_t>& indices)
+{
+	//	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒãƒƒãƒ”ãƒ³ã‚°
+	uint32_t* indexMap = nullptr;
+	HRESULT result = indexBuff_->Map(0, nullptr, (void**)&indexMap);
+	assert(SUCCEEDED(result));
+	// å…¨é ‚ç‚¹ã«å¯¾ã—ã¦
+	for (int i = 0; i < indices.size(); i++) {
+		indexMap[i] = indices[i]; // åº§æ¨™ã‚’ã‚³ãƒ”ãƒ¼
+	}
+	// ç¹‹ãŒã‚Šã‚’è§£é™¤
+	indexBuff_->Unmap(0, nullptr);
 }
 
 void VertIdxBuff::BuffInitialize(ID3D12Device* dev, UINT sizeVB, UINT sizeIB, uint16_t* indices, int indicesSize)
 {
 	D3D12_HEAP_PROPERTIES heapProp{};
 
-	//	ƒq[ƒv‚Ìİ’è
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPU‚Ö‚Ì“]‘——p(CPU‚©‚çƒAƒNƒZƒX‚Å‚«‚é)
+	//	ãƒ’ãƒ¼ãƒ—ã®è¨­å®š
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUã¸ã®è»¢é€ç”¨(CPUã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹)
 
 #pragma region VB
-	// ƒŠƒ\[ƒXİ’è
+	// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	SetResDesc(sizeVB);
 
-	//	GPU‘¤‚Éƒƒ‚ƒŠŠm•Û
+	//	GPUå´ã«ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	HRESULT result = dev->CreateCommittedResource(
-		&heapProp,							// ƒq[ƒvİ’è
+		&heapProp,							// ãƒ’ãƒ¼ãƒ—è¨­å®š
 		D3D12_HEAP_FLAG_NONE,
-		&resDesc,							// ƒŠƒ\[ƒXİ’è
+		&resDesc_,							// ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&vertBuff));
+		IID_PPV_ARGS(&vertBuff_));
 	assert(SUCCEEDED(result));
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìì¬(GPU‚Å—˜—p‚·‚é‚½‚ß)
-	// GPU‰¼‘zƒAƒhƒŒƒX
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	// ’¸“_ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-	vbView.SizeInBytes = sizeVB;
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã®ä½œæˆ(GPUã§åˆ©ç”¨ã™ã‚‹ãŸã‚)
+	// GPUä»®æƒ³ã‚¢ãƒ‰ãƒ¬ã‚¹
+	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+	vbView_.SizeInBytes = sizeVB;
 
 	SetVertices();
 #pragma endregion
 
 #pragma region IB
 	if (indices != nullptr) {
-		ibExist = true;
+		ibActive_ = true;
 
 		SetResDesc(sizeIB);
 		result = dev->CreateCommittedResource(
-			&heapProp, // ƒq[ƒvİ’è
+			&heapProp, // ãƒ’ãƒ¼ãƒ—è¨­å®š
 			D3D12_HEAP_FLAG_NONE,
-			&resDesc, // ƒŠƒ\[ƒXİ’è
+			&resDesc_, // ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
-			IID_PPV_ARGS(&indexBuff));
+			IID_PPV_ARGS(&indexBuff_));
 		assert(SUCCEEDED(result));
-		//	ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒ}ƒbƒsƒ“ƒO
+		//	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒãƒƒãƒ”ãƒ³ã‚°
 		uint16_t* indexMap = nullptr;
-		result = indexBuff->Map(0, nullptr, (void**)&indexMap);
+		result = indexBuff_->Map(0, nullptr, (void**)&indexMap);
 		assert(SUCCEEDED(result));
-		// ‘S’¸“_‚É‘Î‚µ‚Ä
+		// å…¨é ‚ç‚¹ã«å¯¾ã—ã¦
 		for (int i = 0; i < indicesSize; i++) {
-			indexMap[i] = indices[i]; // À•W‚ğƒRƒs[
+			indexMap[i] = indices[i]; // åº§æ¨™ã‚’ã‚³ãƒ”ãƒ¼
 		}
-		// Œq‚ª‚è‚ğ‰ğœ
-		indexBuff->Unmap(0, nullptr);
-		//	ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[ì¬
-		ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
-		ibView.Format = DXGI_FORMAT_R16_UINT;
-		ibView.SizeInBytes = sizeIB;
+		// ç¹‹ãŒã‚Šã‚’è§£é™¤
+		indexBuff_->Unmap(0, nullptr);
+		//	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ä½œæˆ
+		ibView_.BufferLocation = indexBuff_->GetGPUVirtualAddress();
+		ibView_.Format = DXGI_FORMAT_R16_UINT;
+		ibView_.SizeInBytes = sizeIB;
 	}
 #pragma endregion
 }
@@ -154,21 +159,10 @@ void VertIdxBuff::IASetVertIdxBuff()
 {
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìİ’èƒRƒ}ƒ“ƒh
-	cmdList->IASetVertexBuffers(0, 1, &vbView);
-	//	ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[İ’èƒRƒ}ƒ“ƒh
-	if (ibExist) {
-		cmdList->IASetIndexBuffer(&ibView);
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ã®è¨­å®šã‚³ãƒãƒ³ãƒ‰
+	cmdList->IASetVertexBuffers(0, 1, &vbView_);
+	//	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼è¨­å®šã‚³ãƒãƒ³ãƒ‰
+	if (ibActive_) {
+		cmdList->IASetIndexBuffer(&ibView_);
 	}
-}
-
-void VertIdxBuff::SetResDesc(UINT size)
-{
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = size; // ’¸“_ƒf[ƒ^‘S‘Ì‚ÌƒTƒCƒY
-	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;		//	ƒAƒ“ƒ`ƒGƒCƒŠƒAƒVƒ“ƒO—p‚Ìƒpƒ‰ƒ[ƒ^
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 }

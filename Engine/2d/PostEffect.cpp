@@ -85,10 +85,10 @@ void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT for
 	// シザー矩形
 	viewPort.InitializeSR(0, width, 0, height, texNum);
 
-	auto resDesc_ = MyDirectX::GetInstance()->GetBackBuffDesc();
-	resDesc_.Format = format;
-	resDesc_.Width = width;
-	resDesc_.Height = height;
+	auto resDesc = MyDirectX::GetInstance()->GetBackBuffDesc();
+	resDesc.Format = format;
+	resDesc.Width = width;
+	resDesc.Height = height;
 	D3D12_HEAP_PROPERTIES heapProp{};
 	heapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
 	heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -110,7 +110,7 @@ void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT for
 		result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
 			&heapProp,
 			D3D12_HEAP_FLAG_NONE,
-			&resDesc_,
+			&resDesc,
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 			&clearValue,
 			IID_PPV_ARGS(texture[i].GetResourceBuffAddress()));
@@ -230,7 +230,7 @@ void PostEffect::Draw(bool xBlur, bool yBlur, bool shadow, int handle1)
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	BuffUpdate(cmdList);
+	VertIdxBuff::IASetVertIdxBuff();
 
 	if (xBlur == false && yBlur == false && shadow == false) {
 		//	テクスチャ
@@ -277,7 +277,7 @@ void PostEffect::DrawLuminnce()
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	BuffUpdate(cmdList);
+	VertIdxBuff::IASetVertIdxBuff();
 	//	テクスチャ
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
 	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
@@ -288,17 +288,17 @@ void PostEffect::DrawLuminnce()
 void PostEffect::SetVertices()
 {
 	// 頂点1つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(vertices[0]);
+	vbView_.StrideInBytes = sizeof(vertices[0]);
 
 	//	GPUメモリの値書き換えよう
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
 	ScreenVertex* vertMap = nullptr;
-	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	HRESULT result = vertBuff_->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
 	for (int i = 0; i < vertices.size(); i++) {
 		vertMap[i] = vertices[i]; // 座標をコピー
 	}
 	// 繋がりを解除
-	vertBuff->Unmap(0, nullptr);
+	vertBuff_->Unmap(0, nullptr);
 }

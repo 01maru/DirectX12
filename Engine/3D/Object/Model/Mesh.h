@@ -1,6 +1,7 @@
 #pragma once
 #include "VertIdxBuff.h"
 #include "Material.h"
+#include <iostream>
 #include <unordered_map>
 
 class Mesh :public VertIdxBuff

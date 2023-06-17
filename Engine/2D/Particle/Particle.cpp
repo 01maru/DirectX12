@@ -78,7 +78,7 @@ void Particle::Draw(int handle)
 	pipeline->Setting();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
-	BuffUpdate(cmdList);
+	IASetVertIdxBuff();
 	//	テクスチャ
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle));
 	colorMaterial.SetGraphicsRootCBuffView(1);
@@ -107,17 +107,17 @@ void Particle::Move(const Vector3D& spd)
 void Particle::SetVertices()
 {
 	// 頂点1つ分のデータサイズ
-	vbView.StrideInBytes = sizeof(vertex);
+	vbView_.StrideInBytes = sizeof(vertex);
 
 	//	GPUメモリの値書き換えよう
 	// GPU上のバッファに対応した仮想メモリ(メインメモリ上)を取得
 	Vector3D* vertMap = nullptr;
-	HRESULT result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	HRESULT result = vertBuff_->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して
 	for (int i = 0; i < 1; i++) {
 		vertMap[i] = vertex; // 座標をコピー
 	}
 	// 繋がりを解除
-	vertBuff->Unmap(0, nullptr);
+	vertBuff_->Unmap(0, nullptr);
 }
