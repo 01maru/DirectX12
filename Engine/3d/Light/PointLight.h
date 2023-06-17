@@ -1,31 +1,25 @@
-#pragma once
+﻿#pragma once
 #include "MyMath.h"
 
 class PointLight
 {
-public:
-	struct ConstBuffData
-	{
-		Vector3D pos;
-		float pad1;
-		Vector3D color;
-		float pad2;
-		Vector3D lightatten;
-		unsigned int active;
-	};
 private:
-	Vector3D lightpos;
-	Vector3D lightcolor = { 1.0f,1.0f,1.0f };
-	Vector3D lightAtten = { 1.0f,1.0f,1.0f };
-	bool active = false;
+	bool active_ = false;
+	Vector3D pos_;
+	Vector3D color_ = { 1.0f,1.0f,1.0f };
+	Vector3D atten_ = { 1.0f,1.0f,1.0f };
+
 public:
-	void SetLightPos(const Vector3D& lightPos) { lightpos = lightPos; }
-	const Vector3D& GetLightPos() { return lightpos; }
-	void SetLightColor(const Vector3D& color) { lightcolor = color; }
-	const Vector3D& GetLightColor() { return lightcolor; }
-	void SetLightAtten(const Vector3D& lightAtten_) { lightAtten = lightAtten_; }
-	const Vector3D& GetLightAtten() { return lightAtten; }
-	void SetActive(bool active_) { active = active_; }
-	bool IsActive() { return active; }
+	//	Getter
+	bool GetIsActive() { return active_; }
+	const Vector3D& GetLightPos() { return pos_; }
+	const Vector3D& GetLightColor() { return color_; }
+	const Vector3D& GetLightAtten() { return atten_; }
+
+	//	Setter
+	void SetActive(bool active) { active_ = active; }
+	void SetLightPos(const Vector3D& pos) { pos_ = pos; }
+	void SetLightColor(const Vector3D& color) { color_ = color; }
+	void SetLightAtten(const Vector3D& atten) { atten_ = atten; }
 };
 

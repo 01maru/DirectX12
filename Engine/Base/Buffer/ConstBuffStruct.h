@@ -28,4 +28,15 @@ namespace CBuff
 	{
 		Matrix bones[MAX_BONES];
 	};
+
+	//	Light
+	struct CBuffPointLight
+	{
+		Vector3D pos;
+		float pad1;
+		Vector3D color;
+		float pad2;
+		Vector3D lightatten;
+		size_t active;
+	};
 }

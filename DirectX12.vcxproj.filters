@@ -282,9 +282,6 @@
     <ClCompile Include="Engine\3D\Light\SpotLight.cpp">
       <Filter>ソース ファイル\lib\Engine\Light</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Light\PointLight.cpp">
-      <Filter>ソース ファイル\lib\Engine\Light</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\Light\DirLight.cpp">
       <Filter>ソース ファイル\lib\Engine\Light</Filter>
     </ClCompile>
@@ -320,9 +317,6 @@
     </ClCompile>
     <ClCompile Include="Engine\3D\Camera\NormalCamera.cpp">
       <Filter>ソース ファイル\lib\3D\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Light\VolumeLight.cpp">
-      <Filter>ソース ファイル\lib\Engine\Light</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
@@ -547,9 +541,6 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\Camera\NormalCamera.h">
       <Filter>ヘッダー ファイル\lib\3D\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Light\VolumeLight.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Light</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Scene\GameScene.h">
       <Filter>ヘッダー ファイル\Game\Scene</Filter>

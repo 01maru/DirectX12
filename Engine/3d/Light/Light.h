@@ -8,6 +8,8 @@
 #include "CircleShadow.h"
 #include "DistanceFog.h"
 
+#include "ConstBuffStruct.h"
+
 class Light
 {
 private:
@@ -33,7 +35,7 @@ public:
 		Vector3D ambientColor;
 		float pad1;
 		DirLight::ConstBuffData dirLights[DirLightNum];
-		PointLight::ConstBuffData pointLights[PointLightNum];
+		CBuff::CBuffPointLight pointLights[PointLightNum];
 		SpotLight::ConstBuffData spotLights[SpotLightNum];
 		CircleShadow::ConstBuffData circleShadows[CircleShadowNum];
 		DistanceFog::ConstBuffData distanceFog;

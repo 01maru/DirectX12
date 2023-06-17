@@ -50,7 +50,6 @@
     <ClCompile Include="Engine\Game\MyGame.cpp" />
     <ClCompile Include="Engine\Math\MyMath.cpp" />
     <ClCompile Include="Engine\Base\Audio\XAudioManager.cpp" />
-    <ClCompile Include="Engine\3D\Light\PointLight.cpp" />
     <ClCompile Include="Engine\Math\Quaternion.cpp" />
     <ClCompile Include="Engine\Collider\QueryCallBack.cpp" />
     <ClCompile Include="Engine\Collider\RayCast.cpp" />
@@ -71,7 +70,6 @@
     <ClCompile Include="Engine\Base\Window\Window.cpp" />
     <ClCompile Include="Engine\3D\Camera\NormalCamera.cpp" />
     <ClCompile Include="Engine\Scene\TitleScene.cpp" />
-    <ClCompile Include="Engine\3D\Light\VolumeLight.cpp" />
     <ClCompile Include="Engine\3D\Object\Model\FbxModel.cpp" />
     <ClCompile Include="Engine\Base\Input\InputManager.cpp" />
     <ClCompile Include="Engine\2D\Loading\ILoadingObj.cpp" />
@@ -150,7 +148,6 @@
     <ClInclude Include="Engine\Base\Window\Window.h" />
     <ClInclude Include="Engine\3D\Camera\NormalCamera.h" />
     <ClInclude Include="Engine\Scene\TitleScene.h" />
-    <ClInclude Include="Engine\3D\Light\VolumeLight.h" />
     <ClInclude Include="Engine\3D\Light\DistanceFog.h" />
     <ClInclude Include="Engine\3D\Object\Model\FbxModel.h" />
     <ClInclude Include="Engine\3D\Object\Model\ObjModel.h" />
