@@ -1,4 +1,4 @@
-#include "ConstBuff.h"
+ï»¿#include "ConstBuff.h"
 #include "DirectX.h"
 #include <cassert>
 
@@ -8,10 +8,10 @@ void ConstBuff::Initialize(uint64_t resWidth)
 	D3D12_HEAP_PROPERTIES heapProp{};
 	D3D12_RESOURCE_DESC resourceDesc{};
 
-	//	ƒq[ƒvÝ’è
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//	GPU“]‘——p
+	//	ãƒ’ãƒ¼ãƒ—è¨­å®š
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//	GPUè»¢é€ç”¨
 
-	//	ƒŠƒ\[ƒXÝ’è
+	//	ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resourceDesc.Width = (resWidth + 0xFF) & ~0xFF;
 	resourceDesc.Height = 1;
@@ -20,18 +20,20 @@ void ConstBuff::Initialize(uint64_t resWidth)
 	resourceDesc.SampleDesc.Count = 1;
 	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	//	¶¬
+	//	ç”Ÿæˆ
 	result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
-		&heapProp,	//	ƒq[ƒvÝ’è
+		&heapProp,	//	ãƒ’ãƒ¼ãƒ—è¨­å®š
 		D3D12_HEAP_FLAG_NONE,
-		&resourceDesc,	//	ƒŠƒ\[ƒXÝ’è
+		&resourceDesc,	//	ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&material));
+		IID_PPV_ARGS(&material_));
+
+	assert(SUCCEEDED(result));
 }
 
 void ConstBuff::SetGraphicsRootCBuffView(uint32_t rootparaIdx)
 {
-	//	’è”ƒoƒbƒtƒ@ƒrƒ…[(CBV)‚ÌÝ’èƒRƒ}ƒ“ƒh
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(rootparaIdx, material->GetGPUVirtualAddress());
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼(CBV)ã®è¨­å®šã‚³ãƒžãƒ³ãƒ‰
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootConstantBufferView(rootparaIdx, material_->GetGPUVirtualAddress());
 }
