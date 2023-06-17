@@ -1,4 +1,4 @@
-#include "LoadingSprite.h"
+ï»¿#include "LoadingSprite.h"
 #include "TextureManager.h"
 #include "Window.h"
 #include "PipelineManager.h"
@@ -17,28 +17,28 @@ void LoadingSprite::Initialize()
 
 void LoadingSprite::Update()
 {
-    //  ƒ[ƒfƒBƒ“ƒO’†‚¶‚á‚È‚­fadeInÏ‚İ‚¾‚Á‚½‚ç
+    //  ãƒ­ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ä¸­ã˜ã‚ƒãªãfadeInæ¸ˆã¿ã ã£ãŸã‚‰
     if (!loading_ && !fadeIn_) {
         if (easeCount_ > 0) {
             easeCount_--;
 
-            float alphaColor = Easing::EaseIn(1.0f, 0.0f, 1.0f - (float)easeCount_ / sEaseMaxCount, 4);
+            float alphaColor = Easing::EaseIn(1.0f, 0.0f, 1.0f - (float)easeCount_ / sEASE_MAX_COUNT, 4);
 
             loadSprite_->SetColor({ 1.0f,1.0f,1.0f,alphaColor });
         }
     }
     else {
-        bool isEasing = easeCount_ < sEaseMaxCount;
+        bool isEasing = easeCount_ < sEASE_MAX_COUNT;
 
         if (isEasing) {
             easeCount_++;
 
-            float alphaColor = Easing::EaseIn(0.0f, 1.0f, (float)easeCount_ / sEaseMaxCount, 4);
+            float alphaColor = Easing::EaseIn(0.0f, 1.0f, (float)easeCount_ / sEASE_MAX_COUNT, 4);
 
             loadSprite_->SetColor({ 1.0f,1.0f,1.0f,alphaColor });
         }
 
-        //  “§‰ß’l1.0‚É‚È‚Á‚½‚çfalse‚É
+        //  é€éå€¤1.0ã«ãªã£ãŸã‚‰falseã«
         if (!isEasing)  fadeIn_ = false;
 
     }

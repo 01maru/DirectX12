@@ -1,5 +1,4 @@
 #include "LoadingModel.h"
-#include "TextureManager.h"
 #include "Window.h"
 #include "Easing.h"
 
@@ -8,14 +7,14 @@
 
 void LoadingModel::Initialize()
 {
-	loadModel = std::make_unique<ObjModel>("player");
+    loadModel_ = std::make_unique<ObjModel>("player");
 
-	loadObj.reset(Object3D::Create(loadModel.get()));
-	loadObj->SetColor({ 1.0f,1.0f,1.0f });
-	loadObj->SetScale({ 50.0f,50.0f,50.0f });
-	loadObj->SetPosition({ Window::sWIN_WIDTH / 2.0f - 100.0f,-Window::sWIN_HEIGHT / 2.0f + 50.0f,0.0f });
+	loadObj_.reset(Object3D::Create(loadModel_.get()));
+	loadObj_->SetColor({ 1.0f,1.0f,1.0f });
+	loadObj_->SetScale({ 50.0f,50.0f,50.0f });
+	loadObj_->SetPosition({ Window::sWIN_WIDTH / 2.0f - 100.0f,-Window::sWIN_HEIGHT / 2.0f + 50.0f,0.0f });
 
-	camera = std::make_unique<ObjCamera2D>();
+    camera_ = std::make_unique<ObjCamera2D>();
 }
 
 void LoadingModel::Update()
@@ -25,40 +24,40 @@ void LoadingModel::Update()
         if (easeCount_ > 0) {
             easeCount_--;
 
-            float alphaColor = Easing::EaseOut(1.0f, 0.0f, 1.0f - (float)easeCount_ / sEaseMaxCount, 4);
+            float alphaColor = Easing::EaseOut(1.0f, 0.0f, 1.0f - (float)easeCount_ / sEASE_MAX_COUNT, 4);
 
-            loadObj->SetColor({ 1.0f,1.0f,1.0f,alphaColor });
+            loadObj_->SetColor({ 1.0f,1.0f,1.0f,alphaColor });
         }
     }
     else {
-        bool isEasing = easeCount_ < sEaseMaxCount;
+        bool isEasing = easeCount_ < sEASE_MAX_COUNT;
 
         if (isEasing) {
             easeCount_++;
 
-            float alphaColor = Easing::EaseOut(0.0f, 1.0f, (float)easeCount_ / sEaseMaxCount, 4);
+            float alphaColor = Easing::EaseOut(0.0f, 1.0f, (float)easeCount_ / sEASE_MAX_COUNT, 4);
 
-            loadObj->SetColor({ 1.0f,1.0f,1.0f,alphaColor });
+            loadObj_->SetColor({ 1.0f,1.0f,1.0f,alphaColor });
         }
 
         //  “§‰ß’l1.0‚É‚È‚Á‚½‚çfalse‚É
         if (!isEasing)  fadeIn_ = false;
 
-        camera->MatUpdate();
+        camera_->MatUpdate();
     }
 
     //  ƒ‚ƒfƒ‹•\Ž¦’†‚Í‰ñ“]‚³‚¹‚é
     if (easeCount_ > 0) {
-        Vector3D rot = loadObj->GetRotation();
+        Vector3D rot = loadObj_->GetRotation();
         rot.y -= 0.1f;
-        loadObj->SetRotation(rot);
-        loadObj->MatUpdate(camera.get());
+        loadObj_->SetRotation(rot);
+        loadObj_->MatUpdate(camera_.get());
     }
 }
 
 void LoadingModel::Draw()
 {
     if (easeCount_ > 0) {
-        loadObj->DrawSilhouette();
+        loadObj_->DrawSilhouette();
     }
 }

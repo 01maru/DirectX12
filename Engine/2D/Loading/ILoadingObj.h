@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 
 class ILoadingObj
 {
 protected:
 	bool fadeIn_ = false;
-	//	ƒ[ƒh’†‚©
+	//	ãƒ­ãƒ¼ãƒ‰ä¸­ã‹
 	bool loading_ = false;
-	//	ƒtƒF[ƒhƒCƒ“ƒAƒEƒg—p
-	static const int sEaseMaxCount = 30;
+	//	ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ã‚¢ã‚¦ãƒˆç”¨
+	static const int sEASE_MAX_COUNT = 30;
 	int easeCount_ = 0;
 
 public:

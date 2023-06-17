@@ -1,4 +1,4 @@
-#include "ILoadingObj.h"
+﻿#include "ILoadingObj.h"
 
 void ILoadingObj::SetIsLoading(bool loading)
 {

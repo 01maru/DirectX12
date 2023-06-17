@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
+#include "ILoadingObj.h"
 #include "Sprite.h"
 #include <memory>
-#include "ILoadingObj.h"
 
 class LoadingSprite :public ILoadingObj
 {
 private:
-
 	Texture loadTex_;
 	std::unique_ptr<Sprite> loadSprite_;
 	
