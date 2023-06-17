@@ -71,7 +71,7 @@ void Light::TransferConstBuffer()
 			}
 		}
 
-		if (distanceFog.IsActive()) {
+		if (distanceFog.GetIsActive()) {
 			constMap->distanceFog.active = 1;
 			constMap->distanceFog.color = distanceFog.GetColor();
 			constMap->distanceFog.start = distanceFog.GetStart();

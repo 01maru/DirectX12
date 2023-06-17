@@ -29,7 +29,8 @@ namespace CBuff
 		Matrix bones[MAX_BONES];
 	};
 
-	//	Light
+#pragma region Light
+
 	struct CBuffPointLight
 	{
 		Vector3D pos;
@@ -47,4 +48,16 @@ namespace CBuff
 		Vector3D lightcolor;
 		bool active;
 	};
+
+	struct CBuffDisFogData
+	{
+		Vector3D color;
+		bool active;
+		float start;
+		float end;
+		float fogNear;
+		float fogFar;
+	};
+
+#pragma endregion
 }

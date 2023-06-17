@@ -1,38 +1,32 @@
-#pragma once
+﻿#pragma once
 #include "MyMath.h"
 
 class DistanceFog
 {
-public:
-	struct ConstBuffData
-	{
-		Vector3D color;
-		unsigned int active;
-		float start;
-		float end;
-		float fogNear;
-		float fogFar;
-	};
-
 private:
-	Vector3D color = Vector3D(1.0f, 1.0f, 1.0f);
-	float start = 0.1f;
-	float end = 5.0f;
-	float fogFar = 30.0f;
-	float fogNear = 0.1f;
-	bool active = false;
+	bool active_ = false;
+	Vector3D color_ = Vector3D(1.0f, 1.0f, 1.0f);
+	float start_ = 0.1f;
+	float end_ = 5.0f;
+	float fogFar_ = 30.0f;
+	float fogNear_ = 0.1f;
+
 public:
-	void SetColor(const Vector3D& color_) { color = color_; }
-	const Vector3D& GetColor() { return color; }
-	void SetStart(const float fogStart) { start = fogStart; }
-	const float GetStart() { return start; }
-	void SetEnd(const float fogEnd) { end = fogEnd; }
-	const float GetEnd() { return end; }
-	void SetFar(const float far_) { fogFar = far_; }
-	const float GetFar() { return fogFar; }
-	void SetNear(const float near_) { fogNear = near_; }
-	const float GetNear() { return fogNear; }
-	void SetActive(bool active_) { active = active_; }
-	bool IsActive() { return active; }
+
+	//	Getter
+	bool GetIsActive() { return active_; }
+	const Vector3D& GetColor() { return color_; }
+	float GetStart() { return start_; }
+	float GetEnd() { return end_; }
+	float GetFar() { return fogFar_; }
+	float GetNear() { return fogNear_; }
+
+	//	Setter
+	void SetActive(bool active) { active_ = active; }
+	void SetColor(const Vector3D& color) { color_ = color; }
+	void SetStart(float start) { start_ = start; }
+	void SetEnd(float end) { end_ = end; }
+	void SetFar(float fogFar) { fogFar_ = fogFar; }
+	void SetNear(float fogNear) { fogNear_ = fogNear; }
 };
 

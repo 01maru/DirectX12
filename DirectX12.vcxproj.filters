@@ -303,9 +303,6 @@
     <ClCompile Include="Engine\3D\Object\Object2D.cpp">
       <Filter>ソース ファイル\lib\3D\Obj</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Light\DistanceFog.cpp">
-      <Filter>ソース ファイル\lib\Engine\Light</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\Object\Object3D.cpp">
       <Filter>ソース ファイル\lib\3D\Obj</Filter>
     </ClCompile>

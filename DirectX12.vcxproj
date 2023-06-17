@@ -45,7 +45,6 @@
     <ClCompile Include="Engine\Base\Pipeline\GPipeline.cpp" />
     <ClCompile Include="Engine\Base\Input\InputKeyboard.cpp" />
     <ClCompile Include="Engine\Base\Input\InputJoypad.cpp" />
-    <ClCompile Include="Engine\3D\Light\DistanceFog.cpp" />
     <ClCompile Include="Engine\Math\Matrix.cpp" />
     <ClCompile Include="Engine\Game\MyGame.cpp" />
     <ClCompile Include="Engine\Math\MyMath.cpp" />
