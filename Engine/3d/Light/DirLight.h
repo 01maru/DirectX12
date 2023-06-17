@@ -1,39 +1,30 @@
-#pragma once
+﻿#pragma once
 #include "MyMath.h"
 #include "ICamera.h"
 #include <memory>
 
 class DirLight
 {
-public:
-	struct ConstBuffData
-	{
-		Vector3D lightv;
-		float pad1;
-		Vector3D lightcolor;
-		unsigned int active;
-	};
-
 private:
-	Vector3D center = { 0.0f, 1.0f, 0.0f };
-	Vector3D lightdir = { 0,1,0 };
-	Vector3D lightcolor = { 1,1,1 };
-	bool active = false;
+	bool active_ = false;
+	Vector3D dir_ = { 0,1,0 };
+	Vector3D color_ = { 1,1,1 };
 
-	bool shadowing = false;
+	bool shadowing_ = false;
+	Vector3D center_ = { 0.0f, 1.0f, 0.0f };
 
 	std::unique_ptr<ICamera> lightCamera;
 public:
-	void SetShadow(bool shadowflag);
-	void SetLightDir(const Vector3D& lightdir_) {
-		lightdir = lightdir_;
-		lightdir.Normalize();
-	}
-	const Vector3D& GetLightDir() { return lightdir; }
-	void SetLightColor(const Vector3D& lightcolor_) { lightcolor = lightcolor_; }
-	const Vector3D& GetLightColor() { return lightcolor; }
-	void SetActive(bool active_) { active = active_; }
-	bool IsActive() { return active; }
+	//	Getter
+	bool GetIsActive() { return active_; }
+	const Vector3D& GetLightDir() { return dir_; }
+	const Vector3D& GetLightColor() { return color_; }
 	ICamera* GetCamera() { return lightCamera.get(); }
+
+	//	Setter
+	void SetActive(bool active) { active_ = active; }
+	void SetLightDir(const Vector3D& dir);
+	void SetLightColor(const Vector3D& color) { color_ = color; }
+	void SetShadow(bool shadowflag);
 };
 

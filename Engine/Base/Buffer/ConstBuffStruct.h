@@ -37,6 +37,14 @@ namespace CBuff
 		Vector3D color;
 		float pad2;
 		Vector3D lightatten;
-		size_t active;
+		bool active;
+	};
+
+	struct CBuffDirLightData
+	{
+		Vector3D lightv;
+		float pad1;
+		Vector3D lightcolor;
+		bool active;
 	};
 }

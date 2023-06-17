@@ -18,7 +18,7 @@ void Light::TransferConstBuffer()
 
 		for (int i = 0; i < DirLightNum; i++)
 		{
-			if (dirLights[i].IsActive()) {
+			if (dirLights[i].GetIsActive()) {
 				constMap->dirLights[i].active = 1;
 				constMap->dirLights[i].lightv = dirLights[i].GetLightDir();
 				constMap->dirLights[i].lightcolor = dirLights[i].GetLightColor();

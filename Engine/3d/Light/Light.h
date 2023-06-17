@@ -34,7 +34,7 @@ public:
 	{
 		Vector3D ambientColor;
 		float pad1;
-		DirLight::ConstBuffData dirLights[DirLightNum];
+		CBuff::CBuffDirLightData dirLights[DirLightNum];
 		CBuff::CBuffPointLight pointLights[PointLightNum];
 		SpotLight::ConstBuffData spotLights[SpotLightNum];
 		CircleShadow::ConstBuffData circleShadows[CircleShadowNum];
