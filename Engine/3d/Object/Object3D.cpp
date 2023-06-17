@@ -201,7 +201,7 @@ void Object3D::PlayAnimation()
 
 void Object3D::Draw()
 {
-	pipeline->Setting();
+	pipeline->SetGraphicsRootSignature();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	transform.SetGraphicsRootCBuffView(2);
@@ -216,7 +216,7 @@ void Object3D::Draw()
 void Object3D::DrawSilhouette()
 {
 	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("ModelSilhouette");
-	pipeline_->Setting();
+	pipeline_->SetGraphicsRootSignature();
 	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	transform.SetGraphicsRootCBuffView(2);
@@ -230,7 +230,7 @@ void Object3D::DrawSilhouette()
 void Object3D::DrawShadow()
 {
 	GPipeline* pipeline_ = PipelineManager::GetInstance()->GetPipeline("Shadow");
-	pipeline_->Setting();
+	pipeline_->SetGraphicsRootSignature();
 	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	shadowTransform.SetGraphicsRootCBuffView(2);
@@ -242,7 +242,7 @@ void Object3D::DrawShadow()
 void Object3D::DrawShadowReciever()
 {
 	GPipeline* pipeline_= PipelineManager::GetInstance()->GetPipeline("ShadowReciever");
-	pipeline_->Setting();
+	pipeline_->SetGraphicsRootSignature();
 	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	Texture shadowmap = SceneManager::GetInstance()->GetShadowMap();
 	dx->GetCmdList()->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(shadowmap.GetHandle()));

@@ -90,7 +90,7 @@ void Sprite::Draw(GPipeline* pipeline)
 	if (pipeline != nullptr) pipeline_ = pipeline;
 
 	else					 pipeline_ = PipelineManager::GetInstance()->GetPipeline("Sprite", GPipeline::ALPHA_BLEND);
-	pipeline_->Setting();
+	pipeline_->SetGraphicsRootSignature();
 	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	IASetVertIdxBuff();

@@ -29,7 +29,7 @@ void PipelineManager::Initialize()
 	modelSilhouettePipe = std::make_unique<GPipeline>();
 	modelSilhouettePipe->Init(silhouetteShader, modelInputLayout, _countof(modelInputLayout), 5,
 		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
-	modelSilhouettePipe->SetBlend(GPipeline::ALPHA_BLEND);
+	modelSilhouettePipe->SetBlendMord(GPipeline::ALPHA_BLEND);
 
 	for (int i = 0; i < blendMordNum; i++)
 	{
@@ -39,7 +39,7 @@ void PipelineManager::Initialize()
 		GPipeline* modelpipeline_ = modelPipeline.back().get();
 		modelpipeline_->Init(objShader, modelInputLayout, _countof(modelInputLayout), 5
 			, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
-		modelpipeline_->SetBlend(i);
+		modelpipeline_->SetBlendMord(i);
 	}
 
 	Shader shadowShader(L"Resources/Shader/ObjShadowVS.hlsl", L"Resources/Shader/ObjShadowPS.hlsl");
@@ -51,7 +51,7 @@ void PipelineManager::Initialize()
 	shadowPipeline = std::make_unique<GPipeline>();
 	shadowPipeline->Init(shadowShader, shadowInputLayout, _countof(shadowInputLayout), 5
 		, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R32G32_FLOAT);
-	shadowPipeline->SetBlend(GPipeline::NONE_BLEND);
+	shadowPipeline->SetBlendMord(GPipeline::NONE_BLEND);
 
 	Shader shadowRecieverShader(L"Resources/Shader/ShadowRecieverVS.hlsl", L"Resources/Shader/ShadowRecieverPS.hlsl");
 
@@ -64,7 +64,7 @@ void PipelineManager::Initialize()
 	shadowRecieverPipeline = std::make_unique<GPipeline>();
 	shadowRecieverPipeline->Init(shadowRecieverShader, shadowRecieverInputLayout, _countof(shadowRecieverInputLayout)
 		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R11G11B10_FLOAT, 2);
-	shadowRecieverPipeline->SetBlend(GPipeline::NONE_BLEND);
+	shadowRecieverPipeline->SetBlendMord(GPipeline::NONE_BLEND);
 #pragma endregion
 
 #pragma region Obj2D
@@ -81,7 +81,7 @@ void PipelineManager::Initialize()
 		GPipeline* obj2Dpipe_ = new GPipeline();
 		obj2Dpipe_->Init(test2dShader, inputLayout2D, _countof(inputLayout2D), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
 			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
-		obj2Dpipe_->SetBlend(i);
+		obj2Dpipe_->SetBlendMord(i);
 
 		//	pipeline’Ç‰Á
 		obj2DPipeline.emplace_back(obj2Dpipe_);
@@ -96,7 +96,7 @@ void PipelineManager::Initialize()
 		GPipeline* postEffectpipe_ = new GPipeline();
 		postEffectpipe_->Init(luminnceShader, inputLayout2D, _countof(inputLayout2D), 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
 			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 4);
-		postEffectpipe_->SetBlend(i);
+		postEffectpipe_->SetBlendMord(i);
 
 		//	pipeline’Ç‰Á
 		postEffectPipeline.emplace_back(postEffectpipe_);
@@ -109,7 +109,7 @@ void PipelineManager::Initialize()
 		GPipeline* postEffectpipe_ = new GPipeline();
 		postEffectpipe_->Init(postEffect, inputLayout2D, _countof(inputLayout2D), 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
 			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO);
-		postEffectpipe_->SetBlend(i);
+		postEffectpipe_->SetBlendMord(i);
 
 		//	pipeline’Ç‰Á
 		postShadowPipeline.emplace_back(postEffectpipe_);
@@ -122,7 +122,7 @@ void PipelineManager::Initialize()
 		GPipeline* postEffectpipe_ = new GPipeline();
 		postEffectpipe_->Init(luminncePostEffect, inputLayout2D, _countof(inputLayout2D), 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
 			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO);
-		postEffectpipe_->SetBlend(i);
+		postEffectpipe_->SetBlendMord(i);
 
 		//	pipeline’Ç‰Á
 		luminncePipeline.emplace_back(postEffectpipe_);
@@ -168,7 +168,7 @@ void PipelineManager::Initialize()
 		GPipeline* spritepipe_ = new GPipeline();
 		spritepipe_->Init(Spriteshader, spriteInputLayout, _countof(spriteInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
 			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
-		spritepipe_->SetBlend(i);
+		spritepipe_->SetBlendMord(i);
 
 		//	pipeline’Ç‰Á
 		spritePipeline.emplace_back(spritepipe_);
@@ -177,7 +177,7 @@ void PipelineManager::Initialize()
 	loadingSpritePipe = std::make_unique<GPipeline>();
 	loadingSpritePipe->Init(Spriteshader, spriteInputLayout, _countof(spriteInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
 		D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
-	loadingSpritePipe->SetBlend(GPipeline::ALPHA_BLEND);
+	loadingSpritePipe->SetBlendMord(GPipeline::ALPHA_BLEND);
 #pragma endregion
 
 #pragma region Particle
@@ -193,7 +193,7 @@ void PipelineManager::Initialize()
 		GPipeline* particlepipe_ = new GPipeline();
 		particlepipe_->Init(particleShader, particleInputLayout, _countof(particleInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT
 			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO);
-		particlepipe_->SetBlend(i);
+		particlepipe_->SetBlendMord(i);
 
 		//	pipeline’Ç‰Á
 		particlePipeline.emplace_back(particlepipe_);
@@ -210,7 +210,7 @@ void PipelineManager::Initialize()
 		GPipeline* particlepipe_ = new GPipeline();
 		particlepipe_->Init(grassShader, particleInputLayout, _countof(particleInputLayout), 3, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT
 			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
-		particlepipe_->SetBlend(i);
+		particlepipe_->SetBlendMord(i);
 
 		//	pipeline’Ç‰Á
 		grassPipeline.emplace_back(particlepipe_);

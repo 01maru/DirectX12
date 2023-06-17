@@ -229,7 +229,7 @@ void PostEffect::Draw(bool xBlur, bool yBlur, bool shadow, int handle1)
 		}
 	}
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
-	pipeline->Setting();
+	pipeline->SetGraphicsRootSignature();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	VertIdxBuff::IASetVertIdxBuff();
 
@@ -276,7 +276,7 @@ void PostEffect::DrawLuminnce()
 	GPipeline* pipeline = PipelineManager::GetInstance()->GetPipeline("Luminnce", GPipeline::NONE_BLEND);
 
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
-	pipeline->Setting();
+	pipeline->SetGraphicsRootSignature();
 	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	VertIdxBuff::IASetVertIdxBuff();
 	//	テクスチャ

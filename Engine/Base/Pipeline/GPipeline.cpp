@@ -1,90 +1,49 @@
-#include "GPipeline.h"
+ï»¿#include "GPipeline.h"
 #include "Shader.h"
 #include "DirectX.h"
 #include <cassert>
 #include <vector>
 
-void GPipeline::Update(D3D_PRIMITIVE_TOPOLOGY primitive)
+void GPipeline::SetShader(Shader& shader)
 {
-	MyDirectX* dx = MyDirectX::GetInstance();
-	// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg‚Æƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚Ìİ’èƒRƒ}ƒ“ƒh
-	dx->GetCmdList()->SetPipelineState(state.Get());
-	dx->GetCmdList()->IASetPrimitiveTopology(primitive);
-}
-
-void GPipeline::Setting()
-{
-	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootSignature(rootSignature.Get());
-}
-
-void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, int constBuffNum, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord, D3D12_CULL_MODE cullmord, D3D12_DEPTH_WRITE_MASK depth_write_mask, bool isDeep, DXGI_FORMAT format, int textureNum)
-{
-	HRESULT result;
-	// ƒVƒF[ƒ_[‚Ìİ’è
-	SetShader(shader);
-
-	// ƒTƒ“ƒvƒ‹ƒ}ƒXƒN‚Ìİ’è
-	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // •W€İ’è
-
-#pragma region Rasterizer
-	// İ’è
-	pipelineDesc.RasterizerState.CullMode = cullmord; // ”w–ÊƒJƒŠƒ“ƒO
-	pipelineDesc.RasterizerState.FillMode = fillmord; // ƒ|ƒŠƒSƒ““à“h‚è‚Â‚Ô‚µ
-	pipelineDesc.RasterizerState.DepthClipEnable = true; // [“xƒNƒŠƒbƒsƒ“ƒO‚ğ—LŒø‚É
+#pragma region VertexShader
+	pipelineDesc_.VS.pShaderBytecode = shader.VSBlob()->GetBufferPointer();
+	pipelineDesc_.VS.BytecodeLength = shader.VSBlob()->GetBufferSize();
 #pragma endregion
-
-#pragma region  Blending
-	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
-	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	Blend(blenddesc);
+#pragma region HShader
+	if (shader.HSBlob() != nullptr) {
+		pipelineDesc_.HS.pShaderBytecode = shader.HSBlob()->GetBufferPointer();
+		pipelineDesc_.HS.BytecodeLength = shader.HSBlob()->GetBufferSize();
+	}
 #pragma endregion
-
-	// ’¸“_ƒŒƒCƒAƒEƒg‚Ìİ’è
-	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
-	pipelineDesc.InputLayout.NumElements = inputLayoutSize;
-
-	// }Œ`‚ÌŒ`óİ’è
-	pipelineDesc.PrimitiveTopologyType = topologyType;
-
-	// ‚»‚Ì‘¼‚Ìİ’è
-	pipelineDesc.NumRenderTargets = 2;		// •`‰æ‘ÎÛ
-	for (int i = 0; i < 2; i++)
-	{
-		pipelineDesc.RTVFormats[i] = format; // 0~255w’è‚ÌRGBA
+#pragma region DShader
+	if (shader.DSBlob() != nullptr) {
+		pipelineDesc_.DS.pShaderBytecode = shader.DSBlob()->GetBufferPointer();
+		pipelineDesc_.DS.BytecodeLength = shader.DSBlob()->GetBufferSize();
 	}
-	pipelineDesc.SampleDesc.Count = 1;							  // 1ƒsƒNƒZƒ‹‚É‚Â‚«1‰ñƒTƒ“ƒvƒŠƒ“ƒO
-
-	//	ƒfƒvƒXƒXƒeƒ“ƒVƒ‹ƒXƒe[ƒgİ’è
-	if (isDeep) {
-		pipelineDesc.DepthStencilState.DepthEnable = true;								//	[“xƒeƒXƒg‚ğs‚¤
-		pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;			//	¬‚³‚¯‚ê‚Î‡Ši
+#pragma endregion
+#pragma region GShader
+	if (shader.GSBlob() != nullptr) {
+		pipelineDesc_.GS.pShaderBytecode = shader.GSBlob()->GetBufferPointer();
+		pipelineDesc_.GS.BytecodeLength = shader.GSBlob()->GetBufferSize();
 	}
-	else {
-		pipelineDesc.DepthStencilState.DepthEnable = false;
-		pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-	}
-	pipelineDesc.DepthStencilState.DepthWriteMask = depth_write_mask;		//	‘‚«‚İ‹–‰Â‚·‚é‚©‚Ç‚¤‚©
-	pipelineDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;							//	[“xƒtƒH[ƒ}ƒbƒg
-
-	SetRootSignature(constBuffNum, textureNum);
-
-	// ƒpƒCƒvƒ‰ƒCƒ“‚Éƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚ğƒZƒbƒg
-	pipelineDesc.pRootSignature = rootSignature.Get();
-
-	// ƒpƒCƒvƒ‰ƒ“ƒXƒe[ƒg‚Ì¶¬
-	result = MyDirectX::GetInstance()->GetDev()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&state));
-	assert(SUCCEEDED(result));
+#pragma endregion
+#pragma region PixcelShader
+	pipelineDesc_.PS.pShaderBytecode = shader.PSBlob()->GetBufferPointer();
+	pipelineDesc_.PS.BytecodeLength = shader.PSBlob()->GetBufferSize();
+#pragma endregion
 }
 
-void GPipeline::Blend(D3D12_RENDER_TARGET_BLEND_DESC& blenddesc, const int mord)
+void GPipeline::SetBlendDesc(D3D12_RENDER_TARGET_BLEND_DESC& blenddesc, int mord)
 {
-	//	‹¤’Êİ’è
-	if (mord != NONE_BLEND) {
-		blenddesc.BlendEnable = true;
-		blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-		blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-	}
+	//	ãƒ–ãƒ¬ãƒ³ãƒ‰ãªã—ã ã£ãŸã‚‰
+	if (mord == NONE_BLEND) return;
+
+	//	å…±é€šè¨­å®š
+	blenddesc.BlendEnable = true;
+	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	switch (mord)
 	{
@@ -108,17 +67,15 @@ void GPipeline::Blend(D3D12_RENDER_TARGET_BLEND_DESC& blenddesc, const int mord)
 		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 		break;
-	default:
-		break;
 	}
 }
 
 void GPipeline::SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister, UINT registerSpace, D3D12_SHADER_VISIBILITY shaderVisibility)
 {
-	rootParam.ParameterType = type;							//	’è”ƒoƒbƒtƒ@ƒrƒ…[
-	rootParam.Descriptor.ShaderRegister = shaderRegister;	//	’è”ƒoƒbƒtƒ@”Ô†
-	rootParam.Descriptor.RegisterSpace = registerSpace;		//	ƒfƒtƒHƒ‹ƒg’l
-	rootParam.ShaderVisibility = shaderVisibility;			//	‚·‚×‚Ä‚ÌƒVƒF[ƒ_‚©‚çŒ©‚é
+	rootParam.ParameterType = type;							//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼
+	rootParam.Descriptor.ShaderRegister = shaderRegister;	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ç•ªå·
+	rootParam.Descriptor.RegisterSpace = registerSpace;		//	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤
+	rootParam.ShaderVisibility = shaderVisibility;			//	ã™ã¹ã¦ã®ã‚·ã‚§ãƒ¼ãƒ€ã‹ã‚‰è¦‹ã‚‹
 }
 
 void GPipeline::SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMETER_TYPE type, D3D12_DESCRIPTOR_RANGE pDescriptorRange, UINT numDescriptorRanges, D3D12_SHADER_VISIBILITY shaderVisibility)
@@ -132,15 +89,15 @@ void GPipeline::SetRootParam(D3D12_ROOT_PARAMETER& rootParam, D3D12_ROOT_PARAMET
 void GPipeline::SetRootSignature(UINT rootParamNum, int textureNum)
 {
 
-#pragma region	ƒ‹[ƒgƒpƒ‰ƒ[ƒ^
-	//	ƒ‹[ƒgƒpƒ‰ƒ[ƒ^‚Ìİ’è
+#pragma region	ãƒ«ãƒ¼ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	//	ãƒ«ãƒ¼ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®è¨­å®š
 	std::vector<D3D12_ROOT_PARAMETER> rootParams = {};
 	rootParams.resize(rootParamNum + textureNum);
 	std::vector<D3D12_DESCRIPTOR_RANGE> descriptorRange{};
 	descriptorRange.resize(textureNum);
 	for (size_t i = 0; i < textureNum; i++)
 	{
-		//ƒfƒXƒNƒŠƒvƒ^ƒŒƒ“ƒW‚Ìİ’è
+		//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ¬ãƒ³ã‚¸ã®è¨­å®š
 		descriptorRange[i].NumDescriptors = 1;
 		descriptorRange[i].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 		descriptorRange[i].BaseShaderRegister = (UINT)i;
@@ -161,7 +118,7 @@ void GPipeline::SetRootSignature(UINT rootParamNum, int textureNum)
 #pragma endregion
 
 #pragma region sampler
-	//	ƒeƒNƒXƒ`ƒƒ[ƒTƒ“ƒvƒ‰[‚Ìİ’è
+	//	ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¼ã‚µãƒ³ãƒ—ãƒ©ãƒ¼ã®è¨­å®š
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
 	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -174,15 +131,15 @@ void GPipeline::SetRootSignature(UINT rootParamNum, int textureNum)
 	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 #pragma endregion
 
-#pragma region ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚Ìİ’è
+#pragma region ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã®è¨­å®š
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = &rootParams.front();						//	æ“ªƒAƒhƒŒƒX
-	rootSignatureDesc.NumParameters = (UINT)rootParams.size();					//	ƒ‹[ƒgƒpƒ‰ƒ[ƒ^”
+	rootSignatureDesc.pParameters = &rootParams.front();						//	å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
+	rootSignatureDesc.NumParameters = (UINT)rootParams.size();					//	ãƒ«ãƒ¼ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æ•°
 	rootSignatureDesc.pStaticSamplers = &samplerDesc;
 	rootSignatureDesc.NumStaticSamplers = 1;
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚ÌƒVƒŠƒAƒ‰ƒCƒY
+	// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã®ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚º
 	ComPtr<ID3DBlob> rootSigBlob;
 	ComPtr<ID3DBlob> errorBlob;
 	HRESULT result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
@@ -190,62 +147,92 @@ void GPipeline::SetRootSignature(UINT rootParamNum, int textureNum)
 		errorBlob.ReleaseAndGetAddressOf());
 	assert(SUCCEEDED(result));
 	result = MyDirectX::GetInstance()->GetDev()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(),
-		IID_PPV_ARGS(rootSignature.ReleaseAndGetAddressOf()));
+		IID_PPV_ARGS(rootSignature_.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
 #pragma endregion
 }
 
-GPipeline::GPipeline(Shader shader, int mord, int constBuffNum)
+void GPipeline::Init(Shader shader, D3D12_INPUT_ELEMENT_DESC* inputLayout, UINT inputLayoutSize, int constBuffNum, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, D3D12_FILL_MODE fillmord, D3D12_CULL_MODE cullmord, D3D12_DEPTH_WRITE_MASK depth_write_mask, bool isDeep, DXGI_FORMAT format, int textureNum)
 {
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzÀ•W
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	–@üƒxƒNƒgƒ‹
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uvÀ•W
-	};
+	HRESULT result;
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®è¨­å®š
+	SetShader(shader);
 
-	Init(shader, inputLayout, _countof(inputLayout), constBuffNum);
-	SetBlend(mord);
+	// ã‚µãƒ³ãƒ—ãƒ«ãƒã‚¹ã‚¯ã®è¨­å®š
+	pipelineDesc_.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // æ¨™æº–è¨­å®š
+
+#pragma region Rasterizer
+	// è¨­å®š
+	pipelineDesc_.RasterizerState.CullMode = cullmord; // èƒŒé¢ã‚«ãƒªãƒ³ã‚°
+	pipelineDesc_.RasterizerState.FillMode = fillmord; // ãƒãƒªã‚´ãƒ³å†…å¡—ã‚Šã¤ã¶ã—
+	pipelineDesc_.RasterizerState.DepthClipEnable = true; // æ·±åº¦ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°ã‚’æœ‰åŠ¹ã«
+#pragma endregion
+
+#pragma region  Blending
+	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc_.BlendState.RenderTarget[0];
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	SetBlendDesc(blenddesc);
+#pragma endregion
+
+	// é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®è¨­å®š
+	pipelineDesc_.InputLayout.pInputElementDescs = inputLayout;
+	pipelineDesc_.InputLayout.NumElements = inputLayoutSize;
+
+	// å›³å½¢ã®å½¢çŠ¶è¨­å®š
+	pipelineDesc_.PrimitiveTopologyType = topologyType;
+
+	// ãã®ä»–ã®è¨­å®š
+	pipelineDesc_.NumRenderTargets = 2;		// æç”»å¯¾è±¡
+	for (int i = 0; i < 2; i++)
+	{
+		pipelineDesc_.RTVFormats[i] = format; // 0~255æŒ‡å®šã®RGBA
+	}
+	pipelineDesc_.SampleDesc.Count = 1;							  // 1ãƒ”ã‚¯ã‚»ãƒ«ã«ã¤ã1å›ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°
+
+	//	ãƒ‡ãƒ—ã‚¹ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ã‚¹ãƒ†ãƒ¼ãƒˆè¨­å®š
+	if (isDeep) {
+		pipelineDesc_.DepthStencilState.DepthEnable = true;								//	æ·±åº¦ãƒ†ã‚¹ãƒˆã‚’è¡Œã†
+		pipelineDesc_.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;			//	å°ã•ã‘ã‚Œã°åˆæ ¼
+	}
+	else {
+		pipelineDesc_.DepthStencilState.DepthEnable = false;
+		pipelineDesc_.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	}
+	pipelineDesc_.DepthStencilState.DepthWriteMask = depth_write_mask;		//	æ›¸ãè¾¼ã¿è¨±å¯ã™ã‚‹ã‹ã©ã†ã‹
+	pipelineDesc_.DSVFormat = DXGI_FORMAT_D32_FLOAT;							//	æ·±åº¦ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+
+	SetRootSignature(constBuffNum, textureNum);
+
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã«ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã‚’ã‚»ãƒƒãƒˆ
+	pipelineDesc_.pRootSignature = rootSignature_.Get();
+
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã®ç”Ÿæˆ
+	result = MyDirectX::GetInstance()->GetDev()->CreateGraphicsPipelineState(&pipelineDesc_, IID_PPV_ARGS(&state_));
+	assert(SUCCEEDED(result));
 }
 
-void GPipeline::SetBlend(int mord)
+void GPipeline::Update(D3D_PRIMITIVE_TOPOLOGY primitive)
 {
-	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
+	MyDirectX* dx = MyDirectX::GetInstance();
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã¨ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£ã®è¨­å®šã‚³ãƒãƒ³ãƒ‰
+	dx->GetCmdList()->SetPipelineState(state_.Get());
+	dx->GetCmdList()->IASetPrimitiveTopology(primitive);
+}
+
+void GPipeline::SetGraphicsRootSignature()
+{
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootSignature(rootSignature_.Get());
+}
+
+void GPipeline::SetBlendMord(int mord)
+{
+	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc_.BlendState.RenderTarget[0];
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-	Blend(blenddesc, mord);
-	HRESULT result = MyDirectX::GetInstance()->GetDev()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&state));
+	SetBlendDesc(blenddesc, mord);
+	HRESULT result = MyDirectX::GetInstance()->GetDev()->CreateGraphicsPipelineState(&pipelineDesc_, IID_PPV_ARGS(&state_));
 	assert(SUCCEEDED(result));
 	for (int i = 0; i < 2 - 1; i++)
 	{
-		pipelineDesc.BlendState.RenderTarget[i + 1] = pipelineDesc.BlendState.RenderTarget[i];
+		pipelineDesc_.BlendState.RenderTarget[i + 1] = pipelineDesc_.BlendState.RenderTarget[i];
 	}
-}
-
-void GPipeline::SetShader(Shader shader)
-{
-#pragma region VertexShader
-	pipelineDesc.VS.pShaderBytecode = shader.VSBlob()->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = shader.VSBlob()->GetBufferSize();
-#pragma endregion
-#pragma region HShader
-	if (shader.HSBlob() != nullptr) {
-		pipelineDesc.HS.pShaderBytecode = shader.HSBlob()->GetBufferPointer();
-		pipelineDesc.HS.BytecodeLength = shader.HSBlob()->GetBufferSize();
-	}
-#pragma endregion
-#pragma region DShader
-	if (shader.DSBlob() != nullptr) {
-		pipelineDesc.DS.pShaderBytecode = shader.DSBlob()->GetBufferPointer();
-		pipelineDesc.DS.BytecodeLength = shader.DSBlob()->GetBufferSize();
-	}
-#pragma endregion
-#pragma region GShader
-	if (shader.GSBlob() != nullptr) {
-		pipelineDesc.GS.pShaderBytecode = shader.GSBlob()->GetBufferPointer();
-		pipelineDesc.GS.BytecodeLength = shader.GSBlob()->GetBufferSize();
-	}
-#pragma endregion
-#pragma region PixcelShader
-	pipelineDesc.PS.pShaderBytecode = shader.PSBlob()->GetBufferPointer();
-	pipelineDesc.PS.BytecodeLength = shader.PSBlob()->GetBufferSize();
-#pragma endregion
 }
