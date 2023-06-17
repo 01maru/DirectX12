@@ -1,11 +1,11 @@
-#include "Sprite.h"
+ï»¿#include "Sprite.h"
 #include "ConstBuffStruct.h"
 #include "DirectX.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
 #include "Window.h"
 
-Matrix Sprite::sMat2DTransform = Create2DTransformMatrix();
+Matrix Sprite::sMAT_2DTRANSFORM = Create2DTransformMatrix();
 
 void Sprite::Initialize(Texture texture)
 {
@@ -33,14 +33,14 @@ void Sprite::Initialize(Texture texture)
 #pragma region ConstBuffer
 
 	cbTransform_.Initialize(sizeof(CBuff::CBuffSpriteTransform));
-	//	’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	result = cbTransform_.GetResource()->Map(0, nullptr, (void**)&cbTransformMat_);	//	ƒ}ƒbƒsƒ“ƒO
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ”ãƒ³ã‚°
+	result = cbTransform_.GetResource()->Map(0, nullptr, (void**)&cbTransformMat_);	//	ãƒãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
 
 	cbColorMaterial_.Initialize(sizeof(CBuff::CBuffColorMaterial));
-	//	’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	result = cbColorMaterial_.GetResource()->Map(0, nullptr, (void**)&cbMaterialMap_);	//	ƒ}ƒbƒsƒ“ƒO
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ”ãƒ³ã‚°
+	result = cbColorMaterial_.GetResource()->Map(0, nullptr, (void**)&cbMaterialMap_);	//	ãƒãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
 #pragma endregion
@@ -77,7 +77,7 @@ void Sprite::MatUpdate()
 		dirtyFlagMat_ = false;
 
 		cbTransformMat_->mat = mat_.GetMatWorld();
-		cbTransformMat_->mat *= sMat2DTransform;
+		cbTransformMat_->mat *= sMAT_2DTRANSFORM;
 	}
 }
 
@@ -93,7 +93,7 @@ void Sprite::Draw(GPipeline* pipeline)
 	pipeline_->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	IASetVertIdxBuff();
-	//	ƒeƒNƒXƒ`ƒƒ
+	//	ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle_.GetHandle()));
 
 	cbColorMaterial_.SetGraphicsRootCBuffView(1);
@@ -145,23 +145,23 @@ void Sprite::SetVerticesPos()
 
 void Sprite::TransferVertex()
 {
-	//	GPUƒƒ‚ƒŠ‚Ì’l‘‚«Š·‚¦‚æ‚¤
-	// GPUã‚Ìƒoƒbƒtƒ@‚É‘Î‰‚µ‚½‰¼‘zƒƒ‚ƒŠ(ƒƒCƒ“ƒƒ‚ƒŠã)‚ğæ“¾
+	//	GPUãƒ¡ãƒ¢ãƒªã®å€¤æ›¸ãæ›ãˆã‚ˆã†
+	// GPUä¸Šã®ãƒãƒƒãƒ•ã‚¡ã«å¯¾å¿œã—ãŸä»®æƒ³ãƒ¡ãƒ¢ãƒª(ãƒ¡ã‚¤ãƒ³ãƒ¡ãƒ¢ãƒªä¸Š)ã‚’å–å¾—
 	ScreenVertex* vertMap = nullptr;
 	HRESULT result = vertBuff_->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
-	// ‘S’¸“_‚É‘Î‚µ‚Ä
-	for (int i = 0; i < vertices_.size(); i++) {
-		vertMap[i] = vertices_[i]; // À•W‚ğƒRƒs[
+	// å…¨é ‚ç‚¹ã«å¯¾ã—ã¦
+	for (size_t i = 0; i < vertices_.size(); i++) {
+		vertMap[i] = vertices_[i]; // åº§æ¨™ã‚’ã‚³ãƒ”ãƒ¼
 	}
-	// Œq‚ª‚è‚ğ‰ğœ
+	// ç¹‹ãŒã‚Šã‚’è§£é™¤
 	vertBuff_->Unmap(0, nullptr);
 }
 
 void Sprite::SetVertices()
 {
 	TransferVertex();
-	// ’¸“_1‚Â•ª‚Ìƒf[ƒ^ƒTƒCƒY
+	// é ‚ç‚¹1ã¤åˆ†ã®ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
 	vbView_.StrideInBytes = sizeof(vertices_[0]);
 }
 

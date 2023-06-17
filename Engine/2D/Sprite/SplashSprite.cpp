@@ -1,4 +1,4 @@
-#include "SplashSprite.h"
+﻿#include "SplashSprite.h"
 #include "TextureManager.h"
 #include "Window.h"
 #include "PipelineManager.h"

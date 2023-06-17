@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "VertIdxBuff.h"
 #include "ConstBuff.h"
 
@@ -19,14 +19,14 @@ class Sprite :public VertIdxBuff
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	static Matrix sMat2DTransform;
+	static Matrix sMAT_2DTRANSFORM;
 	
-	//	‰æ‘œ‚ğ’£‚è•t‚¯‚éƒ|ƒŠƒSƒ“‚Ìİ’è
+	//	ç”»åƒã‚’å¼µã‚Šä»˜ã‘ã‚‹ãƒãƒªã‚´ãƒ³ã®è¨­å®š
 	MyMath::SpriteMatrix mat_;
 	Vector2D size_ = { 100.0f,100.0f };
 	Vector2D anchorPoint_;
 
-	//	•\¦‚·‚é‰æ‘œ‚Ìİ’è
+	//	è¡¨ç¤ºã™ã‚‹ç”»åƒã®è¨­å®š
 	Vector2D textureLeftTop_;
 	Vector2D textureSize_ = { 100.0f,100.0f };
 	Vector4D color_ = { 1.0f,1.0f,1.0f,1.0f };
@@ -44,7 +44,7 @@ private:
 	bool dirtyFlagColor_ = true;
 
 #pragma region VertBuff
-	//	’¸“_î•ñ
+	//	é ‚ç‚¹æƒ…å ±
 	std::vector<ScreenVertex> vertices_;
 
 	enum VertexNumber {
@@ -56,10 +56,10 @@ private:
 #pragma endregion
 
 #pragma region CBuff
-	//	s—ñ
+	//	è¡Œåˆ—
 	ConstBuff cbTransform_;
 	CBuff::CBuffSpriteTransform* cbTransformMat_ = nullptr;
-	//	F
+	//	è‰²
 	ConstBuff cbColorMaterial_;
 	CBuff::CBuffColorMaterial* cbMaterialMap_ = nullptr;
 #pragma endregion
@@ -68,14 +68,14 @@ private:
 	void SetVertices() override;
 
 	void MatUpdate();
-	//	vertices‚ÌÀ•Wİ’è
+	//	verticesã®åº§æ¨™è¨­å®š
 	void SetVerticesPos();
-	//	vertices‚ÌUVİ’è
+	//	verticesã®UVè¨­å®š
 	void SetVerticesUV();
-	//	vertices“]‘—
+	//	verticesè»¢é€
 	void TransferVertex();
 
-	//	‰æ‘œƒTƒCƒY‚ğæ“¾‚·‚é
+	//	ç”»åƒã‚µã‚¤ã‚ºã‚’å–å¾—ã™ã‚‹
 	void AdjustTextureSize();
 public:
 	

@@ -1,11 +1,11 @@
-#include "DebugTextManager.h"
+Ôªø#include "DebugTextManager.h"
 #include "TextureManager.h"
 
-Texture DebugTextManager::fontTex;
-int DebugTextManager::maxSpritesNum = 256;
-int DebugTextManager::fontWidth = 9;
-int DebugTextManager::fontHeight = 18;
-int DebugTextManager::fontLineCharNum = 14;
+Texture DebugTextManager::sFontTex;
+size_t DebugTextManager::sMaxSpritesNum = 256;
+size_t DebugTextManager::sFontWidth = 9;
+size_t DebugTextManager::sFontHeight = 18;
+size_t DebugTextManager::sFontLineCharNum = 14;
 
 DebugTextManager* DebugTextManager::GetInstance()
 {
@@ -15,48 +15,48 @@ DebugTextManager* DebugTextManager::GetInstance()
 
 void DebugTextManager::Initialize()
 {
-	fontTex = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/debugfont.png");
-	sprites.resize(maxSpritesNum);
-	for (int i = 0; i < sprites.size(); i++)
+	sFontTex = TextureManager::GetInstance()->LoadTextureGraph(L"Resources/Sprite/debugfont.png");
+	sprites.resize(sMaxSpritesNum);
+	for (size_t i = 0; i < sprites.size(); i++)
 	{
-		sprites[i].Initialize(fontTex);
+		sprites[i].Initialize(sFontTex);
 	}
 }
 
 void DebugTextManager::Print(const std::string& text, const Vector2D& pos, float size)
 {
-	for (int i = 0; i < text.size(); i++)
+	for (size_t i = 0; i < text.size(); i++)
 	{
-		// ç≈ëÂï∂éöêîí¥âﬂ
-		if (index >= maxSpritesNum) {
+		// ÊúÄÂ§ßÊñáÂ≠óÊï∞Ë∂ÖÈÅé
+		if (index >= sMaxSpritesNum) {
 			break;
 		}
 
 		const unsigned char& character = text[i];
 
-		int fontIndex = character - 32;
+		size_t fontIndex = character - 32;
 		if (character >= 0x7f) {
 			fontIndex = 0;
 		}
 
-		int fontIndexY = fontIndex / fontLineCharNum;
-		int fontIndexX = fontIndex % fontLineCharNum;
+		size_t fontIndexY = fontIndex / sFontLineCharNum;
+		size_t fontIndexX = fontIndex % sFontLineCharNum;
 
-		// ç¿ïWåvéZ
-		sprites[index].SetPosition({ pos.x + fontWidth * size * i, pos.y });
-		sprites[index].SetTextureLeftTop({ (float)fontIndexX * fontWidth, (float)fontIndexY * fontHeight });
-		sprites[index].SetTextureSize({ (float)fontWidth, (float)fontHeight });
-		sprites[index].SetSize({ fontWidth * size, fontHeight * size });
+		// Â∫ßÊ®ôË®àÁÆó
+		sprites[index].SetPosition({ pos.x + sFontWidth * size * i, pos.y });
+		sprites[index].SetTextureLeftTop({ (float)fontIndexX * sFontWidth, (float)fontIndexY * sFontHeight });
+		sprites[index].SetTextureSize({ (float)sFontWidth, (float)sFontHeight });
+		sprites[index].SetSize({ sFontWidth * size, sFontHeight * size });
 		sprites[index].Update();
 		//sprites[index].SetTextureRect();
-		// ï∂éöÇÇPÇ¬êiÇﬂÇÈ
+		// ÊñáÂ≠ó„ÇíÔºë„Å§ÈÄ≤„ÇÅ„Çã
 		index++;
 	}
 }
 
 void DebugTextManager::Draw()
 {
-	for (int i = 0; i < sprites.size(); i++)
+	for (size_t i = 0; i < sprites.size(); i++)
 	{
 		sprites[i].Draw();
 	}

@@ -1,24 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "Sprite.h"
 
 class DebugTextManager
 {
 private:
-	static Texture fontTex;		// ƒfƒoƒbƒOƒeƒLƒXƒg—p‚ÌƒeƒNƒXƒ`ƒƒ
-	static int maxSpritesNum;	// Å‘å•¶š”
-	static int fontWidth;		// fontTex“à1•¶š•ª‚Ì‰¡•
-	static int fontHeight;		// fontTex“à1•¶š•ª‚Ìc•
-	static int fontLineCharNum;	// fontTex“à1s•ª‚Ì•¶š”
+	static Texture sFontTex;		// ãƒ‡ãƒãƒƒã‚°ãƒ†ã‚­ã‚¹ãƒˆç”¨ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
+	static size_t sMaxSpritesNum;	// æœ€å¤§æ–‡å­—æ•°
+	static size_t sFontWidth;		// fontTexå†…1æ–‡å­—åˆ†ã®æ¨ªå¹…
+	static size_t sFontHeight;		// fontTexå†…1æ–‡å­—åˆ†ã®ç¸¦å¹…
+	static size_t sFontLineCharNum;	// fontTexå†…1è¡Œåˆ†ã®æ–‡å­—æ•°
 
 	std::vector<Sprite> sprites;
 
-	int index = 0;
+	size_t index = 0;
 
 	DebugTextManager() {};
 	~DebugTextManager() {};
 public:
 	static DebugTextManager* GetInstance();
-
 	DebugTextManager(const DebugTextManager& obj) = delete;
 	DebugTextManager& operator=(const DebugTextManager& obj) = delete;
 
