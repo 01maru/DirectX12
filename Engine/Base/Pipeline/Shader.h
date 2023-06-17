@@ -1,31 +1,30 @@
-#pragma once
-#include <d3d12.h>
-#include <dxgi1_6.h>
+ï»¿#pragma once
 #include <d3dcompiler.h>
 #include <wrl.h>
 
 #pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
 
 class Shader
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	ComPtr<ID3DBlob> vsBlob;		// ’¸“_ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3DBlob> hsBlob;		// ƒnƒ‹ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3DBlob> dsBlob;		// ƒhƒƒCƒ“ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3DBlob> gsBlob;		// ƒWƒIƒƒgƒŠƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3DBlob> psBlob;		// ƒsƒNƒZƒ‹ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
-	ComPtr<ID3DBlob> errorBlob;		// ƒGƒ‰[ƒIƒuƒWƒFƒNƒg
+	ComPtr<ID3DBlob> vsBlob;		// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3DBlob> hsBlob;		// ãƒãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3DBlob> dsBlob;		// ãƒ‰ãƒ¡ã‚¤ãƒ³ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3DBlob> gsBlob;		// ã‚¸ã‚ªãƒ¡ãƒˆãƒªã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3DBlob> psBlob;		// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	ComPtr<ID3DBlob> errorBlob;		// ã‚¨ãƒ©ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 
 private:
 	void Error(HRESULT result);
+
 public:
 	Shader() {};
-	Shader(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint = "main", LPCWSTR GSFileName = nullptr, LPCWSTR DSFileName = nullptr, LPCWSTR HSFileName = nullptr);
-	void Initialize(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint = "main", LPCWSTR GSFileName = nullptr, LPCWSTR DSFileName = nullptr, LPCWSTR HSFileName = nullptr);
+	Shader(const LPCWSTR& VSFileName, const LPCWSTR& PSFileName, const LPCSTR& pEntryPoint = "main"
+		, const LPCWSTR& GSFileName = nullptr, const LPCWSTR& DSFileName = nullptr, const LPCWSTR& HSFileName = nullptr);
+	void Initialize(const LPCWSTR& VSFileName, const LPCWSTR& PSFileName, const LPCSTR& pEntryPoint = "main"
+		, const LPCWSTR& GSFileName = nullptr, const LPCWSTR& DSFileName = nullptr, const LPCWSTR& HSFileName = nullptr);
 
 	//	Getter
 	ID3DBlob* VSBlob() { return vsBlob.Get(); }

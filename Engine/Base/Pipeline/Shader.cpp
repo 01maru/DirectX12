@@ -1,92 +1,92 @@
-#include "Shader.h"
+ï»¿#include "Shader.h"
 #include <string>
 #include <cassert>
 
-Shader::Shader(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint,LPCWSTR GSFileName, LPCWSTR DSFileName, LPCWSTR HSFileName)
+Shader::Shader(const LPCWSTR& VSFileName, const LPCWSTR& PSFileName, const LPCSTR& pEntryPoint, const LPCWSTR& GSFileName, const LPCWSTR& DSFileName, const LPCWSTR& HSFileName)
 {
 	Initialize(VSFileName, PSFileName, pEntryPoint, GSFileName, DSFileName, HSFileName);
 }
 
-void Shader::Initialize(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoint, LPCWSTR GSFileName, LPCWSTR DSFileName, LPCWSTR HSFileName)
+void Shader::Initialize(const LPCWSTR& VSFileName, const LPCWSTR& PSFileName, const LPCSTR& pEntryPoint, const LPCWSTR& GSFileName, const LPCWSTR& DSFileName, const LPCWSTR& HSFileName)
 {
 #pragma region VertexShader
-	//	’¸“_ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹“Ç‚İ‚İ•ƒRƒ“ƒpƒCƒ‹
+	//	é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ï¼†ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 	HRESULT result = D3DCompileFromFile(
-		VSFileName,									// ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹–¼
+		VSFileName,									// ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«å
 		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,					// ƒCƒ“ƒNƒ‹[ƒh‰Â”\‚É‚·‚é
-		pEntryPoint, "vs_5_0",									// ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg–¼AƒVƒF[ƒ_[ƒ‚ƒfƒ‹w’è
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// ƒfƒoƒbƒO—pİ’è
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,					// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰å¯èƒ½ã«ã™ã‚‹
+		pEntryPoint, "vs_5_0",									// ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆåã€ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ¢ãƒ‡ãƒ«æŒ‡å®š
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// ãƒ‡ãƒãƒƒã‚°ç”¨è¨­å®š
 		0,
 		&vsBlob, &errorBlob);
 
-	// ƒGƒ‰[‚È‚ç
+	// ã‚¨ãƒ©ãƒ¼ãªã‚‰
 	Error(result);
 #pragma endregion
 
 #pragma region HS
 	if (HSFileName != nullptr) {
-		//	’¸“_ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹“Ç‚İ‚İ•ƒRƒ“ƒpƒCƒ‹
+		//	é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ï¼†ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 		result = D3DCompileFromFile(
-			HSFileName,									// ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹–¼
+			HSFileName,									// ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«å
 			nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,					// ƒCƒ“ƒNƒ‹[ƒh‰Â”\‚É‚·‚é
-			pEntryPoint, "hs_5_0",									// ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg–¼AƒVƒF[ƒ_[ƒ‚ƒfƒ‹w’è
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// ƒfƒoƒbƒO—pİ’è
+			D3D_COMPILE_STANDARD_FILE_INCLUDE,					// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰å¯èƒ½ã«ã™ã‚‹
+			pEntryPoint, "hs_5_0",									// ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆåã€ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ¢ãƒ‡ãƒ«æŒ‡å®š
+			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// ãƒ‡ãƒãƒƒã‚°ç”¨è¨­å®š
 			0,
 			&hsBlob, &errorBlob);
 
-		// ƒGƒ‰[‚È‚ç
+		// ã‚¨ãƒ©ãƒ¼ãªã‚‰
 		Error(result);
 	}
 #pragma endregion
 
 #pragma region DS
 	if (DSFileName != nullptr) {
-		//	’¸“_ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹“Ç‚İ‚İ•ƒRƒ“ƒpƒCƒ‹
+		//	é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ï¼†ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 		result = D3DCompileFromFile(
-			DSFileName,									// ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹–¼
+			DSFileName,									// ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«å
 			nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,					// ƒCƒ“ƒNƒ‹[ƒh‰Â”\‚É‚·‚é
-			pEntryPoint, "ds_5_0",									// ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg–¼AƒVƒF[ƒ_[ƒ‚ƒfƒ‹w’è
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// ƒfƒoƒbƒO—pİ’è
+			D3D_COMPILE_STANDARD_FILE_INCLUDE,					// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰å¯èƒ½ã«ã™ã‚‹
+			pEntryPoint, "ds_5_0",									// ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆåã€ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ¢ãƒ‡ãƒ«æŒ‡å®š
+			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// ãƒ‡ãƒãƒƒã‚°ç”¨è¨­å®š
 			0,
 			&dsBlob, &errorBlob);
 
-		// ƒGƒ‰[‚È‚ç
+		// ã‚¨ãƒ©ãƒ¼ãªã‚‰
 		Error(result);
 	}
 #pragma endregion
 
 #pragma region GS
 	if (GSFileName != nullptr) {
-		//	’¸“_ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹“Ç‚İ‚İ•ƒRƒ“ƒpƒCƒ‹
+		//	é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ï¼†ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 		result = D3DCompileFromFile(
-			GSFileName,									// ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹–¼
+			GSFileName,									// ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«å
 			nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,					// ƒCƒ“ƒNƒ‹[ƒh‰Â”\‚É‚·‚é
-			pEntryPoint, "gs_5_0",									// ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg–¼AƒVƒF[ƒ_[ƒ‚ƒfƒ‹w’è
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// ƒfƒoƒbƒO—pİ’è
+			D3D_COMPILE_STANDARD_FILE_INCLUDE,					// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰å¯èƒ½ã«ã™ã‚‹
+			pEntryPoint, "gs_5_0",									// ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆåã€ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ¢ãƒ‡ãƒ«æŒ‡å®š
+			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	// ãƒ‡ãƒãƒƒã‚°ç”¨è¨­å®š
 			0,
 			&gsBlob, &errorBlob);
 
-		// ƒGƒ‰[‚È‚ç
+		// ã‚¨ãƒ©ãƒ¼ãªã‚‰
 		Error(result);
 	}
 #pragma endregion
 
 #pragma region PixelShader
-	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_‚Ì“Ç‚İ‚İ‚ÆƒRƒ“ƒpƒCƒ‹
+	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã®èª­ã¿è¾¼ã¿ã¨ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 	result = D3DCompileFromFile(
-		PSFileName, // ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹–¼
+		PSFileName, // ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«å
 		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // ƒCƒ“ƒNƒ‹[ƒh‰Â”\‚É‚·‚é
-		pEntryPoint, "ps_5_0", // ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg–¼AƒVƒF[ƒ_[ƒ‚ƒfƒ‹w’è
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // ƒfƒoƒbƒO—pİ’è
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰å¯èƒ½ã«ã™ã‚‹
+		pEntryPoint, "ps_5_0", // ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆåã€ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ¢ãƒ‡ãƒ«æŒ‡å®š
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // ãƒ‡ãƒãƒƒã‚°ç”¨è¨­å®š
 		0,
 		&psBlob, &errorBlob);
 
-	// ƒGƒ‰[‚È‚ç
+	// ã‚¨ãƒ©ãƒ¼ãªã‚‰
 	Error(result);
 #pragma endregion
 }
@@ -94,14 +94,14 @@ void Shader::Initialize(LPCWSTR VSFileName, LPCWSTR PSFileName, LPCSTR pEntryPoi
 void Shader::Error(HRESULT result)
 {
 	if (FAILED(result)) {
-		// errorBlob‚©‚çƒGƒ‰[“à—e‚ğstringŒ^‚ÉƒRƒs[
+		// errorBlobã‹ã‚‰ã‚¨ãƒ©ãƒ¼å†…å®¹ã‚’stringå‹ã«ã‚³ãƒ”ãƒ¼
 		std::string error;
 		error.resize(errorBlob->GetBufferSize());
 		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			error.begin());
 		error += "\n";
-		// ƒGƒ‰[“à—e‚ğo—ÍƒEƒBƒ“ƒhƒE‚É•\¦
+		// ã‚¨ãƒ©ãƒ¼å†…å®¹ã‚’å‡ºåŠ›ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«è¡¨ç¤º
 		OutputDebugStringA(error.c_str());
 		assert(0);
 	}
