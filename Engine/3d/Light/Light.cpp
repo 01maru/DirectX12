@@ -58,7 +58,7 @@ void Light::TransferConstBuffer()
 
 		for (int i = 0; i < CircleShadowNum; i++)
 		{
-			if (circleShadows[i].IsActive()) {
+			if (circleShadows[i].GetIsActive()) {
 				constMap->circleShadows[i].active = 1;
 				constMap->circleShadows[i].dir = circleShadows[i].GetDir();
 				constMap->circleShadows[i].casterPos= circleShadows[i].GetCasterPos();

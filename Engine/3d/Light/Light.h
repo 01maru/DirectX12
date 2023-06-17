@@ -37,7 +37,7 @@ public:
 		CBuff::CBuffDirLightData dirLights[DirLightNum];
 		CBuff::CBuffPointLight pointLights[PointLightNum];
 		CBuff::CBuffSpotLightData spotLights[SpotLightNum];
-		CircleShadow::ConstBuffData circleShadows[CircleShadowNum];
+		CBuff::CBuffCircleShadowData circleShadows[CircleShadowNum];
 		CBuff::CBuffDisFogData distanceFog;
 	};
 private:

@@ -74,5 +74,18 @@ namespace CBuff
 		float pad5;
 	};
 
+	struct CBuffCircleShadowData
+	{
+		Vector3D dir;
+		float pad1;
+		Vector3D casterPos;
+		float distanceCasterLight;
+		Vector3D atten;
+		float pad2;
+		Vector2D factorAngleCos;
+		bool active;
+		float pad3;
+	};
+
 #pragma endregion
 }
