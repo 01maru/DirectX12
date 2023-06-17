@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <cstdint>
 
 class ILoadingObj
 {
@@ -8,7 +9,7 @@ protected:
 	bool loading_ = false;
 	//	フェードインアウト用
 	static const int sEASE_MAX_COUNT = 30;
-	int easeCount_ = 0;
+	int32_t easeCount_ = 0;
 
 public:
 	virtual ~ILoadingObj() = default;
