@@ -59,5 +59,20 @@ namespace CBuff
 		float fogFar;
 	};
 
+	struct CBuffSpotLightData
+	{
+		Vector3D lightv;
+		float pad1;
+		Vector3D lightpos;
+		float pad2;
+		Vector3D lightcolor;
+		float pad3;
+		Vector3D lightatten;
+		float pad4;
+		Vector2D lightfactoranglecos;
+		bool active;
+		float pad5;
+	};
+
 #pragma endregion
 }

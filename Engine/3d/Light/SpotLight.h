@@ -1,51 +1,32 @@
 #pragma once
 #include "MyMath.h"
-#include <cmath>
 
 class SpotLight
 {
-public:
-	struct ConstBuffData
-	{
-		Vector3D lightv;
-		float pad1;
-		Vector3D lightpos;
-		float pad2;
-		Vector3D lightcolor;
-		float pad3;
-		Vector3D lightatten;
-		float pad4;
-		Vector2D lightfactoranglecos;
-		unsigned int active;
-		float pad5;
-	};
-
 private:
-	Vector3D lightdir = { 1,0,0 };
-	Vector3D lightpos = { 0,0,0 };
-	Vector3D lightcolor = { 1,1,1 };
-	Vector3D lightAtten = { 1,1,1 };
-	Vector2D lightFactorAngleCos = { 0.5f,0.2f };
-	bool active = false;
+	bool active_ = false;
+	Vector3D dir_ = { 1,0,0 };
+	Vector3D pos_ = { 0,0,0 };
+	Vector3D color_ = { 1,1,1 };
+	Vector3D atten_ = { 1,1,1 };
+	Vector2D factorAngleCos_ = { 0.5f,0.2f };
 
 public:
-	void SetLightDir(const Vector3D& lightdir_) {
-		lightdir = lightdir_;
-		lightdir.Normalize();
-	}
-	const Vector3D& GetLightDir() { return lightdir; }
-	void SetLightPos(const Vector3D& lightPos) { lightpos = lightPos; }
-	const Vector3D& GetLightPos() { return lightpos; }
-	void SetLightColor(const Vector3D& color) { lightcolor = color; }
-	const Vector3D& GetLightColor() { return lightcolor; }
-	void SetLightAtten(const Vector3D& lightAtten_) { lightAtten = lightAtten_; }
-	const Vector3D& GetLightAtten() { return lightAtten; }
-	void SetLightFactorAngle(const Vector2D& lightFactorAngle) {
-		lightFactorAngleCos.x = cosf(MyMath::ConvertToRad(lightFactorAngle.x));
-		lightFactorAngleCos.y = cosf(MyMath::ConvertToRad(lightFactorAngle.y));
-	}
-	const Vector2D& GetLightFactorAngleCos() { return lightFactorAngleCos; }
-	void SetActive(bool active_) { active = active_; }
-	bool IsActive() { return active; }
+
+	//	Getter
+	bool GetIsActive() { return active_; }
+	const Vector3D& GetLightDir() { return dir_; }
+	const Vector3D& GetLightPos() { return pos_; }
+	const Vector3D& GetLightColor() { return color_; }
+	const Vector3D& GetLightAtten() { return atten_; }
+	const Vector2D& GetLightFactorAngleCos() { return factorAngleCos_; }
+
+	//	Setter
+	void SetActive(bool active) { active_ = active; }
+	void SetLightDir(const Vector3D& dir);
+	void SetLightPos(const Vector3D& pos) { pos_ = pos; }
+	void SetLightColor(const Vector3D& color) { color_ = color; }
+	void SetLightAtten(const Vector3D& atten) { atten_ = atten; }
+	void SetLightFactorAngle(const Vector2D& factorAngle);
 };
 

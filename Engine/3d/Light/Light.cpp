@@ -43,7 +43,7 @@ void Light::TransferConstBuffer()
 
 		for (int i = 0; i < SpotLightNum; i++)
 		{
-			if (spotLights[i].IsActive()) {
+			if (spotLights[i].GetIsActive()) {
 				constMap->spotLights[i].active = 1;
 				constMap->spotLights[i].lightpos= spotLights[i].GetLightPos();
 				constMap->spotLights[i].lightcolor = spotLights[i].GetLightColor();

@@ -36,7 +36,7 @@ public:
 		float pad1;
 		CBuff::CBuffDirLightData dirLights[DirLightNum];
 		CBuff::CBuffPointLight pointLights[PointLightNum];
-		SpotLight::ConstBuffData spotLights[SpotLightNum];
+		CBuff::CBuffSpotLightData spotLights[SpotLightNum];
 		CircleShadow::ConstBuffData circleShadows[CircleShadowNum];
 		CBuff::CBuffDisFogData distanceFog;
 	};
