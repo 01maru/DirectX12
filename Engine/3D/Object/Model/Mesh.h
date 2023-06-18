@@ -7,11 +7,11 @@
 class Mesh :public VertIdxBuff
 {
 private:
-    std::vector<ModelVertex> vertices;        // 頂点データ配列
-    std::vector<uint16_t> indices;          // インデックス配列
-    std::string diffuseMap;                 // テクスチャのファイルパス
-    Material* mtl = nullptr;
-    std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData;
+    std::vector<ModelVertex> vertices_;        // 頂点データ配列
+    std::vector<uint16_t> indices_;          // インデックス配列
+    std::string diffuseMap_;                 // テクスチャのファイルパス
+    Material* mtl_ = nullptr;
+    std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData_;
 
 private:
     void SetVertices() override;
@@ -23,19 +23,19 @@ public:
     void CalcSmoothedNormals();
 
     //  Getter
-    Material* GetMaterial() { return mtl; }
-    size_t GetVertexCount() { return vertices.size(); }
-    inline const std::vector<ModelVertex>& GetVertices() { return vertices; }
-    inline const std::vector<unsigned short>& GetIndices() { return indices; }
+    Material* GetMaterial() { return mtl_; }
+    size_t GetVertexCount() { return vertices_.size(); }
+    inline const std::vector<ModelVertex>& GetVertices() { return vertices_; }
+    inline const std::vector<unsigned short>& GetIndices() { return indices_; }
 
     //  Setter
-    void SetMaterial(Material* material) { mtl = material; }
+    void SetMaterial(Material* material) { mtl_ = material; }
     void SetBone(int vertexID, UINT boneIndex, float weight);
     void SetTextureFilePath(const std::string& filePath);
 
     //  Add
-    void AddIndex(unsigned short index) { indices.emplace_back(index); }
-    void AddVertex(const ModelVertex& vertex) { vertices.emplace_back(vertex); }
-    void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex) { smoothData[indexPosition].emplace_back(indexVertex); }
+    void AddIndex(unsigned short index) { indices_.emplace_back(index); }
+    void AddVertex(const ModelVertex& vertex) { vertices_.emplace_back(vertex); }
+    void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex) { smoothData_[indexPosition].emplace_back(indexVertex); }
 };
 
