@@ -1,5 +1,4 @@
-#include "FrameCounter.h"
-#include "FrameCounter.h"
+ï»¿#include "FrameCounter.h"
 
 void FrameCounter::StartCount()
 {
@@ -15,7 +14,7 @@ void FrameCounter::ResetCount()
 	count_ = 0;
 }
 
-void FrameCounter::Initialize(int maxFrameCount, bool isIncrement, bool isLoop, int maxCount)
+void FrameCounter::Initialize(int32_t maxFrameCount, bool isIncrement, bool isLoop, int32_t maxCount)
 {
 	if (isIncrement_) frameCount_ = 0;
 	else			  frameCount_ = maxFrameCount;
@@ -34,44 +33,44 @@ void FrameCounter::Update()
 
 		bool countContinue = isEndless_ || count_ <= maxCount_;
 
-		if (isIncrement_)	//	ƒCƒ“ƒNƒŠƒƒ“ƒg
+		if (isIncrement_)	//	ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 		{
 			frameCount_++;
 
-			//	”ÍˆÍŠO
+			//	ç¯„å›²å¤–
 			if (frameCount_ >= maxFrameCount_)
 			{
-				//	”ÍˆÍŠO‚É‚È‚Á‚½‚çƒCƒ“ƒNƒŠƒƒ“ƒg
+				//	ç¯„å›²å¤–ã«ãªã£ãŸã‚‰ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 				count_++;
 
 				if (countContinue) {
-					//	ƒ‹[ƒv‚¾‚Á‚½‚çƒfƒNƒŠƒƒ“ƒg‚É•ÏX
+					//	ãƒ«ãƒ¼ãƒ—ã ã£ãŸã‚‰ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã«å¤‰æ›´
 					if (isLoop_)	isIncrement_ = false;
-					//	ƒ‹[ƒv‚¶‚á‚È‚©‚Á‚½‚ç‰Šú‰»
+					//	ãƒ«ãƒ¼ãƒ—ã˜ã‚ƒãªã‹ã£ãŸã‚‰åˆæœŸåŒ–
 					else		frameCount_ = 0;
 				}
 			}
 		}
-		else				//	ƒfƒNƒŠƒƒ“ƒg
+		else				//	ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 		{
 			frameCount_--;
 
-			//	”ÍˆÍŠO
+			//	ç¯„å›²å¤–
 			if (frameCount_ <= 0)
 			{
-				//	”ÍˆÍŠO‚É‚È‚Á‚½‚çƒCƒ“ƒNƒŠƒƒ“ƒg
+				//	ç¯„å›²å¤–ã«ãªã£ãŸã‚‰ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 				count_++;
 
 				if (countContinue) {
-					//	ƒ‹[ƒv‚¾‚Á‚½‚çƒCƒ“ƒNƒŠƒƒ“ƒg‚É•ÏX
+					//	ãƒ«ãƒ¼ãƒ—ã ã£ãŸã‚‰ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã«å¤‰æ›´
 					if (isLoop_)	isIncrement_ = true;
-					//	ƒ‹[ƒv‚¶‚á‚È‚©‚Á‚½‚ç‰Šú‰»
+					//	ãƒ«ãƒ¼ãƒ—ã˜ã‚ƒãªã‹ã£ãŸã‚‰åˆæœŸåŒ–
 					else		frameCount_ = maxFrameCount_;
 				}
 			}
 		}
 
-		//	ƒGƒ“ƒhƒŒƒX‚¶‚á‚È‚­count‚ª”ÍˆÍŠO‚É‚È‚Á‚½‚ç
+		//	ã‚¨ãƒ³ãƒ‰ãƒ¬ã‚¹ã˜ã‚ƒãªãcountãŒç¯„å›²å¤–ã«ãªã£ãŸã‚‰
 		if (!isEndless_ && count_ >= maxCount_)	isActive_ = false;
 	}
 }
@@ -80,7 +79,7 @@ float FrameCounter::GetCountPerMaxCount()
 {
 	if (maxFrameCount_ != 0) return (float)frameCount_ / maxFrameCount_;
 
-	//	0‚ÅŠ„‚ç‚È‚¢‚æ‚¤‚É
+	//	0ã§å‰²ã‚‰ãªã„ã‚ˆã†ã«
 	return 0.0f;
 }
 

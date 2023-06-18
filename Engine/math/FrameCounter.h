@@ -1,17 +1,18 @@
-#pragma once
+ï»¿#pragma once
+#include <cstdint>
 
 class FrameCounter
 {
 private:
-	//	Œ»İ‚ÌŒo‰ßƒtƒŒ[ƒ€”
-	int frameCount_ = 0;
-	//	ƒtƒŒ[ƒ€‚Ì”ÍˆÍ(0~maxFrameCount)
-	int maxFrameCount_ = 0;
+	//	ç¾åœ¨ã®çµŒéãƒ•ãƒ¬ãƒ¼ãƒ æ•°
+	int32_t frameCount_ = 0;
+	//	ãƒ•ãƒ¬ãƒ¼ãƒ ã®ç¯„å›²(0~maxFrameCount)
+	int32_t maxFrameCount_ = 0;
 
-	//	”ÍˆÍŠO‚ÉŒ¾‚Á‚½‰ñ”
-	int count_ = 0;
-	//	I—¹‚Ü‚Å‚ÌnowCount‚Ì‰ñ”
-	int maxCount_ = 0;
+	//	ç¯„å›²å¤–ã«è¨€ã£ãŸå›æ•°
+	int32_t count_ = 0;
+	//	çµ‚äº†ã¾ã§ã®nowCountã®å›æ•°
+	int32_t maxCount_ = 0;
 
 	bool isEndless_ = false;
 	bool isLoop_ = true;
@@ -24,17 +25,17 @@ public:
 	void StartCount();
 	void ResetCount();
 
-	void Initialize(int maxFrameCount, bool isIncrement, bool isLoop = false, int maxCount = 1);
+	void Initialize(int32_t maxFrameCount, bool isIncrement, bool isLoop = false, int32_t maxCount = 1);
 	void Update();
 
 	//	Getter
-	bool GetIsActive()		{ return isActive_; }
-	bool GetIsIncrement()	{ return isIncrement_; }
-	int GetCount()			{ return count_; }
-	int GetMaxCount()		{ return maxCount_; }
-	int GetFrameCount()		{ return frameCount_; }
-	int GetMaxFrameCount()	{ return maxFrameCount_; }
-	//	0~1.0f‚ÌŠÔ‚Ì’l‚ğ•Ô‚·
+	bool GetIsActive()			{ return isActive_; }
+	bool GetIsIncrement()		{ return isIncrement_; }
+	int32_t GetCount()			{ return count_; }
+	int32_t GetMaxCount()		{ return maxCount_; }
+	int32_t GetFrameCount()		{ return frameCount_; }
+	int32_t GetMaxFrameCount()	{ return maxFrameCount_; }
+	//	0~1.0fã®é–“ã®å€¤ã‚’è¿”ã™
 	float GetCountPerMaxCount();
 
 	//	Setter
