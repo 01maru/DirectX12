@@ -1,4 +1,4 @@
-#include "Quaternion.h"
+﻿#include "Quaternion.h"
 #include "Matrix.h"
 #include "Vector3D.h"
 #include <math.h>
@@ -137,7 +137,7 @@ Quaternion& Quaternion::operator*=(float s)
     return *this;
 }
 
-Quaternion& Quaternion::operator+=(Quaternion q)
+Quaternion& Quaternion::operator+=(const Quaternion& q)
 {
     x += q.x;
     y += q.y;
@@ -146,7 +146,7 @@ Quaternion& Quaternion::operator+=(Quaternion q)
     return *this;
 }
 
-Quaternion& Quaternion::operator-=(Quaternion q)
+Quaternion& Quaternion::operator-=(const Quaternion& q)
 {
     x -= q.x;
     y -= q.y;
@@ -160,13 +160,13 @@ float Quaternion::Dot(const Quaternion& q)
     return x * q.x + y * q.y + z * q.z + w * q.w;
 }
 
-const Quaternion operator*(const Quaternion& q, float s)
+Quaternion operator*(const Quaternion& q, float s)
 {
     Quaternion temp(q);
     return temp *= s;
 }
 
-const Quaternion operator*(float s, const Quaternion& q)
+Quaternion operator*(float s, const Quaternion& q)
 {
     return q * s;
 }
@@ -177,7 +177,7 @@ Quaternion operator+(const Quaternion& q1, const Quaternion& q2)
     return temp += q2;
 }
 
-const Quaternion operator-(const Quaternion& q1, const Quaternion& q2)
+Quaternion operator-(const Quaternion& q1, const Quaternion& q2)
 {
     Quaternion ans = q1;
     return ans -= q2;

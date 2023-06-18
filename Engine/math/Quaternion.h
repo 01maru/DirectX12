@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 class Vector3D;
 class Matrix;
@@ -6,10 +6,11 @@ class Matrix;
 class Quaternion
 {
 public:
-	float x = 0.0f;	//	‹•”
-	float y = 0.0f;	//	‹•”
-	float z = 0.0f;	//	‹•”
-	float w = 0.0f;	//	À”
+	float x = 0.0f;	//	è™šæ•°
+	float y = 0.0f;	//	è™šæ•°
+	float z = 0.0f;	//	è™šæ•°
+	float w = 0.0f;	//	å®Ÿæ•°
+
 public:
 	Quaternion() {};
 	Quaternion(float w, float x, float y, float z) :w(w), x(x), y(y), z(z) {};
@@ -29,8 +30,8 @@ public:
 
 	Quaternion& operator/=(float s);
 	Quaternion& operator*=(float s);
-	Quaternion& operator+=(Quaternion q);
-	Quaternion& operator-=(Quaternion q);
+	Quaternion& operator+=(const Quaternion& q);
+	Quaternion& operator-=(const Quaternion& q);
 
 	float Dot(const Quaternion& q);
 };
@@ -39,10 +40,10 @@ Quaternion SetQuaternion(const Vector3D& v, float angle);
 
 Quaternion operator-(const Quaternion& q);
 
-const Quaternion operator*(const Quaternion& q, float s);
-const Quaternion operator*(float s, const Quaternion& q);
+Quaternion operator*(const Quaternion& q, float s);
+Quaternion operator*(float s, const Quaternion& q);
 Quaternion operator+(const Quaternion& q1, const Quaternion& q2);
-const Quaternion operator-(const Quaternion& q1, const Quaternion& q2);
+Quaternion operator-(const Quaternion& q1, const Quaternion& q2);
 
 Quaternion Multiply(const Quaternion& q, const Quaternion& r);
 Quaternion IdentityQuaternion();
