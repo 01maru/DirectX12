@@ -1,21 +1,21 @@
-#pragma once
+ï»¿#pragma once
 
 class Matrix
 {
 public:
 	float m[4][4];
 public:
-	//	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Matrix();
-	//	’PˆÊs—ñ
+	//	å˜ä½è¡Œåˆ—
 	void Identity();
 
 	Matrix& operator*=(const Matrix& m2);
 };
 
 const Matrix operator*(const Matrix& m1, const Matrix& m2);
-//	‹ts—ñ
+//	é€†è¡Œåˆ—
 bool InverseMatrix(const Matrix& mat, Matrix& invMat);
 
-//	2DÀ•WŒn•ÏŠ·—ps—ñ
+//	2Dåº§æ¨™ç³»å¤‰æ›ç”¨è¡Œåˆ—
 Matrix Create2DTransformMatrix();

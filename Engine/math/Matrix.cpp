@@ -1,4 +1,4 @@
-#include "Matrix.h"
+ï»¿#include "Matrix.h"
 #include "Window.h"
 #include <cmath>
 
@@ -45,14 +45,13 @@ const Matrix operator*(const Matrix& m1, const Matrix& m2)
 bool InverseMatrix(const Matrix& mat, Matrix& invMat)
 {
     float sweep[4][8];
-    int k;
 
-    for (int y = 0; y < 4; y++) {
-        for (int x = 0; x < 4; x++) {
-            // sweep‚Ì¶‘¤‚É‹ts—ñ‚ð‹‚ß‚és—ñ‚ðƒZƒbƒg
+    for (size_t y = 0; y < 4; y++) {
+        for (size_t x = 0; x < 4; x++) {
+            // sweepã®å·¦å´ã«é€†è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹è¡Œåˆ—ã‚’ã‚»ãƒƒãƒˆ
             sweep[y][x] = mat.m[y][x];
 
-            // sweep‚Ì‰E‘¤‚É’PˆÊs—ñ‚ðƒZƒbƒg
+            // sweepã®å³å´ã«å˜ä½è¡Œåˆ—ã‚’ã‚»ãƒƒãƒˆ
             if (y == x) {
                 sweep[y][4 + x] = 1;
             }
@@ -63,15 +62,15 @@ bool InverseMatrix(const Matrix& mat, Matrix& invMat)
     }
 
 
-    /* ‘S‚Ä‚Ì—ñ‚Ì‘ÎŠp¬•ª‚É‘Î‚·‚éŒJ‚è•Ô‚µ */
-    for (k = 0; k < 4; k++) {
+    /* å…¨ã¦ã®åˆ—ã®å¯¾è§’æˆåˆ†ã«å¯¾ã™ã‚‹ç¹°ã‚Šè¿”ã— */
+    for (size_t k = 0; k < 4; k++) {
 
-        /* Å‘å‚Ìâ‘Î’l‚ð’–Ú‘ÎŠp¬•ª‚Ìâ‘Î’l‚Æ‰¼’è */
+        /* æœ€å¤§ã®çµ¶å¯¾å€¤ã‚’æ³¨ç›®å¯¾è§’æˆåˆ†ã®çµ¶å¯¾å€¤ã¨ä»®å®š */
         double max = fabs(sweep[k][k]);
-        int max_i = k;
+        size_t max_i = k;
 
-        /* k—ñ–Ú‚ªÅ‘å‚Ìâ‘Î’l‚Æ‚È‚és‚ð’T‚· */
-        for (int y = k + 1; y < 4; y++) {
+        /* kåˆ—ç›®ãŒæœ€å¤§ã®çµ¶å¯¾å€¤ã¨ãªã‚‹è¡Œã‚’æŽ¢ã™ */
+        for (size_t y = k + 1; y < 4; y++) {
             if (fabs(sweep[y][k]) > max) {
                 max = fabs(sweep[y][k]);
                 max_i = y;
@@ -79,49 +78,49 @@ bool InverseMatrix(const Matrix& mat, Matrix& invMat)
         }
 
         if (fabs(sweep[max_i][k]) <= MAX_ERR) {
-            /* ‹ts—ñ‚Í‹‚ß‚ç‚ê‚È‚¢ */
+            /* é€†è¡Œåˆ—ã¯æ±‚ã‚ã‚‰ã‚Œãªã„ */
             return false;
         }
 
-        /* ‘€ìi‚PjFks–Ú‚Æmax_is–Ú‚ð“ü‚ê‘Ö‚¦‚é */
+        /* æ“ä½œï¼ˆï¼‘ï¼‰ï¼škè¡Œç›®ã¨max_iè¡Œç›®ã‚’å…¥ã‚Œæ›¿ãˆã‚‹ */
         if (k != max_i) {
-            for (int x = 0; x < 8; x++) {
+            for (size_t x = 0; x < 8; x++) {
                 double tmp = sweep[max_i][x];
                 sweep[max_i][x] = sweep[k][x];
                 sweep[k][x] = (float)tmp;
             }
         }
 
-        /* sweep[k][k]‚ÉŠ|‚¯‚é‚Æ1‚É‚È‚é’l‚ð‹‚ß‚é */
+        /* sweep[k][k]ã«æŽ›ã‘ã‚‹ã¨1ã«ãªã‚‹å€¤ã‚’æ±‚ã‚ã‚‹ */
         float a = 1 / sweep[k][k];
 
-        /* ‘€ìi‚QjFks–Ú‚ða”{‚·‚é */
-        for (int x = 0; x < 8; x++) {
-            /* ‚±‚ê‚É‚æ‚èsweep[k][k]‚ª1‚É‚È‚é */
+        /* æ“ä½œï¼ˆï¼’ï¼‰ï¼škè¡Œç›®ã‚’aå€ã™ã‚‹ */
+        for (size_t x = 0; x < 8; x++) {
+            /* ã“ã‚Œã«ã‚ˆã‚Šsweep[k][k]ãŒ1ã«ãªã‚‹ */
             sweep[k][x] *= a;
         }
 
-        /* ‘€ìi‚Rj‚É‚æ‚èks–ÚˆÈŠO‚Ìs‚Ìk—ñ–Ú‚ð0‚É‚·‚é */
-        for (int y = 0; y < 4; y++) {
+        /* æ“ä½œï¼ˆï¼“ï¼‰ã«ã‚ˆã‚Škè¡Œç›®ä»¥å¤–ã®è¡Œã®kåˆ—ç›®ã‚’0ã«ã™ã‚‹ */
+        for (size_t y = 0; y < 4; y++) {
             if (y == k) {
-                /* ks–Ú‚Í‚»‚Ì‚Ü‚Ü */
+                /* kè¡Œç›®ã¯ãã®ã¾ã¾ */
                 continue;
             }
 
-            /* ks–Ú‚ÉŠ|‚¯‚é’l‚ð‹‚ß‚é */
+            /* kè¡Œç›®ã«æŽ›ã‘ã‚‹å€¤ã‚’æ±‚ã‚ã‚‹ */
             a = -sweep[y][k];
 
-            for (int x = 0; x < 8; x++) {
-                /* is–Ú‚Éks–Ú‚ða”{‚µ‚½s‚ð‘«‚· */
-                /* ‚±‚ê‚É‚æ‚èsweep[i][k]‚ª0‚É‚È‚é */
+            for (size_t x = 0; x < 8; x++) {
+                /* iè¡Œç›®ã«kè¡Œç›®ã‚’aå€ã—ãŸè¡Œã‚’è¶³ã™ */
+                /* ã“ã‚Œã«ã‚ˆã‚Šsweep[i][k]ãŒ0ã«ãªã‚‹ */
                 sweep[y][x] += sweep[k][x] * a;
             }
         }
     }
 
-    /* sweep‚Ì‰E”¼•ª‚ªmat‚Ì‹ts—ñ */
-    for (int y = 0; y < 4; y++) {
-        for (int x = 0; x < 4; x++) {
+    /* sweepã®å³åŠåˆ†ãŒmatã®é€†è¡Œåˆ— */
+    for (size_t y = 0; y < 4; y++) {
+        for (size_t x = 0; x < 4; x++) {
             invMat.m[y][x] = sweep[y][4 + x];
         }
     }
