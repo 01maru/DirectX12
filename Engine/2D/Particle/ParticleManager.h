@@ -1,15 +1,14 @@
-#pragma once
+﻿#pragma once
 #include <forward_list>
-#include "ParticleStruct.h"
 #include "Texture.h"
 
 class ParticleManager
 {
 private:
-	std::forward_list<MoveParticle> particles;
+	//std::forward_list<MoveParticle> particles;
 
 #pragma region Texture
-	Texture particleTex;
+	Texture particleTex_;
 #pragma endregion
 
 	ParticleManager() {};
@@ -25,7 +24,9 @@ public:
 	void Draw();
 
 #pragma region ADD
-	void AddMoveParticle(const Vector3D& pos, const Vector3D& spd, int time, float scale = 3.0f);
+
+	//void AddMoveParticle(const Vector3D& pos, const Vector3D& spd, int time, float scale = 3.0f);
+
 #pragma endregion
 };
 

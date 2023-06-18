@@ -324,9 +324,6 @@
     <ClCompile Include="Engine\2D\Particle\ParticleManager.cpp">
       <Filter>ソース ファイル\lib\2D\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2D\Particle\ParticleStruct.cpp">
-      <Filter>ソース ファイル\lib\2D\Particle</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Game\MyGame.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
@@ -546,9 +543,6 @@
       <Filter>ヘッダー ファイル\lib\3D\Obj\Model</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\Particle\ParticleManager.h">
-      <Filter>ヘッダー ファイル\lib\2D\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\Particle\ParticleStruct.h">
       <Filter>ヘッダー ファイル\lib\2D\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Game\MyGame.h">

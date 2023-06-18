@@ -16,7 +16,6 @@
     <ClCompile Include="Engine\3D\Camera\ObjCamera2D.cpp" />
     <ClCompile Include="Engine\2D\Sprite\DebugTextManager.cpp" />
     <ClCompile Include="Engine\2D\Particle\ParticleManager.cpp" />
-    <ClCompile Include="Engine\2D\Particle\ParticleStruct.cpp" />
     <ClCompile Include="Engine\3D\Object\Model\Material.cpp" />
     <ClCompile Include="Engine\3D\Object\Model\Mesh.cpp" />
     <ClCompile Include="Engine\3D\Object\Model\IModel.cpp" />
@@ -87,7 +86,6 @@
     <ClInclude Include="Engine\Base\Buffer\ConstBuffStruct.h" />
     <ClInclude Include="Engine\2D\Sprite\DebugTextManager.h" />
     <ClInclude Include="Engine\2D\Particle\ParticleManager.h" />
-    <ClInclude Include="Engine\2D\Particle\ParticleStruct.h" />
     <ClInclude Include="Engine\3D\Object\Model\Material.h" />
     <ClInclude Include="Engine\3D\Object\Model\Mesh.h" />
     <ClInclude Include="Engine\3D\Object\Model\IModel.h" />
