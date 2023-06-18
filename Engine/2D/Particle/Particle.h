@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "MyMath.h"
 #include "VertIdxBuff.h"
 #include "ConstBuff.h"

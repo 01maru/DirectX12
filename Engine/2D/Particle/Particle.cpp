@@ -1,4 +1,4 @@
-#include "Particle.h"
+ï»¿#include "Particle.h"
 #include "TextureManager.h"
 #include "DirectX.h"
 #include <cassert>
@@ -7,22 +7,22 @@
 
 void Particle::TransferVertex()
 {
-	// GPUã‚Ìƒoƒbƒtƒ@‚É‘Î‰ž‚µ‚½‰¼‘zƒƒ‚ƒŠ(ƒƒCƒ“ƒƒ‚ƒŠã)‚ðŽæ“¾
+	// GPUä¸Šã®ãƒãƒƒãƒ•ã‚¡ã«å¯¾å¿œã—ãŸä»®æƒ³ãƒ¡ãƒ¢ãƒª(ãƒ¡ã‚¤ãƒ³ãƒ¡ãƒ¢ãƒªä¸Š)ã‚’å–å¾—
 	Vector3D* vertMap = nullptr;
 	HRESULT result = vertBuff_->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 
-	vertMap = &vertex_; // À•W‚ðƒRƒs[
-	// Œq‚ª‚è‚ð‰ðœ
+	vertMap = &vertex_; // åº§æ¨™ã‚’ã‚³ãƒ”ãƒ¼
+	// ç¹‹ãŒã‚Šã‚’è§£é™¤
 	vertBuff_->Unmap(0, nullptr);
 }
 
 void Particle::SetVertices()
 {
-	// ’¸“_1‚Â•ª‚Ìƒf[ƒ^ƒTƒCƒY
+	// é ‚ç‚¹1ã¤åˆ†ã®ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
 	vbView_.StrideInBytes = sizeof(vertex_);
 
-	//	GPUƒƒ‚ƒŠ‚Ì’l‘‚«Š·‚¦‚æ‚¤
+	//	GPUãƒ¡ãƒ¢ãƒªã®å€¤æ›¸ãæ›ãˆã‚ˆã†
 	TransferVertex();
 }
 
@@ -33,13 +33,13 @@ void Particle::Initialize()
 #pragma region  ConstBuffer
 
 	transform_.Initialize(sizeof(CBuff::CBufferParticleTransform));
-	//	’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	result = transform_.GetResource()->Map(0, nullptr, (void**)&cTransformMap_);	//	ƒ}ƒbƒsƒ“ƒO
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒžãƒƒãƒ”ãƒ³ã‚°
+	result = transform_.GetResource()->Map(0, nullptr, (void**)&cTransformMap_);	//	ãƒžãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
 	colorMaterial_.Initialize(sizeof(CBuff::CBuffColorMaterial));
-	//	’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	result = colorMaterial_.GetResource()->Map(0, nullptr, (void**)&cColorMap_);	//	ƒ}ƒbƒsƒ“ƒO
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒžãƒƒãƒ”ãƒ³ã‚°
+	result = colorMaterial_.GetResource()->Map(0, nullptr, (void**)&cColorMap_);	//	ãƒžãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
 #pragma endregion
@@ -87,7 +87,7 @@ void Particle::Draw(int32_t handle)
 	//pipeline->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	IASetVertIdxBuff();
-	//	ƒeƒNƒXƒ`ƒƒ
+	//	ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(handle));
 	colorMaterial_.SetGraphicsRootCBuffView(1);
 	transform_.SetGraphicsRootCBuffView(2);
