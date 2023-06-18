@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "GPipeline.h"
 #include <vector>
 #include <memory>
@@ -8,33 +8,44 @@ class PipelineManager
 {
 private:
 #pragma region Sprite
-	std::unique_ptr<GPipeline> loadingSpritePipe;		//	Loadingóp
+
+	std::vector<std::unique_ptr<GPipeline>> spritePipeline_;
+	std::unique_ptr<GPipeline> loadingSpritePipe_;		//	LoadingÁî®
 
 #pragma endregion
 
 #pragma region Model
 
-	std::unique_ptr<GPipeline> modelSilhouettePipe;		//	Obj3DíPêFÉVÉFÅ[É_Å[
+	std::unique_ptr<GPipeline> modelSilhouettePipe_;		//	Obj3DÂçòËâ≤„Ç∑„Çß„Éº„ÉÄ„Éº
+	std::vector<std::unique_ptr<GPipeline>> modelPipeline_;
+	std::unique_ptr<GPipeline> shadowPipeline_;
+	std::unique_ptr<GPipeline> shadowRecieverPipeline_;
 
 #pragma endregion
 
+#pragma region Particle
 
+	std::vector<std::unique_ptr<GPipeline>> particlePipeline_;
+	
+#pragma endregion
 
-	std::vector<std::unique_ptr<GPipeline>> modelPipeline;
-	std::vector<std::unique_ptr<GPipeline>> obj2DPipeline;
-	std::vector<std::unique_ptr<GPipeline>> luminncePipeline;
-	std::vector<std::unique_ptr<GPipeline>> postEffectPipeline;
-	std::vector<std::unique_ptr<GPipeline>> postShadowPipeline;
-	std::vector<std::unique_ptr<GPipeline>> particlePipeline;
-	std::vector<std::unique_ptr<GPipeline>> spritePipeline;
-	std::vector<std::unique_ptr<GPipeline>> grassPipeline;
-	std::unique_ptr<GPipeline> shadowPipeline;
-	std::unique_ptr<GPipeline> shadowRecieverPipeline;
-	std::unique_ptr<GPipeline> xBlurPipeline;
-	std::unique_ptr<GPipeline> yBlurPipeline;
-	std::unique_ptr<GPipeline> luminncexBlurPipeline;
-	std::unique_ptr<GPipeline> luminnceyBlurPipeline;
+#pragma region PostEffect
 
+	std::unique_ptr<GPipeline> postEffectPipeline_;
+	std::unique_ptr<GPipeline> postShadowPipeline_;
+	std::unique_ptr<GPipeline> luminncePipeline_;
+	std::unique_ptr<GPipeline> xBlurPipeline_;
+	std::unique_ptr<GPipeline> yBlurPipeline_;
+	std::unique_ptr<GPipeline> luminncexBlurPipeline_;
+	std::unique_ptr<GPipeline> luminnceyBlurPipeline_;
+
+#pragma endregion
+
+private:
+	void InitializeSprite();
+	void InitializeParticle();
+	void InitializePostEffect();
+	void InitializeModel();
 
 	PipelineManager() {};
 	~PipelineManager() {};

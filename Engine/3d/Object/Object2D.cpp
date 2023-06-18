@@ -136,7 +136,7 @@ void Object2D::Draw(int handle)
 	ID3D12GraphicsCommandList* cmdList = dx->GetCmdList();
 
 	pipeline->SetGraphicsRootSignature();
-	pipeline->Update();
+	pipeline->SetPipeStateAndPrimitive();
 
 	VertIdxBuff::IASetVertIdxBuff();
 	//	テクスチャ

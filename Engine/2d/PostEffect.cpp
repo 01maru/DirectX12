@@ -230,7 +230,7 @@ void PostEffect::Draw(bool xBlur, bool yBlur, bool shadow, int handle1)
 	}
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
 	pipeline->SetGraphicsRootSignature();
-	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pipeline->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	VertIdxBuff::IASetVertIdxBuff();
 
 	if (xBlur == false && yBlur == false && shadow == false) {
@@ -277,7 +277,7 @@ void PostEffect::DrawLuminnce()
 
 	ID3D12GraphicsCommandList* cmdList = MyDirectX::GetInstance()->GetCmdList();
 	pipeline->SetGraphicsRootSignature();
-	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pipeline->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	VertIdxBuff::IASetVertIdxBuff();
 	//	テクスチャ
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));

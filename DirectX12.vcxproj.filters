@@ -300,9 +300,6 @@
     <ClCompile Include="Engine\3D\Object\Model\Mesh.cpp">
       <Filter>ソース ファイル\lib\3D\Obj\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3D\Object\Object2D.cpp">
-      <Filter>ソース ファイル\lib\3D\Obj</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\Object\Object3D.cpp">
       <Filter>ソース ファイル\lib\3D\Obj</Filter>
     </ClCompile>
@@ -529,9 +526,6 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\Object\Model\Material.h">
       <Filter>ヘッダー ファイル\lib\3D\Obj\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Object\Object2D.h">
-      <Filter>ヘッダー ファイル\lib\3D\Obj</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Light\DistanceFog.h">
       <Filter>ヘッダー ファイル\lib\Engine\Light</Filter>

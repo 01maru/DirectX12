@@ -77,7 +77,7 @@ void Particle::Draw(int handle)
 	ID3D12GraphicsCommandList* cmdList = dx->GetCmdList();
 
 	pipeline->SetGraphicsRootSignature();
-	pipeline->Update(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	pipeline->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	IASetVertIdxBuff();
 	//	テクスチャ

@@ -1,4 +1,4 @@
-#include "PipelineManager.h"
+Ôªø#include "PipelineManager.h"
 #include "Shader.h"
 
 PipelineManager* PipelineManager::GetInstance()
@@ -7,266 +7,225 @@ PipelineManager* PipelineManager::GetInstance()
 	return &instance;
 }
 
-void PipelineManager::Initialize()
+void PipelineManager::InitializeSprite()
 {
-	int blendMordNum = 5;
+#pragma region Sprite
+	//	Nonblend‰ª•Â§ñ
+	spritePipeline_.reserve(4);
 
-#pragma region Model
-	modelPipeline.reserve(blendMordNum);
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
+	inputLayout.emplace_back();
+	inputLayout.back() = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };	//	xyzÂ∫ßÊ®ô
+	inputLayout.emplace_back();
+	inputLayout.back() = { "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };					//	uvÂ∫ßÊ®ô
 
-	Shader objShader(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
+	Shader shader(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
 
-	D3D12_INPUT_ELEMENT_DESC modelInputLayout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzç¿ïW
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	ñ@ê¸ÉxÉNÉgÉã
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uvç¿ïW
-		{"BONEINDICES",0,DXGI_FORMAT_R32G32B32A32_UINT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
-		{"BONEWEIGHTS",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
-	};
-
-	Shader silhouetteShader(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/SilhouettePS.hlsl");
-
-	modelSilhouettePipe = std::make_unique<GPipeline>();
-	modelSilhouettePipe->Init(silhouetteShader, modelInputLayout, _countof(modelInputLayout), 5,
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
-	modelSilhouettePipe->SetBlendMord(GPipeline::ALPHA_BLEND);
-
-	for (int i = 0; i < blendMordNum; i++)
+	for (size_t i = 0; i < 4; i++)
 	{
-		//	pipelineí«â¡
-		modelPipeline.emplace_back(new GPipeline());
-		
-		GPipeline* modelpipeline_ = modelPipeline.back().get();
-		modelpipeline_->Init(objShader, modelInputLayout, _countof(modelInputLayout), 5
-			, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
-		modelpipeline_->SetBlendMord(i);
-	}
-
-	Shader shadowShader(L"Resources/Shader/ObjShadowVS.hlsl", L"Resources/Shader/ObjShadowPS.hlsl");
-
-	D3D12_INPUT_ELEMENT_DESC shadowInputLayout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzç¿ïW
-	};
-
-	shadowPipeline = std::make_unique<GPipeline>();
-	shadowPipeline->Init(shadowShader, shadowInputLayout, _countof(shadowInputLayout), 5
-		, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R32G32_FLOAT);
-	shadowPipeline->SetBlendMord(GPipeline::NONE_BLEND);
-
-	Shader shadowRecieverShader(L"Resources/Shader/ShadowRecieverVS.hlsl", L"Resources/Shader/ShadowRecieverPS.hlsl");
-
-	D3D12_INPUT_ELEMENT_DESC shadowRecieverInputLayout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzç¿ïW
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	ñ@ê¸ÉxÉNÉgÉã
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uvç¿ïW
-	};
-
-	shadowRecieverPipeline = std::make_unique<GPipeline>();
-	shadowRecieverPipeline->Init(shadowRecieverShader, shadowRecieverInputLayout, _countof(shadowRecieverInputLayout)
-		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R11G11B10_FLOAT, 2);
-	shadowRecieverPipeline->SetBlendMord(GPipeline::NONE_BLEND);
-#pragma endregion
-
-#pragma region Obj2D
-	obj2DPipeline.reserve(blendMordNum);
-	Shader test2dShader(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
-
-	D3D12_INPUT_ELEMENT_DESC inputLayout2D[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzç¿ïW
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uvç¿ïW
-	};
-
-	for (int i = 0; i < blendMordNum; i++)
-	{
-		GPipeline* obj2Dpipe_ = new GPipeline();
-		obj2Dpipe_->Init(test2dShader, inputLayout2D, _countof(inputLayout2D), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
+		GPipeline* spritepipe_ = new GPipeline();
+		spritepipe_->Initialize(shader, inputLayout, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
 			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
-		obj2Dpipe_->SetBlendMord(i);
+		spritepipe_->SetBlendMord(i);
 
-		//	pipelineí«â¡
-		obj2DPipeline.emplace_back(obj2Dpipe_);
+		//	pipelineËøΩÂä†
+		spritePipeline_.emplace_back(spritepipe_);
+	}
+
+	loadingSpritePipe_ = std::make_unique<GPipeline>();
+	loadingSpritePipe_->Initialize(shader, inputLayout, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
+		D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+	loadingSpritePipe_->SetBlendMord(GPipeline::ALPHA_BLEND);
+#pragma endregion
+}
+
+void PipelineManager::InitializeParticle()
+{
+#pragma region Particle
+	particlePipeline_.reserve(4);
+
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
+	inputLayout.emplace_back();
+	inputLayout.back() = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };	//	xyzÂ∫ßÊ®ô
+
+	Shader shader(L"Resources/Shader/ParticleVS.hlsl", L"Resources/Shader/ParticlePS.hlsl", "main", L"Resources/Shader/ParticleGS.hlsl");
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		GPipeline* particlepipe_ = new GPipeline();
+		particlepipe_->Initialize(shader, inputLayout, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT
+			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
+		particlepipe_->SetBlendMord(i);
+
+		//	pipelineËøΩÂä†
+		particlePipeline_.emplace_back(particlepipe_);
 	}
 #pragma endregion
+}
 
+void PipelineManager::InitializePostEffect()
+{
 #pragma region PostEffect
-	postEffectPipeline.reserve(blendMordNum);
-	Shader luminnceShader(L"Resources/Shader/ScreenVS.hlsl", L"Resources/Shader/ScreenPS.hlsl");
-	for (int i = 0; i < blendMordNum; i++)
-	{
-		GPipeline* postEffectpipe_ = new GPipeline();
-		postEffectpipe_->Init(luminnceShader, inputLayout2D, _countof(inputLayout2D), 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 4);
-		postEffectpipe_->SetBlendMord(i);
 
-		//	pipelineí«â¡
-		postEffectPipeline.emplace_back(postEffectpipe_);
-	}
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
+	inputLayout.emplace_back();
+	inputLayout.back() = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };	//	xyzÂ∫ßÊ®ô
+	inputLayout.emplace_back();
+	inputLayout.back() = { "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };					//	uvÂ∫ßÊ®ô
+
+	Shader luminnceShader(L"Resources/Shader/ScreenVS.hlsl", L"Resources/Shader/ScreenPS.hlsl");
+	
+	postEffectPipeline_ = std::make_unique<GPipeline>();
+	postEffectPipeline_->Initialize(luminnceShader, inputLayout, 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
+		, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 4);
 
 	Shader postEffect(L"Resources/Shader/ScreenVS.hlsl", L"Resources/Shader/ScreenShadowPS.hlsl");
-	postShadowPipeline.reserve(blendMordNum);
-	for (int i = 0; i < blendMordNum; i++)
-	{
-		GPipeline* postEffectpipe_ = new GPipeline();
-		postEffectpipe_->Init(postEffect, inputLayout2D, _countof(inputLayout2D), 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO);
-		postEffectpipe_->SetBlendMord(i);
 
-		//	pipelineí«â¡
-		postShadowPipeline.emplace_back(postEffectpipe_);
-	}
+	postShadowPipeline_ = std::make_unique<GPipeline>();
+	postShadowPipeline_->Initialize(postEffect, inputLayout, 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
+		, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
 
 	Shader luminncePostEffect(L"Resources/Shader/ScreenVS.hlsl", L"Resources/Shader/LuminncePS.hlsl");
-	luminncePipeline.reserve(blendMordNum);
-	for (int i = 0; i < blendMordNum; i++)
-	{
-		GPipeline* postEffectpipe_ = new GPipeline();
-		postEffectpipe_->Init(luminncePostEffect, inputLayout2D, _countof(inputLayout2D), 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO);
-		postEffectpipe_->SetBlendMord(i);
-
-		//	pipelineí«â¡
-		luminncePipeline.emplace_back(postEffectpipe_);
-	}
-
+	
+	luminncePipeline_ = std::make_unique<GPipeline>();
+	luminncePipeline_->Initialize(luminncePostEffect, inputLayout, 1, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
+		, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
 
 #pragma region Blur
 	Shader xblur(L"Resources/Shader/XBlurVS.hlsl", L"Resources/Shader/BlurPS.hlsl");
 
-	xBlurPipeline = std::make_unique<GPipeline>();
-	xBlurPipeline->Init(xblur, inputLayout2D, _countof(inputLayout2D)
+	xBlurPipeline_ = std::make_unique<GPipeline>();
+	xBlurPipeline_->Initialize(xblur, inputLayout
 		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R32G32_FLOAT);
 
 	Shader yblur(L"Resources/Shader/YBlurVS.hlsl", L"Resources/Shader/BlurPS.hlsl");
 
-	yBlurPipeline = std::make_unique<GPipeline>();
-	yBlurPipeline->Init(yblur, inputLayout2D, _countof(inputLayout2D)
+	yBlurPipeline_ = std::make_unique<GPipeline>();
+	yBlurPipeline_->Initialize(yblur, inputLayout
 		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R32G32_FLOAT);
 
-	luminncexBlurPipeline = std::make_unique<GPipeline>();
-	luminncexBlurPipeline->Init(xblur, inputLayout2D, _countof(inputLayout2D)
+	luminncexBlurPipeline_ = std::make_unique<GPipeline>();
+	luminncexBlurPipeline_->Initialize(xblur, inputLayout
 		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true);
 
-	luminnceyBlurPipeline = std::make_unique<GPipeline>();
-	luminnceyBlurPipeline->Init(yblur, inputLayout2D, _countof(inputLayout2D)
+	luminnceyBlurPipeline_ = std::make_unique<GPipeline>();
+	luminnceyBlurPipeline_->Initialize(yblur, inputLayout
 		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true);
 #pragma endregion
-#pragma endregion
+}
 
-#pragma region Sprite
+void PipelineManager::InitializeModel()
+{
+	size_t blendMordNum = 5;
 
-	spritePipeline.reserve(blendMordNum);
+#pragma region Model
 
-	D3D12_INPUT_ELEMENT_DESC spriteInputLayout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzç¿ïW
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},				//	uvç¿ïW
-	};
+	Shader shadowShader(L"Resources/Shader/ObjShadowVS.hlsl", L"Resources/Shader/ObjShadowPS.hlsl");
 
-	Shader Spriteshader(L"Resources/Shader/SpriteVS.hlsl", L"Resources/Shader/SpritePS.hlsl");
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
+	inputLayout.emplace_back();
+	inputLayout.back() = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };	//	xyzÂ∫ßÊ®ô
 
-	for (int i = 0; i < blendMordNum; i++)
+	shadowPipeline_ = std::make_unique<GPipeline>();
+	shadowPipeline_->Initialize(shadowShader, inputLayout, 5
+		, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R32G32_FLOAT);
+	shadowPipeline_->SetBlendMord(GPipeline::NONE_BLEND);
+
+	Shader shadowRecieverShader(L"Resources/Shader/ShadowRecieverVS.hlsl", L"Resources/Shader/ShadowRecieverPS.hlsl");
+
+	inputLayout.emplace_back();
+	inputLayout.back() = { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };		//	Ê≥ïÁ∑ö„Éô„ÇØ„Éà„É´
+	inputLayout.emplace_back();
+	inputLayout.back() = { "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };					//	uvÂ∫ßÊ®ô
+
+	shadowRecieverPipeline_ = std::make_unique<GPipeline>();
+	shadowRecieverPipeline_->Initialize(shadowRecieverShader, inputLayout
+		, 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R11G11B10_FLOAT, 2);
+	shadowRecieverPipeline_->SetBlendMord(GPipeline::NONE_BLEND);
+
+	modelPipeline_.reserve(blendMordNum);
+	Shader objShader(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/ObjPS.hlsl");
+
+	inputLayout.emplace_back();
+	inputLayout.back() = { "BONEINDICES",0,DXGI_FORMAT_R32G32B32A32_UINT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
+	inputLayout.emplace_back();
+	inputLayout.back() = { "BONEWEIGHTS",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
+
+	Shader silhouetteShader(L"Resources/Shader/ObjVS.hlsl", L"Resources/Shader/SilhouettePS.hlsl");
+
+	modelSilhouettePipe_ = std::make_unique<GPipeline>();
+	modelSilhouettePipe_->Initialize(silhouetteShader, inputLayout, 5,
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ALL, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+	modelSilhouettePipe_->SetBlendMord(GPipeline::ALPHA_BLEND);
+
+	for (size_t i = 0; i < blendMordNum; i++)
 	{
-		GPipeline* spritepipe_ = new GPipeline();
-		spritepipe_->Init(Spriteshader, spriteInputLayout, _countof(spriteInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO);
-		spritepipe_->SetBlendMord(i);
+		//	pipelineËøΩÂä†
+		modelPipeline_.emplace_back(new GPipeline());
 
-		//	pipelineí«â¡
-		spritePipeline.emplace_back(spritepipe_);
+		GPipeline* modelpipeline_ = modelPipeline_.back().get();
+		modelpipeline_->Initialize(objShader, inputLayout, 5
+			, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
+		modelpipeline_->SetBlendMord(i);
 	}
 
-	loadingSpritePipe = std::make_unique<GPipeline>();
-	loadingSpritePipe->Init(Spriteshader, spriteInputLayout, _countof(spriteInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
-		D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, D3D12_DEPTH_WRITE_MASK_ZERO, true, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
-	loadingSpritePipe->SetBlendMord(GPipeline::ALPHA_BLEND);
 #pragma endregion
+}
 
-#pragma region Particle
-	particlePipeline.reserve(blendMordNum);
+void PipelineManager::Initialize()
+{
+	InitializeModel();
 
-	D3D12_INPUT_ELEMENT_DESC particleInputLayout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,	D3D12_APPEND_ALIGNED_ELEMENT,	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},		//	xyzç¿ïW
-	};
-	Shader particleShader(L"Resources/Shader/ParticleVS.hlsl", L"Resources/Shader/ParticlePS.hlsl", "main", L"Resources/Shader/ParticleGS.hlsl");
+	InitializePostEffect();
 
-	for (int i = 0; i < blendMordNum; i++)
-	{
-		GPipeline* particlepipe_ = new GPipeline();
-		particlepipe_->Init(particleShader, particleInputLayout, _countof(particleInputLayout), 2, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT
-			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK,D3D12_DEPTH_WRITE_MASK_ZERO);
-		particlepipe_->SetBlendMord(i);
+	InitializeSprite();
 
-		//	pipelineí«â¡
-		particlePipeline.emplace_back(particlepipe_);
-	}
-#pragma endregion
-
-#pragma region Grass
-	grassPipeline.reserve(blendMordNum);
-
-	Shader grassShader(L"Resources/Shader/GrassParticleVS.hlsl", L"Resources/Shader/GrassParticlePS.hlsl", "main", L"Resources/Shader/GrassParticleGS.hlsl");
-
-	for (int i = 0; i < blendMordNum; i++)
-	{
-		GPipeline* particlepipe_ = new GPipeline();
-		particlepipe_->Init(grassShader, particleInputLayout, _countof(particleInputLayout), 3, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT
-			, D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK);
-		particlepipe_->SetBlendMord(i);
-
-		//	pipelineí«â¡
-		grassPipeline.emplace_back(particlepipe_);
-	}
-#pragma endregion
+	InitializeParticle();
 }
 
 GPipeline* PipelineManager::GetPipeline(const std::string& name, GPipeline::BlendMord blend)
 {
 	if (name == "Model") {
-		return modelPipeline[blend].get();
-	}
-	else if (name == "ModelSilhouette") {
-		return modelSilhouettePipe.get();
-	}
-	else if (name == "Obj2D") {
-		return obj2DPipeline[blend].get();
-	}
-	else if (name == "PostEffect") {
-		return postEffectPipeline[blend].get();
-	}
-	else if (name == "Luminnce") {
-		return luminncePipeline[blend].get();
-	}
-	else if (name == "PostEffectShadow") {
-		return postShadowPipeline[blend].get();
-	}
-	else if (name == "Sprite") {
-		return spritePipeline[blend].get();
-	}
-	else if (name == "LoadingSprite") {
-		return loadingSpritePipe.get();
-	}
-	else if (name == "Particle") {
-		return particlePipeline[blend].get();
-	}
-	else if (name == "GrassParticle") {
-		return grassPipeline[blend].get();
+		return modelPipeline_[blend].get();
 	}
 	else if (name == "Shadow") {
-		return shadowPipeline.get();
+		return shadowPipeline_.get();
 	}
 	else if (name == "ShadowReciever") {
-		return shadowRecieverPipeline.get();
+		return shadowRecieverPipeline_.get();
+	}
+	else if (name == "ModelSilhouette") {
+		return modelSilhouettePipe_.get();
+	}
+	else if (name == "Sprite") {
+		return spritePipeline_[blend].get();
+	}
+	else if (name == "LoadingSprite") {
+		return loadingSpritePipe_.get();
+	}
+	else if (name == "Particle") {
+		return particlePipeline_[blend].get();
+	}
+	else if (name == "PostEffect") {
+		return postEffectPipeline_.get();
+	}
+	else if (name == "Luminnce") {
+		return luminncePipeline_.get();
+	}
+	else if (name == "PostEffectShadow") {
+		return postShadowPipeline_.get();
 	}
 	else if (name == "xBlur") {
-		return xBlurPipeline.get();
+		return xBlurPipeline_.get();
 	}
 	else if (name == "yBlur") {
-		return yBlurPipeline.get();
+		return yBlurPipeline_.get();
 	}
 	else if (name == "luminncexBlur") {
-		return luminncexBlurPipeline.get();
+		return luminncexBlurPipeline_.get();
 	}
 	else if (name == "luminnceyBlur") {
-		return luminnceyBlurPipeline.get();
+		return luminnceyBlurPipeline_.get();
 	}
 	return nullptr;
 }
