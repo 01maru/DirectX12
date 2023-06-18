@@ -393,6 +393,9 @@
     <ClCompile Include="Engine\2D\Sprite\DebugTextManager.cpp">
       <Filter>ソース ファイル\lib\2D\Sprite</Filter>
     </ClCompile>
+    <ClCompile Include="GaussBlur.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Base\Input\InputJoypad.h">
@@ -616,6 +619,9 @@
     </ClInclude>
     <ClInclude Include="Engine\2D\Sprite\SplashSprite.h">
       <Filter>ヘッダー ファイル\lib\2D\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussBlur.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

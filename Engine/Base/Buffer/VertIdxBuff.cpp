@@ -13,7 +13,7 @@ void VertIdxBuff::SetResDesc(UINT size)
 	resDesc_.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 }
 
-void VertIdxBuff::Initialize(uint32_t sizeVB, const std::vector<uint32_t>& indices)
+void VertIdxBuff::Initialize(uint32_t sizeVB, const std::vector<uint16_t>& indices)
 {
 	Initialize(sizeVB);
 
@@ -28,7 +28,7 @@ void VertIdxBuff::Initialize(uint32_t sizeVB, const std::vector<uint32_t>& indic
 
 		ibActive_ = true;
 
-		uint32_t sizeIB = static_cast<uint32_t>(sizeof(uint32_t) * indices.size());
+		uint16_t sizeIB = static_cast<uint16_t>(sizeof(uint16_t) * indices.size());
 		SetResDesc(sizeIB);
 		result = dev->CreateCommittedResource(
 			&heapProp, // ヒープ設定
@@ -80,10 +80,10 @@ void VertIdxBuff::Initialize(uint32_t sizeVB)
 #pragma endregion
 }
 
-void VertIdxBuff::SetIndices(const std::vector<uint32_t>& indices)
+void VertIdxBuff::SetIndices(const std::vector<uint16_t>& indices)
 {
 	//	インデックスバッファマッピング
-	uint32_t* indexMap = nullptr;
+	uint16_t* indexMap = nullptr;
 	HRESULT result = indexBuff_->Map(0, nullptr, (void**)&indexMap);
 	assert(SUCCEEDED(result));
 	// 全頂点に対して

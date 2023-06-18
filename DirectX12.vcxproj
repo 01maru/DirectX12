@@ -74,6 +74,7 @@
     <ClCompile Include="Engine\2D\Loading\LoadingModel.cpp" />
     <ClCompile Include="Engine\2D\Loading\LoadingSprite.cpp" />
     <ClCompile Include="Engine\Base\ImGui\ImGuiController.cpp" />
+    <ClCompile Include="GaussBlur.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\3D\Object\Model\ObjModel.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\PipelineManager.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Engine\2D\Loading\LoadingSprite.h" />
     <ClInclude Include="Engine\2D\Sprite\SplashSprite.h" />
     <ClInclude Include="Engine\Base\ImGui\ImGuiController.h" />
+    <ClInclude Include="GaussBlur.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

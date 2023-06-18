@@ -36,6 +36,10 @@ namespace CBuff
 		Matrix bones[MAX_BONES];
 	};
 
+	struct CBufferBlurWeight {
+		Vector4D weight[2];
+	};
+
 #pragma region Light
 
 	struct CBuffPointLight

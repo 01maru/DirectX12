@@ -1,90 +1,64 @@
-#include "PostEffect.h"
+Ôªø#include "PostEffect.h"
 #include "DirectX.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
 #include <cassert>
 
-void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT format)
+#include "ConstBuffStruct.h"
+
+void PostEffect::Initialize(int32_t width, int32_t height, float weight, DXGI_FORMAT format)
 {
-	texture.resize(texNum);
-	for (int i = 0; i < texNum; i++)
+	texture_.resize(texNum_);
+	for (size_t i = 0; i < texNum_; i++)
 	{
-		TextureManager::GetInstance()->CreateNoneGraphTexture("postEffect", texture[i]);
+		TextureManager::GetInstance()->CreateNoneGraphTexture("postEffect", texture_[i]);
 	}
 
-	D3D12_HEAP_PROPERTIES cbHeapProp{};
-	D3D12_RESOURCE_DESC cbResourceDesc{};
 #pragma region  ConstBuffer
-	//	ÉqÅ[Évê›íË
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//	GPUì]ëóóp
 
-	//	ÉäÉ\Å[ÉXê›íË
-	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Height = 1;
-	cbResourceDesc.DepthOrArraySize = 1;
-	cbResourceDesc.MipLevels = 1;
-	cbResourceDesc.SampleDesc.Count = 1;
-	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	cbResourceDesc.Width = (sizeof(ConstBufferDataMaterial) + 0xFF) & ~0xFF;
-	//	ê∂ê¨
-	HRESULT result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
-		&cbHeapProp,	//	ÉqÅ[Évê›íË
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,	//	ÉäÉ\Å[ÉXê›íË
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&material));
+	material_.Initialize((sizeof(CBuff::CBuffColorMaterial) + 0xFF) & ~0xFF);
+
+	HRESULT result = material_.GetResource()->Map(0, nullptr, (void**)&cMaterialMap_);	//	„Éû„ÉÉ„Éî„É≥„Ç∞
 	assert(SUCCEEDED(result));
+	SetColor(color_);
 
-	cbResourceDesc.Width = (sizeof(ConstBufferWeight) + 0xFF) & ~0xFF;
-	//	ê∂ê¨
-	result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
-		&cbHeapProp,	//	ÉqÅ[Évê›íË
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,	//	ÉäÉ\Å[ÉXê›íË
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&weightMaterial));
-	assert(SUCCEEDED(result));
+	weight_.Initialize((sizeof(CBuff::CBufferBlurWeight) + 0xFF) & ~0xFF);
 
+	weights_.resize(8);
 	MyMath::CalcGaussianWeightsTable(
-		weights,        // èdÇ›ÇÃäiî[êÊ
-		NUM_WEIGHTS,    // èdÇ›ÉeÅ[ÉuÉãÇÃÉTÉCÉY
-		weight            // É{ÉPãÔçáÅBÇ±ÇÃêîílÇ™ëÂÇ´Ç≠Ç»ÇÈÇ∆É{ÉPÇ™ã≠Ç≠Ç»ÇÈ
+		weights_,        // Èáç„Åø„ÅÆÊ†ºÁ¥çÂÖà
+		weight          // „Éú„Ç±ÂÖ∑Âêà„ÄÇ„Åì„ÅÆÊï∞ÂÄ§„ÅåÂ§ß„Åç„Åè„Å™„Çã„Å®„Éú„Ç±„ÅåÂº∑„Åè„Å™„Çã
 	);
 
-	ConstBufferWeight* mapWeight = nullptr;
-	result = weightMaterial->Map(0, nullptr, (void**)&mapWeight);	//	É}ÉbÉsÉìÉO
-	mapWeight->weight[0] = Vector4D(weights[0], weights[1], weights[2], weights[3]);
-	mapWeight->weight[1] = Vector4D(weights[4], weights[5], weights[6], weights[7]);
+	CBuff::CBufferBlurWeight* mapWeight = nullptr;
+	result = weight_.GetResource()->Map(0, nullptr, (void**)&mapWeight);	//	„Éû„ÉÉ„Éî„É≥„Ç∞
+	mapWeight->weight[0] = Vector4D(weights_[0], weights_[1], weights_[2], weights_[3]);
+	mapWeight->weight[1] = Vector4D(weights_[4], weights_[5], weights_[6], weights_[7]);
 	assert(SUCCEEDED(result));
-	weightMaterial->Unmap(0, nullptr);
+	weight_.GetResource()->Unmap(0, nullptr);
 
-	//	íËêîÉoÉbÉtÉ@ÇÃÉ}ÉbÉsÉìÉO
-	SetColor(color);
 #pragma endregion
 
-	vertices.clear();
-	vertices.push_back({ {-1.0f,-1.0f,0.0f},{0,1} });
-	vertices.push_back({ {-1.0f, 1.0f,0.0f},{0,0} });
-	vertices.push_back({ { 1.0f,-1.0f,0.0f},{1,1} });
-	vertices.push_back({ { 1.0f, 1.0f,0.0f},{1,0} });
+	vertices_.clear();
+	vertices_.push_back({ {-1.0f,-1.0f,0.0f},{0,1} });
+	vertices_.push_back({ {-1.0f, 1.0f,0.0f},{0,0} });
+	vertices_.push_back({ { 1.0f,-1.0f,0.0f},{1,1} });
+	vertices_.push_back({ { 1.0f, 1.0f,0.0f},{1,0} });
 
-	UINT sizePV = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
-	//	ÉCÉìÉfÉbÉNÉXÉfÅ[É^
-	indices[0] = 0;
-	indices[1] = 1;
-	indices[2] = 2;
-	indices[3] = 2;
-	indices[4] = 1;
-	indices[5] = 3;
-	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * indexSize);
-	BuffInitialize(MyDirectX::GetInstance()->GetDev(), sizePV, sizeIB, indices, indexSize);
+	uint32_t sizePV = static_cast<uint32_t>(sizeof(vertices_[0]) * vertices_.size());
+	//	„Ç§„É≥„Éá„ÉÉ„ÇØ„Çπ„Éá„Éº„Çø
+	indices_.push_back(0);
+	indices_.push_back(1);
+	indices_.push_back(2);
+	indices_.push_back(2);
+	indices_.push_back(1);
+	indices_.push_back(3);
+	VertIdxBuff::Initialize(sizePV, indices_);
 
-	//	ÉrÉÖÅ[É|Å[Ég
-	viewPort.InitializeVP(width, height, 0, 0, 0.0f, 1.0f, texNum);
-	// ÉVÉUÅ[ãÈå`
-	viewPort.InitializeSR(0, width, 0, height, texNum);
+	//	„Éì„É•„Éº„Éù„Éº„Éà
+	viewPortSciRect_.InitializeVP(width, height, 0, 0, 0.0f, 1.0f, texNum_);
+	// „Ç∑„Ç∂„ÉºÁü©ÂΩ¢
+	viewPortSciRect_.InitializeSR(0, width, 0, height, texNum_);
 
 	auto resDesc = MyDirectX::GetInstance()->GetBackBuffDesc();
 	resDesc.Format = format;
@@ -106,7 +80,7 @@ void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT for
 		clearValue.Color[i] = clsClr[i];
 	}
 
-	for (int i = 0; i < texNum; i++)
+	for (size_t i = 0; i < texNum_; i++)
 	{
 		result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
 			&heapProp,
@@ -114,16 +88,16 @@ void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT for
 			&resDesc,
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 			&clearValue,
-			IID_PPV_ARGS(texture[i].GetResourceBuffAddress()));
+			IID_PPV_ARGS(texture_[i].GetResourceBuffAddress()));
 	}
 
 #pragma region RTV
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = MyDirectX::GetInstance()->GetRTVHeapDesc();
 	//	heap
-	heapDesc.NumDescriptors = texNum;
+	heapDesc.NumDescriptors = texNum_;
 	result = MyDirectX::GetInstance()->GetDev()->CreateDescriptorHeap(
 		&heapDesc,
-		IID_PPV_ARGS(rtvHeap.ReleaseAndGetAddressOf()));
+		IID_PPV_ARGS(rtvHeap_.ReleaseAndGetAddressOf()));
 
 	D3D12_RENDER_TARGET_VIEW_DESC _rtvDesc = {};
 	_rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
@@ -135,12 +109,12 @@ void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT for
 	}
 
 	//	RTV
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = rtvHeap->GetCPUDescriptorHandleForHeapStart();
-	for (int i = 0; i < texNum; i++)
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
+	for (size_t i = 0; i < texNum_; i++)
 	{
 		rtvHandle_.ptr += MyDirectX::GetInstance()->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * i;
 		MyDirectX::GetInstance()->GetDev()->CreateRenderTargetView(
-			texture[i].GetResourceBuff(),
+			texture_[i].GetResourceBuff(),
 			&_rtvDesc,
 			rtvHandle_);
 	}
@@ -154,20 +128,20 @@ void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT for
 	_srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	
 	//	SRV
-	for (int i = 0; i < texNum; i++)
+	for (size_t i = 0; i < texNum_; i++)
 	{
-		UINT incrementSize = MyDirectX::GetInstance()->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		size_t incrementSize = MyDirectX::GetInstance()->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = MyDirectX::GetInstance()->GetSRVHeap()->GetCPUDescriptorHandleForHeapStart();
-		srvHandle.ptr += incrementSize * texture[i].GetHandle();
+		srvHandle.ptr += incrementSize * texture_[i].GetHandle();
 
 		MyDirectX::GetInstance()->GetDev()->CreateShaderResourceView(
-			texture[i].GetResourceBuff(),
+			texture_[i].GetResourceBuff(),
 			&_srvDesc,
 			srvHandle);
 	}
 #pragma endregion
 
-#pragma region ê[ìxÉoÉbÉtÉ@
+#pragma region Ê∑±Â∫¶„Éê„ÉÉ„Éï„Ç°
 	D3D12_RESOURCE_DESC depthResourceDesc{};
 	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	depthResourceDesc.Width = width;
@@ -176,38 +150,38 @@ void PostEffect::Initialize(int width, int height, float weight, DXGI_FORMAT for
 	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	depthResourceDesc.SampleDesc.Count = 1;
 	depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-	//	ê[ìxínópÉqÅ[ÉvÉvÉçÉpÉeÉB
+	//	Ê∑±Â∫¶Âú∞Áî®„Éí„Éº„Éó„Éó„É≠„Éë„ÉÜ„Ç£
 	D3D12_HEAP_PROPERTIES depthHeapProp{};
 	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
-	//	ê[ìxínÇÃÉNÉäÉAê›íË
+	//	Ê∑±Â∫¶Âú∞„ÅÆ„ÇØ„É™„Ç¢Ë®≠ÂÆö
 	D3D12_CLEAR_VALUE depthClearValue{};
 	depthClearValue.DepthStencil.Depth = 1.0f;
 	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
-	//	Resourceê∂ê¨
+	//	ResourceÁîüÊàê
 	result = MyDirectX::GetInstance()->GetDev()->CreateCommittedResource(
 		&depthHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&depthResourceDesc,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&depthClearValue,
-		IID_PPV_ARGS(&depthBuff));
-	//	ÉfÉXÉNÉäÉvÉ^ÉqÅ[Év
+		IID_PPV_ARGS(&depthBuff_));
+	//	„Éá„Çπ„ÇØ„É™„Éó„Çø„Éí„Éº„Éó
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
 	dsvHeapDesc.NumDescriptors = 1;
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	result = MyDirectX::GetInstance()->GetDev()->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+	result = MyDirectX::GetInstance()->GetDev()->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap_));
 	//	view
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	MyDirectX::GetInstance()->GetDev()->CreateDepthStencilView(
-		depthBuff.Get(),
+		depthBuff_.Get(),
 		&dsvDesc,
-		dsvHeap->GetCPUDescriptorHandleForHeapStart());
+		dsvHeap_->GetCPUDescriptorHandleForHeapStart());
 #pragma endregion
 }
 
-void PostEffect::Draw(bool xBlur, bool yBlur, bool shadow, int handle1)
+void PostEffect::Draw(bool xBlur, bool yBlur, bool shadow, int32_t handle1)
 {
 	GPipeline* pipeline = nullptr;
 	if (shadow) {
@@ -234,41 +208,37 @@ void PostEffect::Draw(bool xBlur, bool yBlur, bool shadow, int handle1)
 	VertIdxBuff::IASetVertIdxBuff();
 
 	if (xBlur == false && yBlur == false && shadow == false) {
-		//	ÉeÉNÉXÉ`ÉÉ
-		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
+		//	„ÉÜ„ÇØ„Çπ„ÉÅ„É£
+		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture_[0].GetHandle()));
 		if (handle1 != -1) {
 			cmdList->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(handle1));
 		}
 		else {
-			cmdList->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
+			cmdList->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(texture_[0].GetHandle()));
 		}
-		cmdList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
-		cmdList->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
-		cmdList->SetGraphicsRootConstantBufferView(4, material->GetGPUVirtualAddress());
-		if (xBlur || yBlur) { cmdList->SetGraphicsRootConstantBufferView(5, weightMaterial->GetGPUVirtualAddress()); }
+		cmdList->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureHandle(texture_[0].GetHandle()));
+		cmdList->SetGraphicsRootDescriptorTable(3, TextureManager::GetInstance()->GetTextureHandle(texture_[0].GetHandle()));
+		material_.SetGraphicsRootCBuffView(4);
+		if (xBlur || yBlur) 	weight_.SetGraphicsRootCBuffView(5);
 	}
 	else {
-		//	ÉeÉNÉXÉ`ÉÉ
-		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
-		cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
-		if (xBlur || yBlur) { cmdList->SetGraphicsRootConstantBufferView(2, weightMaterial->GetGPUVirtualAddress()); }
+		//	„ÉÜ„ÇØ„Çπ„ÉÅ„É£
+		cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture_[0].GetHandle()));
+		material_.SetGraphicsRootCBuffView(1);
+		if (xBlur || yBlur) 	weight_.SetGraphicsRootCBuffView(2);
 	}
 
-	cmdList->DrawIndexedInstanced(indexSize, 1, 0, 0, 0);
+	cmdList->DrawIndexedInstanced((UINT)indices_.size(), 1, 0, 0, 0);
 }
 
-void PostEffect::SetColor(const Vector4D& color_)
+void PostEffect::SetColor(const Vector4D& color)
 {
-	ConstBufferDataMaterial* mapMaterial = nullptr;
-	HRESULT result = material->Map(0, nullptr, (void**)&mapMaterial);	//	É}ÉbÉsÉìÉO
-	mapMaterial->color = color_;
-	assert(SUCCEEDED(result));
-	material->Unmap(0, nullptr);
+	cMaterialMap_->color = color;
 }
 
 void PostEffect::Setting()
 {
-	viewPort.RSSetVPandSR();
+	viewPortSciRect_.RSSetVPandSR();
 }
 
 void PostEffect::DrawLuminnce()
@@ -279,27 +249,27 @@ void PostEffect::DrawLuminnce()
 	pipeline->SetGraphicsRootSignature();
 	pipeline->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	VertIdxBuff::IASetVertIdxBuff();
-	//	ÉeÉNÉXÉ`ÉÉ
-	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture[0].GetHandle()));
-	cmdList->SetGraphicsRootConstantBufferView(1, material->GetGPUVirtualAddress());
+	//	„ÉÜ„ÇØ„Çπ„ÉÅ„É£
+	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(texture_[0].GetHandle()));
+	material_.SetGraphicsRootCBuffView(1);
 
-	cmdList->DrawIndexedInstanced(indexSize, 1, 0, 0, 0);
+	cmdList->DrawIndexedInstanced((UINT)indices_.size(), 1, 0, 0, 0);
 }
 
 void PostEffect::SetVertices()
 {
-	// í∏ì_1Ç¬ï™ÇÃÉfÅ[É^ÉTÉCÉY
-	vbView_.StrideInBytes = sizeof(vertices[0]);
+	// È†ÇÁÇπ1„Å§ÂàÜ„ÅÆ„Éá„Éº„Çø„Çµ„Ç§„Ç∫
+	vbView_.StrideInBytes = sizeof(vertices_[0]);
 
-	//	GPUÉÅÉÇÉäÇÃílèëÇ´ä∑Ç¶ÇÊÇ§
-	// GPUè„ÇÃÉoÉbÉtÉ@Ç…ëŒâûÇµÇΩâºëzÉÅÉÇÉä(ÉÅÉCÉìÉÅÉÇÉäè„)ÇéÊìæ
+	//	GPU„É°„É¢„É™„ÅÆÂÄ§Êõ∏„ÅçÊèõ„Åà„Çà„ÅÜ
+	// GPU‰∏ä„ÅÆ„Éê„ÉÉ„Éï„Ç°„Å´ÂØæÂøú„Åó„Åü‰ªÆÊÉ≥„É°„É¢„É™(„É°„Ç§„É≥„É°„É¢„É™‰∏ä)„ÇíÂèñÂæó
 	ScreenVertex* vertMap = nullptr;
 	HRESULT result = vertBuff_->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
-	// ëSí∏ì_Ç…ëŒÇµÇƒ
-	for (int i = 0; i < vertices.size(); i++) {
-		vertMap[i] = vertices[i]; // ç¿ïWÇÉRÉsÅ[
+	// ÂÖ®È†ÇÁÇπ„Å´ÂØæ„Åó„Å¶
+	for (size_t i = 0; i < vertices_.size(); i++) {
+		vertMap[i] = vertices_[i]; // Â∫ßÊ®ô„Çí„Ç≥„Éî„Éº
 	}
-	// åqÇ™ÇËÇâèú
+	// Áπã„Åå„Çä„ÇíËß£Èô§
 	vertBuff_->Unmap(0, nullptr);
 }

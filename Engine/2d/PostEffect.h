@@ -1,64 +1,65 @@
-#pragma once
-#include <d3d12.h>
+Ôªø#pragma once
 #include "ViewPortScissorRect.h"
 #include "VertIdxBuff.h"
+#include "ConstBuff.h"
 #include "Texture.h"
 #include <vector>
-#pragma comment(lib, "d3d12.lib")
+#include <cstdint>
 
-//	ÇÿÇÁÉ|ÉäÉSÉì
+class GPipeline;
+namespace CBuff {
+	struct CBuffColorMaterial;
+}
+
+//	„Å∫„Çâ„Éù„É™„Ç¥„É≥
 class PostEffect :public VertIdxBuff
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	int texNum = 2;
-	std::vector<Texture> texture;
-
-	struct ConstBufferDataMaterial {
-		Vector4D color;	//	RGBA
-	};
-	ComPtr<ID3D12Resource> material;
-	struct ConstBufferWeight {
-		Vector4D weight[2];
-	};
-	ComPtr<ID3D12Resource> weightMaterial;
+	int32_t texNum_ = 2;
+	std::vector<Texture> texture_;
 	
-	const int NUM_WEIGHTS = 8;
-	float weights[8];
+#pragma region ConstBuff
 
-	std::vector<ScreenVertex> vertices;
-	UINT indexSize = 6;
-	unsigned short indices[6] = {};
+	CBuff::CBuffColorMaterial* cMaterialMap_ = nullptr;
+	ConstBuff material_;
 
-	D3D12_RESOURCE_BARRIER barrierDesc;
+	ConstBuff weight_;
+	
+#pragma endregion
 
-	Vector4D color = { 1.0f,1.0f,1.0f,1.0f };
+	std::vector<float> weights_;
 
-	ComPtr<ID3D12DescriptorHeap> rtvHeap;
-	//	ÉrÉÖÅ[É|Å[ÉgÉVÉUÅ[ãÈå`
-	ViewPortScissorRect viewPort;
+	std::vector<ScreenVertex> vertices_;
+	std::vector<uint16_t> indices_;
 
-	ComPtr<ID3D12DescriptorHeap> dsvHeap;
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
-	ComPtr<ID3D12Resource> depthBuff;
+	D3D12_RESOURCE_BARRIER barrierDesc_{};
+
+	Vector4D color_ = { 1.0f,1.0f,1.0f,1.0f };
+
+	ComPtr<ID3D12DescriptorHeap> rtvHeap_;
+	//	„Éì„É•„Éº„Éù„Éº„Éà„Ç∑„Ç∂„ÉºÁü©ÂΩ¢
+	ViewPortScissorRect viewPortSciRect_;
+
+	ComPtr<ID3D12DescriptorHeap> dsvHeap_;
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_{};
+	ComPtr<ID3D12Resource> depthBuff_;
 public:
-	PostEffect() {};
-	~PostEffect() {};
-	void Initialize(int width, int height, float weight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
+	void Initialize(int32_t width, int32_t height, float weight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	void Setting();
 	void DrawLuminnce();
-	void Draw(bool xBlur, bool yBlur, bool shadow, int handle1 = -1);
-	void SetColor(const Vector4D& color_);
+	void Draw(bool xBlur, bool yBlur, bool shadow, int32_t handle1 = -1);
+	void SetColor(const Vector4D& color);
 
-	ID3D12Resource* GetTextureBuff(int index = 0) { return texture[index].GetResourceBuff(); }
-	ID3D12Resource** GetTextureBuffPtr(int index = 0) { return texture[index].GetResourceBuffAddress(); }
-	int GetTextureNum() { return texNum; }
-	D3D12_RESOURCE_BARRIER& GetResouceBarrier() { return barrierDesc; }
-	ID3D12DescriptorHeap* GetRTVHeap() { return rtvHeap.Get(); }
-	ID3D12DescriptorHeap* GetDSVHeap() { return dsvHeap.Get(); }
-	Texture GetTexture() { return texture[0]; }
+	ID3D12Resource* GetTextureBuff(int32_t index = 0) { return texture_[index].GetResourceBuff(); }
+	ID3D12Resource** GetTextureBuffPtr(int32_t index = 0) { return texture_[index].GetResourceBuffAddress(); }
+	int32_t GetTextureNum() { return texNum_; }
+	D3D12_RESOURCE_BARRIER& GetResouceBarrier() { return barrierDesc_; }
+	ID3D12DescriptorHeap* GetRTVHeap() { return rtvHeap_.Get(); }
+	ID3D12DescriptorHeap* GetDSVHeap() { return dsvHeap_.Get(); }
+	Texture GetTexture() { return texture_[0]; }
 private:
 	void SetVertices() override;
 };

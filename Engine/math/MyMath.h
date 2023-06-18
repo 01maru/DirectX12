@@ -3,6 +3,7 @@
 #include "Vector3D.h"
 #include "Vector4D.h"
 #include "Matrix.h"
+#include <vector>
 
 namespace MyMath {
 	//	大きい値を返す
@@ -18,6 +19,7 @@ namespace MyMath {
 #pragma endregion
 	//	ガウシアンブラー用のWeight計算
 	void CalcGaussianWeightsTable(float* weights, int32_t numWeights, float sigma);
+	void CalcGaussianWeightsTable(std::vector<float> weights, float sigma);
 
 	//	視点座標、注視点座標、上方向ベクトル
 	Matrix LookAtLH(const Vector3D& eye, const Vector3D& target, const Vector3D& up);
