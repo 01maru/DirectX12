@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #define NOMINMAX
 #include "ViewPortScissorRect.h"
 
@@ -35,7 +35,7 @@ private:
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
 
-	// ƒoƒbƒNƒoƒbƒtƒ@
+	// ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡
 	std::vector<ComPtr<ID3D12Resource>> backBuffers;
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle;
 
@@ -51,12 +51,12 @@ private:
 
 	ComPtr<ID3D12Resource> depthBuff;
 
-	//	ˆê‚Â‚¾‚¯
+	//	ä¸€ã¤ã ã‘
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	
-	//	ƒrƒ…[ƒ|[ƒg
+	//	ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆ
 	ViewPortScissorRect viewPort;
-	// ƒVƒU[‹éŒ`
+	// ã‚·ã‚¶ãƒ¼çŸ©å½¢
 
 private:
 	void DebugLayer();
