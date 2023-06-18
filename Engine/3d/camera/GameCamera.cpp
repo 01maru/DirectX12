@@ -1,10 +1,6 @@
-#include "GameCamera.h"
+﻿#include "GameCamera.h"
 
-GameCamera::~GameCamera()
-{
-}
-
-void GameCamera::Initialize(Vector3D eye, Vector3D target, Vector3D up)
+void GameCamera::Initialize(const Vector3D& eye, const Vector3D& target, const Vector3D& up)
 {
 	eye_ = eye;
 	target_ = target;

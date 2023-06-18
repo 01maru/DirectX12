@@ -1,4 +1,4 @@
-#include "ObjCamera2D.h"
+ï»¿#include "ObjCamera2D.h"
 
 ObjCamera2D::ObjCamera2D()
 {
@@ -13,7 +13,7 @@ ObjCamera2D::ObjCamera2D()
 	CalcDirectionVec();
 }
 
-void ObjCamera2D::Initialize(Vector3D eye, Vector3D target, Vector3D up)
+void ObjCamera2D::Initialize(const Vector3D& eye, const Vector3D& target, const Vector3D& up)
 {
 	eye_ = eye;
 	target_ = target;
@@ -28,7 +28,7 @@ void ObjCamera2D::Update()
 {
 	CalcDirectionVec();
 
-#pragma region ƒrƒ‹ƒ{[ƒh
+#pragma region ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰
 	CalcBillboard();
 #pragma endregion
 

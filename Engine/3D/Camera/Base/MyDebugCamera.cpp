@@ -1,9 +1,9 @@
-#include "MyDebugCamera.h"
+Ôªø#include "MyDebugCamera.h"
 #include "InputManager.h"
 #include "MyMath.h"
 #include <cmath>
 
-void MyDebugCamera::Initialize(Vector3D eye, Vector3D target, Vector3D up)
+void MyDebugCamera::Initialize(const Vector3D& eye, const Vector3D& target, const Vector3D& up)
 {
 	SetProjectionMatrix(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, MyMath::ConvertToRad(90.0f));
 
@@ -13,11 +13,11 @@ void MyDebugCamera::Initialize(Vector3D eye, Vector3D target, Vector3D up)
 
 	MatUpdate();
 
-	//	disEyeTragetèâä˙âª
+	//	disEyeTragetÂàùÊúüÂåñ
 	frontVec_ = target - eye;
-	disEyeTarget = frontVec_.GetLength();
+	disEyeTarget_ = frontVec_.GetLength();
 
-	//	ï˚å¸ÉxÉNÉgÉã
+	//	ÊñπÂêë„Éô„ÇØ„Éà„É´
 	CalcDirectionVec();
 }
 
@@ -32,37 +32,37 @@ void MyDebugCamera::Update()
 
 #pragma region SetMode
 	if (mouse->GetClickTrigger(InputMouse::WheelClick)) {
-		if (keyboard->GetKey(DIK_LSHIFT) || keyboard->GetKey(DIK_RSHIFT))	//	shiftÇ™âüÇ≥ÇÍÇƒÇΩÇÁ
+		if (keyboard->GetKey(DIK_LSHIFT) || keyboard->GetKey(DIK_RSHIFT))	//	shift„ÅåÊäº„Åï„Çå„Å¶„Åü„Çâ
 		{
-			//	ïΩçsà⁄ìÆ
-			mode = TranslationMove;
+			//	Âπ≥Ë°åÁßªÂãï
+			mode_ = TranslationMove;
 		}
 		else {
-			//	íçéãì_é¸ÇËÇâÒì]à⁄ìÆ
-			mode = RotationMove;
+			//	Ê≥®Ë¶ñÁÇπÂë®„Çä„ÇíÂõûËª¢ÁßªÂãï
+			mode_ = RotationMove;
 		}
 	}
 #pragma endregion
 
 #pragma region SetDisEyeTarget
-	//	ÉLÅ[ì¸óÕ
-	disEyeTarget -= mouse->GetWheel() * (disEyeTarget * 0.001f);
-	//	îÕàÕê›íË
-	float minDis_ = 10.0f;	//	ç≈è¨íl
-	disEyeTarget = MyMath::mMax(disEyeTarget, minDis_);
+	//	„Ç≠„ÉºÂÖ•Âäõ
+	disEyeTarget_ -= mouse->GetWheel() * (disEyeTarget_ * 0.001f);
+	//	ÁØÑÂõ≤Ë®≠ÂÆö
+	float minDis_ = 10.0f;	//	ÊúÄÂ∞èÂÄ§
+	disEyeTarget_ = MyMath::mMax(disEyeTarget_, minDis_);
 #pragma endregion
 
-	//	íçéãì_çXêV
+	//	Ê≥®Ë¶ñÁÇπÊõ¥Êñ∞
 	float spd = 0.1f;
-	switch (mode)
+	switch (mode_)
 	{
 	case MyDebugCamera::NoMove:
 		break;
 	case MyDebugCamera::TranslationMove:
 		if (mouse->GetClick(InputMouse::WheelClick)) {
-			//	ç∂âEà⁄ìÆ
+			//	Â∑¶Âè≥ÁßªÂãï
 			target_ -= rightVec_ * (float)(moveCursor.x) * spd;
-			//	è„â∫à⁄ìÆ
+			//	‰∏ä‰∏ãÁßªÂãï
 			target_ -= downVec_ * (float)(moveCursor.y) * spd;
 		}
 		break;
@@ -73,31 +73,31 @@ void MyDebugCamera::Update()
 			if (up_.y < 0) {
 				moveCursor.x = -moveCursor.x;
 			}
-			cursorPos += moveCursor;
+			cursorPos_ += moveCursor;
 		}
 		break;
 	default:
 		break;
 	}
-	//	ëOå„à⁄ìÆ
+	//	ÂâçÂæåÁßªÂãï
 	target_ += -frontVec_ * (float)(keyboard->GetKey(DIK_Z) - keyboard->GetKey(DIK_X)) * spd;
 
-	//	îÕàÕÅ@0Å@>Å@cursorPosÅ@>Å@PIx2Å@Ç…ê›íË
-	if (cursorPos.x >= MyMath::PIx2) cursorPos.x -= MyMath::PIx2;
-	if (cursorPos.x < 0) cursorPos.x += MyMath::PIx2;
-	if (cursorPos.y >= MyMath::PIx2) cursorPos.y -= MyMath::PIx2;
-	if (cursorPos.y < 0) cursorPos.y += MyMath::PIx2;
+	//	ÁØÑÂõ≤„ÄÄ0„ÄÄ>„ÄÄcursorPos„ÄÄ>„ÄÄPIx2„ÄÄ„Å´Ë®≠ÂÆö
+	if (cursorPos_.x >= MyMath::PIx2) cursorPos_.x -= MyMath::PIx2;
+	if (cursorPos_.x < 0) cursorPos_.x += MyMath::PIx2;
+	if (cursorPos_.y >= MyMath::PIx2) cursorPos_.y -= MyMath::PIx2;
+	if (cursorPos_.y < 0) cursorPos_.y += MyMath::PIx2;
 
-	//	è„ï˚å¸ÉxÉNÉgÉãÇ∆éãì_ç¿ïWçXêV
-	up_.y = cosf(cursorPos.y);
-	eye_.x = target_.x - disEyeTarget * cosf(cursorPos.y) * sinf(cursorPos.x);
-	eye_.y = target_.y + disEyeTarget * sinf(cursorPos.y);
-	eye_.z = target_.z - disEyeTarget * cosf(cursorPos.y) * cosf(cursorPos.x);
+	//	‰∏äÊñπÂêë„Éô„ÇØ„Éà„É´„Å®Ë¶ñÁÇπÂ∫ßÊ®ôÊõ¥Êñ∞
+	up_.y = cosf(cursorPos_.y);
+	eye_.x = target_.x - disEyeTarget_ * cosf(cursorPos_.y) * sinf(cursorPos_.x);
+	eye_.y = target_.y + disEyeTarget_ * sinf(cursorPos_.y);
+	eye_.z = target_.z - disEyeTarget_ * cosf(cursorPos_.y) * cosf(cursorPos_.x);
 
-	//	ï˚å¸ÉxÉNÉgÉã
+	//	ÊñπÂêë„Éô„ÇØ„Éà„É´
 	CalcDirectionVec();
 
-	//	ÉrÉãÉ{Å[Éh
+	//	„Éì„É´„Éú„Éº„Éâ
 	CalcBillboard();
 
 	MatUpdate();

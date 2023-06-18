@@ -1,15 +1,13 @@
-#pragma once
+﻿#pragma once
 #include "ICamera.h"
 
 class GameCamera :public ICamera
 {
-private:
-
 public:
 	GameCamera() {};
-	~GameCamera() override;
+	~GameCamera() override {};
 
-	void Initialize(Vector3D eye_, Vector3D target_, Vector3D up_) override;
+	void Initialize(const Vector3D& eye, const Vector3D& target, const Vector3D& up) override;
 	void Update() override;
 };
 

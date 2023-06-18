@@ -1,15 +1,11 @@
-#include "NormalCamera.h"
+﻿#include "NormalCamera.h"
 
-NormalCamera::~NormalCamera()
-{
-}
-
-void NormalCamera::Initialize(Vector3D eye, Vector3D target, Vector3D up)
+void NormalCamera::Initialize(const Vector3D& eye, const Vector3D& target, const Vector3D& up)
 {
 	eye_ = eye;
 	target_ = target;
 	up_ = up;
-	//matProjection_ = MyMath::OrthoLH(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 0.1f, 50.0f);
+
 	MatUpdate();
 
 	CalcDirectionVec();
