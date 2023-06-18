@@ -144,7 +144,7 @@ void Object3D::MatUpdate(ICamera* camera_)
 
 	// 親オブジェクトがあれば
 	if (parent != nullptr) {
-		mat.matWorld *= parent->mat.matWorld;
+		mat.matWorld_ *= parent->mat.matWorld_;
 	}
 
 	ICamera* cam = nullptr;
@@ -161,10 +161,10 @@ void Object3D::MatUpdate(ICamera* camera_)
 	cTransformMap->matViewProj = matViewProjection;
 	if (model != nullptr) {
 		cTransformMap->matWorld = model->GetModelTransform();
-		cTransformMap->matWorld *= mat.matWorld;
+		cTransformMap->matWorld *= mat.matWorld_;
 	}
 	else {
-		cTransformMap->matWorld = mat.matWorld;
+		cTransformMap->matWorld = mat.matWorld_;
 	}
 	cTransformMap->cameraPos = cameraPos;
 
@@ -174,10 +174,10 @@ void Object3D::MatUpdate(ICamera* camera_)
 	cShadowTransMap->matViewProj = matView_;
 	if (model != nullptr) {
 		cShadowTransMap->matWorld = model->GetModelTransform();
-		cShadowTransMap->matWorld *= mat.matWorld;
+		cShadowTransMap->matWorld *= mat.matWorld_;
 	}
 	else {
-		cShadowTransMap->matWorld = mat.matWorld;
+		cShadowTransMap->matWorld = mat.matWorld_;
 	}
 
 	cLightMap->mLVP = matView_;

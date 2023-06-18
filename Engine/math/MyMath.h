@@ -38,10 +38,10 @@ namespace MyMath {
 
 	class MatView {
 	public:
-		Matrix mat;
-		Vector3D eye;		//	視点座標
-		Vector3D target;	//	注視点座標
-		Vector3D up;		//	上方向ベクトル
+		Matrix mat_;
+		Vector3D eye_;		//	視点座標
+		Vector3D target_;	//	注視点座標
+		Vector3D up_;		//	上方向ベクトル
 	public:
 		MatView();
 		void Init(const Vector3D& _eye, const Vector3D& _target, const Vector3D& _up);
@@ -50,16 +50,16 @@ namespace MyMath {
 
 	class ObjMatrix {
 	public:
-		Matrix matWorld;
+		Matrix matWorld_;
 
-		Matrix matScale;
-		Vector3D scale;		//	スケール
+		Matrix matScale_;
+		Vector3D scale_;		//	スケール
 
-		Matrix matRot;
-		Vector3D rotAngle;	//	回転(単位はラジアン)
+		Matrix matRot_;
+		Vector3D angle_;	//	回転(単位はラジアン)
 
-		Matrix matTrans;
-		Vector3D trans;		//	位置
+		Matrix matTrans_;
+		Vector3D trans_;		//	位置
 
 	public:
 		void SetMatScaling();
@@ -72,23 +72,23 @@ namespace MyMath {
 	class SpriteMatrix
 	{
 	private:
-		Matrix matWorld;
+		Matrix matWorld_;
 
-		Matrix matRot;
-		float rotAngle = 0.0f;
+		Matrix matRot_;
+		float rotation_ = 0.0f;
 
-		Matrix matTrans;
+		Matrix matTrans_;
 		Vector2D trans_;
 	public:
 		void SetMatRotation();
 		void SetMatTransform();
 		void Update();
 
-		const Matrix& GetMatWorld() { return matWorld; }
-		float GetAngle() { return rotAngle; }
+		const Matrix& GetMatWorld() { return matWorld_; }
+		float GetAngle() { return rotation_; }
 		const Vector2D& GetTrans() { return trans_; }
 
-		void SetAngle(float angle) { rotAngle = angle; }
+		void SetAngle(float angle) { rotation_ = angle; }
 		void SetTrans(const Vector2D& trans) { trans_ = trans; }
 	};
 }

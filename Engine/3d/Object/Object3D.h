@@ -85,17 +85,17 @@ public:
 	void SetAnimatonTimer(float timer) { animationTimer = timer; }
 	const float GetAnimationTimer() { return animationTimer; }
 
-	void SetPosition(const Vector3D& pos_) { mat.trans = pos_; }
-	const Vector3D& GetPosition() { return mat.trans; }
+	void SetPosition(const Vector3D& pos_) { mat.trans_ = pos_; }
+	const Vector3D& GetPosition() { return mat.trans_; }
 
-	void SetScale(const Vector3D& scale_) { mat.scale = scale_; }
-	const Vector3D& GetScale() { return mat.scale; }
+	void SetScale(const Vector3D& scale_) { mat.scale_ = scale_; }
+	const Vector3D& GetScale() { return mat.scale_; }
 
-	void SetRotation(const Vector3D& rot_) { mat.rotAngle = rot_; }
-	const Vector3D& GetRotation() { return mat.rotAngle; }
+	void SetRotation(const Vector3D& rot_) { mat.angle_ = rot_; }
+	const Vector3D& GetRotation() { return mat.angle_; }
 
 	inline IModel* GetModel() { return model; }
-	const Matrix& GetMatWorld() { return mat.matWorld; }
+	const Matrix& GetMatWorld() { return mat.matWorld_; }
 
 	virtual void OnCollision(const CollisionInfo& info) { (void)info; }
 };
