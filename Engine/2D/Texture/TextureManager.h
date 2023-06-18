@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Texture.h"
 #include <vector>
 
@@ -6,27 +6,28 @@ class TextureManager
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	static Texture whiteTexHandle;
 
-	int textureNum = 0;
-	std::vector<ComPtr<ID3D12Resource>> texBuff;
-	std::vector<ComPtr<ID3D12Resource>> uploadBuff;
-	std::vector<bool> texExist;
+	static Texture sWhiteTexHandle;
+
+	int32_t textureNum_ = 0;
+	std::vector<ComPtr<ID3D12Resource>> texBuff_;
+	std::vector<ComPtr<ID3D12Resource>> uploadBuff_;
+	std::vector<bool> texExist_;
 
 	TextureManager() {}
 	~TextureManager() {}
 public:
-	void SetWhiteTexHandle();		//	“Ç‚İ‚İ¸”s—p”’F‰æ‘œ‚ÌƒZƒbƒg
+	void SetWhiteTexHandle();		//	èª­ã¿è¾¼ã¿å¤±æ•—ç”¨ç™½è‰²ç”»åƒã®ã‚»ãƒƒãƒˆ
 	static TextureManager* GetInstance();
 	TextureManager(const TextureManager& obj) = delete;
 	TextureManager& operator=(const TextureManager& obj) = delete;
 
 	void Initialize();
-	void DeleteTexture(int handle);
+	void DeleteTexture(int32_t handle);
 	Texture LoadTextureGraph(const wchar_t* textureName);
 	void CreateNoneGraphTexture(const std::string& texName, Texture& texture);
 	//	Getter
-	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(int handle);
-	const Texture& GetWhiteTexture() { return whiteTexHandle; }
+	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(int32_t handle);
+	const Texture& GetWhiteTexture() { return sWhiteTexHandle; }
 };
 

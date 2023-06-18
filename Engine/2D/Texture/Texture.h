@@ -1,7 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #include <d3d12.h>
 #include <string>
 #include <wrl.h>
+#include <cstdint>
+
 #pragma comment(lib, "d3d12.lib")
 
 class Texture
@@ -9,16 +11,16 @@ class Texture
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	std::string name;
-	//	‰Šú’l‚Í-1
-	int handle = -1;
-	ComPtr<ID3D12Resource> texBuff;
+	std::string name_;
+	//	åˆæœŸå€¤ã¯-1
+	int32_t handle_ = -1;
+	ComPtr<ID3D12Resource> texBuff_;
 public:
-	void Initialize(const std::string& texName, int handle_, ID3D12Resource* texBuff_ptr);
+	void Initialize(const std::string& texName, int32_t handle, ID3D12Resource* texBuff_ptr);
 	void CreateNoTexture(const std::string& texName);
 
-	int GetHandle() { return handle; }
-	ID3D12Resource* GetResourceBuff() { return texBuff.Get(); }
-	ID3D12Resource** GetResourceBuffAddress() { return texBuff.ReleaseAndGetAddressOf(); }
+	int GetHandle() { return handle_; }
+	ID3D12Resource* GetResourceBuff() { return texBuff_.Get(); }
+	ID3D12Resource** GetResourceBuffAddress() { return texBuff_.ReleaseAndGetAddressOf(); }
 };
 

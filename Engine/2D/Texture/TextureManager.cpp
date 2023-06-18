@@ -1,14 +1,14 @@
-#include "TextureManager.h"
+ï»¿#include "TextureManager.h"
 #include "DirectX.h"
 
 #include <DirectXTex.h>
 using namespace DirectX;
 
-Texture TextureManager::whiteTexHandle;
+Texture TextureManager::sWhiteTexHandle;
 
 void TextureManager::SetWhiteTexHandle()
 {
-	whiteTexHandle = LoadTextureGraph(L"Resources/Sprite/white1x1.png");
+	sWhiteTexHandle = LoadTextureGraph(L"Resources/Sprite/white1x1.png");
 }
 
 TextureManager* TextureManager::GetInstance()
@@ -19,12 +19,12 @@ TextureManager* TextureManager::GetInstance()
 
 void TextureManager::Initialize()
 {
-	textureNum = 0;
-	//	ƒTƒCƒYŠm•Û
+	textureNum_ = 0;
+	//	ã‚µã‚¤ã‚ºç¢ºä¿
 	const size_t kMaxSRVCount = 2056;
-	texBuff.resize(kMaxSRVCount);
-	uploadBuff.resize(kMaxSRVCount);
-	texExist.resize(kMaxSRVCount);
+	texBuff_.resize(kMaxSRVCount);
+	uploadBuff_.resize(kMaxSRVCount);
+	texExist_.resize(kMaxSRVCount);
 }
 
 Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
@@ -40,23 +40,23 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 		&metadata, scratchImg);
 
 	if (!SUCCEEDED(result)) {
-		//	“Ç‚İ‚İ‚É¸”s‚µ‚½‚ç”’F‰æ‘œ
-		return whiteTexHandle;
+		//	èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ãŸã‚‰ç™½è‰²ç”»åƒ
+		return sWhiteTexHandle;
 	}
-	int index = 0;		//	‰æ‘œ‚Ìindex
-	for (int i = 0; i < texExist.size(); i++)
+	int32_t index = 0;		//	ç”»åƒã®index
+	for (size_t i = 0; i < texExist_.size(); i++)
 	{
-		//	‰æ‘œ‚ª‚»‚Ì”z—ñ‚É‚È‚©‚Á‚½‚ç
-		if (texExist[i] == false)
+		//	ç”»åƒãŒãã®é…åˆ—ã«ãªã‹ã£ãŸã‚‰
+		if (texExist_[i] == false)
 		{
-			texExist[i] = true;
-			index = i;
+			texExist_[i] = true;
+			index = (int32_t)i;
 			break;
 		}
 	}
-	textureNum++;
+	textureNum_++;
 
-	//	ƒ~ƒjƒ}ƒbƒv¶¬
+	//	ãƒŸãƒ‹ãƒãƒƒãƒ—ç”Ÿæˆ
 	ScratchImage mipChain{};
 	result = GenerateMipMaps(
 		scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
@@ -67,7 +67,7 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 		metadata = scratchImg.GetMetadata();
 	}
 
-	const Image* img = scratchImg.GetImage(0, 0, 0);			//	¶ƒf[ƒ^
+	const Image* img = scratchImg.GetImage(0, 0, 0);			//	ç”Ÿãƒ‡ãƒ¼ã‚¿
 
 	metadata.format = MakeSRGB(metadata.format);
 
@@ -80,21 +80,21 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 	tectureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
 	tectureResourceDesc.SampleDesc.Count = 1;
 
-	//	ƒq[ƒvİ’è
+	//	ãƒ’ãƒ¼ãƒ—è¨­å®š
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	textureHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
 
-	int buffIndex = index;
-	//	ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@¶¬
+	int32_t buffIndex = index;
+	//	ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	result = dx->GetDev()->CreateCommittedResource(
 		&textureHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&tectureResourceDesc,
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
-		IID_PPV_ARGS(&texBuff[buffIndex]));
+		IID_PPV_ARGS(&texBuff_[buffIndex]));
 
-	//	FootPrintæ“¾
+	//	FootPrintå–å¾—
 	D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint;
 	UINT64 total_bytes = 0;
 	dx->GetDev()->GetCopyableFootprints(&tectureResourceDesc, 0, 1, 0, &footprint, nullptr, nullptr, &total_bytes);
@@ -117,20 +117,20 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 		&uploadHeap,
 		D3D12_HEAP_FLAG_NONE,
 		&uploadDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,		//	CPU‚©‚ç‘‚«‚İ‰Â”\AGPU‚Í“Ç‚İæ‚èê—p
+		D3D12_RESOURCE_STATE_GENERIC_READ,		//	CPUã‹ã‚‰æ›¸ãè¾¼ã¿å¯èƒ½ã€GPUã¯èª­ã¿å–ã‚Šå°‚ç”¨
 		nullptr,
-		IID_PPV_ARGS(&uploadBuff[buffIndex]));
+		IID_PPV_ARGS(&uploadBuff_[buffIndex]));
 #pragma endregion
 
-	//	“]‘—
+	//	è»¢é€
 	uint8_t* mapforImg = nullptr;
-	result = uploadBuff[buffIndex]->Map(0, nullptr, (void**)&mapforImg);	//	map
+	result = uploadBuff_[buffIndex]->Map(0, nullptr, (void**)&mapforImg);	//	map
 
 	uint8_t* uploadStart = mapforImg + footprint.Offset;
 	uint8_t* sourceStart = img->pixels;
 	uint32_t sourcePitch = ((uint32_t)img->width * sizeof(uint32_t));
 
-	//	‰æ‘œ‚Ì‚‚³(ƒsƒNƒZƒ‹)•ªƒRƒs[‚·‚é
+	//	ç”»åƒã®é«˜ã•(ãƒ”ã‚¯ã‚»ãƒ«)åˆ†ã‚³ãƒ”ãƒ¼ã™ã‚‹
 	for (uint32_t i = 0; i < footprint.Footprint.Height; i++)
 	{
 		memcpy(
@@ -139,27 +139,27 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 			sourcePitch
 		);
 	}
-	uploadBuff[buffIndex]->Unmap(0, nullptr);	//	unmap
+	uploadBuff_[buffIndex]->Unmap(0, nullptr);	//	unmap
 
 #pragma region CopyCommand
-	//	ƒOƒ‰ƒtƒBƒbƒNƒ{[ƒhã‚ÌƒRƒs[æƒAƒhƒŒƒX
+	//	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒœãƒ¼ãƒ‰ä¸Šã®ã‚³ãƒ”ãƒ¼å…ˆã‚¢ãƒ‰ãƒ¬ã‚¹
 	D3D12_TEXTURE_COPY_LOCATION texCopyDest{};
-	texCopyDest.pResource = texBuff[buffIndex].Get();
+	texCopyDest.pResource = texBuff_[buffIndex].Get();
 	texCopyDest.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
 	texCopyDest.SubresourceIndex = 0;
-	//	ƒOƒ‰ƒtƒBƒbƒNƒ{[ƒhã‚ÌƒRƒs[Œ³ƒAƒhƒŒƒX
+	//	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒœãƒ¼ãƒ‰ä¸Šã®ã‚³ãƒ”ãƒ¼å…ƒã‚¢ãƒ‰ãƒ¬ã‚¹
 	D3D12_TEXTURE_COPY_LOCATION src{};
-	src.pResource = uploadBuff[buffIndex].Get();
+	src.pResource = uploadBuff_[buffIndex].Get();
 	src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
 	src.PlacedFootprint = footprint;
 
-	//	ì¬
+	//	ä½œæˆ
 	dx->GetLoadTexCmdList()->CopyTextureRegion(&texCopyDest, 0, 0, 0, &src, nullptr);
 
-	//	resourceBarrier‘}“ü
+	//	resourceBarrieræŒ¿å…¥
 	D3D12_RESOURCE_BARRIER copyBarrier{};
 	copyBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	copyBarrier.Transition.pResource = texBuff[buffIndex].Get();
+	copyBarrier.Transition.pResource = texBuff_[buffIndex].Get();
 	copyBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	copyBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	copyBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
@@ -177,41 +177,41 @@ Texture TextureManager::LoadTextureGraph(const wchar_t* textureName)
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 
-	dx->GetDev()->CreateShaderResourceView(texBuff[buffIndex].Get(), &srvDesc, srvHandle);
+	dx->GetDev()->CreateShaderResourceView(texBuff_[buffIndex].Get(), &srvDesc, srvHandle);
 #pragma endregion
 	Texture ans;
-	ans.Initialize("test", index, texBuff[buffIndex].Get());
+	ans.Initialize("test", index, texBuff_[buffIndex].Get());
 	return ans;
 }
 
-void TextureManager::DeleteTexture(int handle)
+void TextureManager::DeleteTexture(int32_t handle)
 {
-	if (texExist[handle])
+	if (texExist_[handle])
 	{
-		texExist[handle] = false;
+		texExist_[handle] = false;
 	}
 }
 
 void TextureManager::CreateNoneGraphTexture(const std::string& texName, Texture& texture)
 {
-	int index = 0;		//	‰æ‘œ‚Ìindex
-	for (int i = 0; i < texExist.size(); i++)
+	int32_t index = 0;		//	ç”»åƒã®index
+	for (size_t i = 0; i < texExist_.size(); i++)
 	{
-		//	‰æ‘œ‚ª‚»‚Ì”z—ñ‚É‚È‚©‚Á‚½‚ç
-		if (texExist[i] == false)
+		//	ç”»åƒãŒãã®é…åˆ—ã«ãªã‹ã£ãŸã‚‰
+		if (texExist_[i] == false)
 		{
-			texExist[i] = true;
-			index = i;
+			texExist_[i] = true;
+			index = (int32_t)i;
 			break;
 		}
 	}
-	textureNum++;
-	int buffIndex = index - 1;
+	textureNum_++;
+	int32_t buffIndex = index - 1;
 
-	texture.Initialize(texName, index, texBuff[buffIndex].Get());
+	texture.Initialize(texName, index, texBuff_[buffIndex].Get());
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetTextureHandle(int handle)
+D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetTextureHandle(int32_t handle)
 {
 	MyDirectX* dx = MyDirectX::GetInstance();
 	UINT incrementSize = dx->GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
