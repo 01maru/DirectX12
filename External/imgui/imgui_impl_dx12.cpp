@@ -120,7 +120,7 @@ static void ImGui_ImplDX12_SetupRenderState(ImDrawData* draw_data, ID3D12Graphic
     vp.TopLeftX = vp.TopLeftY = 0.0f;
     ctx->RSSetViewports(1, &vp);
 
-    // Bind shader and vertex buffers
+    // Bind shader and vertex_ buffers
     unsigned int stride = sizeof(ImDrawVert);
     unsigned int offset = 0;
     D3D12_VERTEX_BUFFER_VIEW vbv;
@@ -166,7 +166,7 @@ void ImGui_ImplDX12_RenderDrawData(ImDrawData* draw_data, ID3D12GraphicsCommandL
     bd->frameIndex = bd->frameIndex + 1;
     ImGui_ImplDX12_RenderBuffers* fr = &bd->pFrameResources[bd->frameIndex % bd->numFramesInFlight];
 
-    // Create and grow vertex/index buffers if needed
+    // Create and grow vertex_/index buffers if needed
     if (fr->VertexBuffer == nullptr || fr->VertexBufferSize < draw_data->TotalVtxCount)
     {
         SafeRelease(fr->VertexBuffer);
@@ -214,7 +214,7 @@ void ImGui_ImplDX12_RenderDrawData(ImDrawData* draw_data, ID3D12GraphicsCommandL
             return;
     }
 
-    // Upload vertex/index data into a single contiguous GPU buffer
+    // Upload vertex_/index data into a single contiguous GPU buffer
     void* vtx_resource, *idx_resource;
     D3D12_RANGE range;
     memset(&range, 0, sizeof(D3D12_RANGE));
@@ -548,7 +548,7 @@ bool    ImGui_ImplDX12_CreateDeviceObjects()
     ID3DBlob* vertexShaderBlob;
     ID3DBlob* pixelShaderBlob;
 
-    // Create the vertex shader
+    // Create the vertex_ shader
     {
         static const char* vertexShader =
             "cbuffer vertexBuffer : register(b0) \

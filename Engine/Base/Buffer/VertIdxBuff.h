@@ -12,7 +12,7 @@ private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 protected:
-	//	vertex
+	//	vertex_
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 	ComPtr<ID3D12Resource> vertBuff_;
 

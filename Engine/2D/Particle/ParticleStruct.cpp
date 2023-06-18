@@ -1,7 +1,7 @@
 #include "ParticleStruct.h"
 #include "Easing.h"
 
-void MoveParticle::Initialize(const Vector3D& pos, const Vector3D& velocity, float scale_, const int lifeTime)
+void MoveParticle::Initialize(const Vector3D& pos, const Vector3D& velocity, float scale, const int lifeTime)
 {
 	SetPosition(pos);
 	SetScale(3.0f);
@@ -9,7 +9,7 @@ void MoveParticle::Initialize(const Vector3D& pos, const Vector3D& velocity, flo
 	// Œü‚«“Ç‚Ýž‚Ý
 	this->spd = velocity;
 	// ‘å‚«‚³“Ç‚Ýž‚Ý
-	this->maxScale = scale_;
+	this->maxScale = scale;
 
 	maxTime = lifeTime;
 }

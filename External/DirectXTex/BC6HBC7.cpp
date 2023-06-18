@@ -1727,7 +1727,7 @@ void D3DX_BC6H::Decode(bool bSigned, HDRColorA* pOut) const noexcept
             }
         }
 
-        // Inverse transform the end points
+        // Inverse transform_ the end points
         if (info.bTransformed)
         {
             TransformInverse(aEndPts, info.RGBAPrec[0][0], bSigned);

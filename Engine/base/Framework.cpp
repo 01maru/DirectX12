@@ -3,6 +3,8 @@
 #include "DebugTextManager.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
+#include "DirectX.h"
+#include "Window.h"
 
 #include "InputManager.h"
 #include "XAudioManager.h"

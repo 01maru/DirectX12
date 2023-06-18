@@ -9,6 +9,13 @@ namespace CBuff
 		Matrix mat;
 	};
 
+	struct CBufferParticleTransform {
+		Matrix mat;
+		Matrix matBillboard;
+		Vector3D cameraPos;
+		float scale;
+	};
+
 	struct CBuffColorMaterial {
 		Vector4D color;	//	RGBA
 	};

@@ -281,14 +281,14 @@
 //		//	uv反転
 //		uv->y = 1 - uv->y;
 //
-//		ModelVertex vertex = {};
-//		vertex.pos = Vector3D(position->x, position->y, -position->z);
-//		vertex.normal = Vector3D(normal->x, normal->y, normal->z);
-//		vertex.uv = Vector2D(uv->x, uv->y);
-//		vertex.boneIndex[0] = 31;				//	bone最大許容数-1
-//		vertex.boneWeight[0] = 1.0f;			//	ボーンなし用
+//		ModelVertex vertex_ = {};
+//		vertex_.pos = Vector3D(position->x, position->y, -position->z);
+//		vertex_.normal = Vector3D(normal->x, normal->y, normal->z);
+//		vertex_.uv = Vector2D(uv->x, uv->y);
+//		vertex_.boneIndex[0] = 31;				//	bone最大許容数-1
+//		vertex_.boneWeight[0] = 1.0f;			//	ボーンなし用
 //
-//		dst.AddVertex(vertex);
+//		dst.AddVertex(vertex_);
 //	}
 //
 //	//	index設定
