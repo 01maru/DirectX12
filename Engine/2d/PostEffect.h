@@ -1,6 +1,6 @@
 #pragma once
 #include <d3d12.h>
-#include "ViewPort.h"
+#include "ViewPortScissorRect.h"
 #include "VertIdxBuff.h"
 #include "Texture.h"
 #include <vector>
@@ -37,7 +37,7 @@ private:
 
 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
 	//	ビューポートシザー矩形
-	ViewPort viewPort;
+	ViewPortScissorRect viewPort;
 
 	ComPtr<ID3D12DescriptorHeap> dsvHeap;
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;

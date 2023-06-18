@@ -216,7 +216,7 @@
     <ClCompile Include="Engine\Collider\CollisionInfo.cpp">
       <Filter>ソース ファイル\lib\Engine\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Base\Window\ViewPort.cpp">
+    <ClCompile Include="Engine\Base\Window\ViewPortScissorRect.cpp">
       <Filter>ソース ファイル\lib\2D\Screen</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2D\PostEffect.cpp">
@@ -437,7 +437,7 @@
     <ClInclude Include="Engine\Collider\SphereCollider.h">
       <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Base\Window\ViewPort.h">
+    <ClInclude Include="Engine\Base\Window\ViewPortScissorRect.h">
       <Filter>ヘッダー ファイル\lib\2D\Screen</Filter>
     </ClInclude>
     <ClInclude Include="Engine\2D\PostEffect.h">

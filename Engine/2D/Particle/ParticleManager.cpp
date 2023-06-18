@@ -21,7 +21,7 @@ void ParticleManager::Update()
 //	for (std::forward_list<MoveParticle>::iterator it = particles.begin();
 //		it != particles.end();
 //		it++) {
-//		it->Update();
+//		it->RSSetVPandSR();
 //	}
 }
 

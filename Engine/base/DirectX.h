@@ -1,6 +1,6 @@
 #pragma once
 #define NOMINMAX
-#include "ViewPort.h"
+#include "ViewPortScissorRect.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -57,7 +57,7 @@ private:
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	
 	//	ビューポート
-	ViewPort viewPort;
+	ViewPortScissorRect viewPort;
 	// シザー矩形
 
 private:

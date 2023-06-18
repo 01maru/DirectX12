@@ -63,7 +63,7 @@
     <ClCompile Include="Engine\Math\Vector\Vector4D.cpp" />
     <ClCompile Include="Engine\Base\Buffer\VertIdxBuff.cpp" />
     <ClCompile Include="Engine\Base\Pipeline\Shader.cpp" />
-    <ClCompile Include="Engine\Base\Window\ViewPort.cpp" />
+    <ClCompile Include="Engine\Base\Window\ViewPortScissorRect.cpp" />
     <ClCompile Include="Engine\Base\Window\Window.cpp" />
     <ClCompile Include="Engine\3D\Camera\NormalCamera.cpp" />
     <ClCompile Include="Engine\Scene\TitleScene.cpp" />
@@ -139,7 +139,7 @@
     <ClInclude Include="Engine\Base\Buffer\VertIdxBuff.h" />
     <ClInclude Include="Engine\Base\Pipeline\Shader.h" />
     <ClInclude Include="Engine\Base\Buffer\VertexStruct.h" />
-    <ClInclude Include="Engine\Base\Window\ViewPort.h" />
+    <ClInclude Include="Engine\Base\Window\ViewPortScissorRect.h" />
     <ClInclude Include="Engine\Base\Window\Window.h" />
     <ClInclude Include="Engine\3D\Camera\NormalCamera.h" />
     <ClInclude Include="Engine\Scene\TitleScene.h" />

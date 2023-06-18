@@ -121,7 +121,7 @@ void Object3D::Initialize()
 void Object3D::ColliderUpdate()
 {
 	//if (collider) {
-	//	collider->Update();
+	//	collider->RSSetVPandSR();
 	//}
 }
 

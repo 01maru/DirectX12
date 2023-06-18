@@ -372,7 +372,7 @@ void MyDirectX::PrevDraw(FLOAT* clearColor_)
 	CmdListDrawAble(barrierDesc, backBuffers[bbIndex].Get(),
 		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, rtvHandle, dsvHandle, 1, clearColor_);
 
-	viewPort.Update();
+	viewPort.RSSetVPandSR();
 }
 
 void MyDirectX::PostDraw()

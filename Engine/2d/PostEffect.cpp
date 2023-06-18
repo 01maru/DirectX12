@@ -268,7 +268,7 @@ void PostEffect::SetColor(const Vector4D& color_)
 
 void PostEffect::Setting()
 {
-	viewPort.Update();
+	viewPort.RSSetVPandSR();
 }
 
 void PostEffect::DrawLuminnce()
