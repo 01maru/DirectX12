@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "DirectX.h"
 #include "TextureManager.h"
 #include <cassert>
 
@@ -19,8 +20,7 @@ void Mesh::Draw()
 
 	cmdList->SetGraphicsRootDescriptorTable(0, TextureManager::GetInstance()->GetTextureHandle(mtl->GetTextureHandle()));
 
-	ID3D12Resource* constBuff = mtl->GetMaterialConstBuff();
-	cmdList->SetGraphicsRootConstantBufferView(1, constBuff->GetGPUVirtualAddress());
+	mtl->SetGraphicsRootCBuffView(1);
 
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }
@@ -68,7 +68,7 @@ void Mesh::SetBone(int vertexID, UINT boneIndex, float weight)
 
 void Mesh::SetTextureFilePath(const std::string& filePath)
 {
-	MultiByteToWideChar(CP_ACP, 0, filePath.c_str(), -1, mtl->wfilepath, _countof(mtl->wfilepath));
+	MultiByteToWideChar(CP_ACP, 0, filePath.c_str(), -1, mtl->wfilepath_, _countof(mtl->wfilepath_));
 }
 
 void Mesh::SetVertices()

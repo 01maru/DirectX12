@@ -6,6 +6,7 @@
 #include "IModel.h"
 #include "ICamera.h"
 #include "CollisionInfo.h"
+#include "DirectX.h"
 
 #include "ConstBuff.h"
 

@@ -1,8 +1,7 @@
-#include "Material.h"
+ï»¿#include "Material.h"
 #include "TextureManager.h"
+#include "ConstBuffStruct.h"
 #include <cassert>
-
-MyDirectX* Material::dx = MyDirectX::GetInstance();
 
 Material* Material::Create()
 {
@@ -14,44 +13,21 @@ Material* Material::Create()
 
 void Material::Initialize()
 {
-
-	HRESULT result;
-	D3D12_HEAP_PROPERTIES cbHeapProp{};
-	D3D12_RESOURCE_DESC cbResourceDesc{};
-	//	ƒq[ƒvÝ’è
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//	GPU“]‘——p
-
-	//	ƒŠƒ\[ƒXÝ’è
-	cbResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourceDesc.Width = (sizeof(ConstBufferDataMaterial) + 0xFF) & ~0xFF;
-	cbResourceDesc.Height = 1;
-	cbResourceDesc.DepthOrArraySize = 1;
-	cbResourceDesc.MipLevels = 1;
-	cbResourceDesc.SampleDesc.Count = 1;
-	cbResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	result = dx->GetDev()->CreateCommittedResource(
-		&cbHeapProp,	//	ƒq[ƒvÝ’è
-		D3D12_HEAP_FLAG_NONE,
-		&cbResourceDesc,	//	ƒŠƒ\[ƒXÝ’è
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&material));
-	assert(SUCCEEDED(result));
+	material_.Initialize((sizeof(CBuff::CBufferMaterialData) + 0xFF) & ~0xFF);
 }
 
 void Material::Update()
 {
-	// ’è”ƒoƒbƒtƒ@‚Öƒf[ƒ^“]‘—
-	ConstBufferDataMaterial* constMap = nullptr;
-	HRESULT result = material->Map(0, nullptr, (void**)&constMap);
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ã¸ãƒ‡ãƒ¼ã‚¿è»¢é€
+	CBuff::CBufferMaterialData* constMap = nullptr;
+	HRESULT result = material_.GetResource()->Map(0, nullptr, (void**)&constMap);
 
 	if (SUCCEEDED(result)) {
-		constMap->ambient = ambient;
-		constMap->diffuse = diffuse;
-		constMap->specular = specular;
-		constMap->alpha = alpha;
-		material->Unmap(0, nullptr);
+		constMap->ambient = ambient_;
+		constMap->diffuse = diffuse_;
+		constMap->specular = specular_;
+		constMap->alpha = alpha_;
+		material_.GetResource()->Unmap(0, nullptr);
 	}
 }
 
@@ -67,5 +43,10 @@ std::wstring ReplaceExtension(const std::wstring& origin, const wchar_t* ext)
 
 void Material::LoadTexture()
 {
-	texture = TextureManager::GetInstance()->LoadTextureGraph(wfilepath);
+	texture_ = TextureManager::GetInstance()->LoadTextureGraph(wfilepath_);
+}
+
+void Material::SetGraphicsRootCBuffView(uint32_t rootparaIdx)
+{
+	material_.SetGraphicsRootCBuffView(rootparaIdx);
 }

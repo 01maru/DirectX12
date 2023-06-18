@@ -1,35 +1,31 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include "Vector3D.h"
-#include "DirectX.h"
 #include "Texture.h"
+#include "ConstBuff.h"
+
+namespace CBuff {
+	struct CBufferMaterialData;
+}
 
 class Material
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	static MyDirectX* dx;
-public:
-	struct ConstBufferDataMaterial {
-		Vector3D ambient;
-		float pad1;
-		Vector3D diffuse;
-		float pad2;
-		Vector3D specular;
-		float alpha;
-	};
-public:
-	std::string name;
-	Vector3D ambient = { 0.3f, 0.3f, 0.3f };
-	Vector3D diffuse;
-	Vector3D specular;
-	float alpha = 1.0f;
-	std::string textureFilename;
-	wchar_t wfilepath[128];
 
-	Texture texture;
-private:
-	ComPtr<ID3D12Resource> material;
+public:
+	std::string name_;
+	Vector3D ambient_ = { 0.3f, 0.3f, 0.3f };
+	Vector3D diffuse_;
+	Vector3D specular_;
+	float alpha_ = 1.0f;
+
+	std::string textureFilename_;
+	wchar_t wfilepath_[128];
+
+	ConstBuff material_;
+
+	Texture texture_;
 
 public:
 	static Material* Create();
@@ -37,8 +33,8 @@ public:
 	void Initialize();
 	void Update();
 	void LoadTexture();
+	void SetGraphicsRootCBuffView(uint32_t rootparaIdx);
 
-	const int GetTextureHandle() { return texture.GetHandle(); }
-	ID3D12Resource* GetMaterialConstBuff() { return material.Get(); }
+	int32_t GetTextureHandle() { return texture_.GetHandle(); }
 };
 

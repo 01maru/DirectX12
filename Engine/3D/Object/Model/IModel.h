@@ -39,7 +39,7 @@ public:
 	void DrawShadowReciever();
 
 	virtual void BoneTransform(float TimeInSeconds, std::vector<Matrix>& transforms) = 0;
-	void AddMaterial(Material* material) { materials.emplace(material->name, material); }
+	void AddMaterial(Material* material) { materials.emplace(material->name_, material); }
 
 	//Å@Getter
 	//const std::vector<Mesh*>& GetMeshes() { return meshes; }

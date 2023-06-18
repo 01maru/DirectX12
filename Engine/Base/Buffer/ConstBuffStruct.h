@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include "Vector2D.h"
+#include "Vector4D.h"
 #include "Matrix.h"
 
 namespace CBuff
@@ -38,6 +40,15 @@ namespace CBuff
 
 	struct CBufferBlurWeight {
 		Vector4D weight[2];
+	};
+
+	struct CBufferMaterialData {
+		Vector3D ambient;
+		float pad1;
+		Vector3D diffuse;
+		float pad2;
+		Vector3D specular;
+		float alpha;
 	};
 
 #pragma region Light

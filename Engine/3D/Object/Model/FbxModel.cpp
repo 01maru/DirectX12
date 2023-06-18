@@ -49,12 +49,12 @@
 //	mat.m[3][3] = aiMat.d4;
 //}
 //
-//const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, std::string name)
+//const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, std::string name_)
 //{
 //	for (UINT i = 0; i < pAnimation->mNumChannels; i++) {
 //		const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
 //
-//		if (string(pNodeAnim->mNodeName.data) == name) {
+//		if (string(pNodeAnim->mNodeName.data) == name_) {
 //			return pNodeAnim;
 //		}
 //	}
@@ -239,26 +239,26 @@
 //{
 //	Material* material = Material::Create();
 //
-//	material->name += to_string(index);
+//	material->name_ += to_string(index);
 //
 //	//	Diffuse
 //	aiColor3D difcolor(0.f, 0.f, 0.f);
 //	src->Get(AI_MATKEY_COLOR_DIFFUSE, difcolor);
-//	material->diffuse.x = difcolor.r;
-//	material->diffuse.y = difcolor.g;
-//	material->diffuse.z = difcolor.b;
+//	material->diffuse_.x = difcolor.r;
+//	material->diffuse_.y = difcolor.g;
+//	material->diffuse_.z = difcolor.b;
 //	//	AMBIENT
 //	aiColor3D amcolor(0.3f, 0.3f, 0.3f);
 //	src->Get(AI_MATKEY_COLOR_AMBIENT, amcolor);
-//	material->ambient.x = amcolor.r;
-//	material->ambient.y = amcolor.g;
-//	material->ambient.z = amcolor.b;
+//	material->ambient_.x = amcolor.r;
+//	material->ambient_.y = amcolor.g;
+//	material->ambient_.z = amcolor.b;
 //	//	SPECULAR
 //	aiColor3D specolor(0.3f, 0.3f, 0.3f);
 //	src->Get(AI_MATKEY_COLOR_SPECULAR, specolor);
-//	material->specular.x = specolor.r;
-//	material->specular.y = specolor.g;
-//	material->specular.z = specolor.b;
+//	material->specular_.x = specolor.r;
+//	material->specular_.y = specolor.g;
+//	material->specular_.z = specolor.b;
 //
 //	if (material) {
 //		// ƒ}ƒeƒŠƒAƒ‹‚ð“o˜^
@@ -338,7 +338,7 @@
 //		auto dir = GetDirectoryPath(filename);
 //		auto file = std::string(path.C_Str());
 //		dst.SetTextureFilePath(dir + file);
-//		dst.GetMaterial()->name = file;
+//		dst.GetMaterial()->name_ = file;
 //	}
 //}
 //
