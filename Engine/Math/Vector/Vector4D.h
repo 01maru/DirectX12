@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 class Vector3D;
 class Matrix;
@@ -11,13 +11,13 @@ public:
 	float z;
 	float w;
 public:
-	//	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Vector4D();
 	Vector4D(float x, float y, float z, float w);
 	Vector4D(const Vector3D& v, float w);
-	//	ƒxƒNƒgƒ‹‚Ì’·‚³
+	//	ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•
 	float GetLength() const;
-	//	³‹K‰»
+	//	æ­£è¦åŒ–
 	Vector4D& GetNormalize();
 	void Normalize();
 
@@ -30,4 +30,4 @@ public:
 	bool operator!=(const Vector4D& vec);
 };
 
-const Vector4D operator-(const Vector4D& v1, const Vector4D& v2);
+Vector4D operator-(const Vector4D& v1, const Vector4D& v2);

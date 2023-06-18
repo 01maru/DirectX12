@@ -1,4 +1,5 @@
-#pragma once
+ï»¿#pragma once
+#include <cstdint>
 
 class Vector2D
 {
@@ -6,16 +7,16 @@ public:
 	float x;
 	float y;
 public:
-	//	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Vector2D() :x(0), y(0) {}
 	Vector2D(float x, float y) :x(x), y(y) {}
-	Vector2D(int x, int y) :x((float)x), y((float)y) {}
+	Vector2D(int32_t x, int32_t y) :x((float)x), y((float)y) {}
 
-	//	ƒxƒNƒgƒ‹‚Ì’·‚³
+	//	ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•
 	float GetLength() const;
-	//	ƒxƒNƒgƒ‹‚Ì³‹K‰»
+	//	ãƒ™ã‚¯ãƒˆãƒ«ã®æ­£è¦åŒ–
 	void Normalize();
-	//	³‹K‰»‚µ‚½ƒxƒNƒgƒ‹‚ğreturn
+	//	æ­£è¦åŒ–ã—ãŸãƒ™ã‚¯ãƒˆãƒ«ã‚’return
 	Vector2D& GetNormalize();
 
 	Vector2D operator+() const;
@@ -28,6 +29,6 @@ public:
 	bool operator==(const Vector2D& vec);
 };
 
-const Vector2D operator-(const Vector2D& v1, const Vector2D& v2);
-const Vector2D operator*(const Vector2D& v, float s);
-const Vector2D operator*(float s, const Vector2D& v);
+Vector2D operator-(const Vector2D& v1, const Vector2D& v2);
+Vector2D operator*(const Vector2D& v, float s);
+Vector2D operator*(float s, const Vector2D& v);

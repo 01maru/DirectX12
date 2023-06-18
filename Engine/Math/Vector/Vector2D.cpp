@@ -1,4 +1,4 @@
-#include "Vector2D.h"
+ï»¿#include "Vector2D.h"
 #include <cmath>
 
 Vector2D Vector2D::operator+() const
@@ -29,7 +29,7 @@ void Vector2D::Normalize()
 {
 	float len = GetLength();
 
-	//	0ƒxƒNƒgƒ‹‚¶‚á‚È‚©‚Á‚½‚ç
+	//	0ãƒ™ã‚¯ãƒˆãƒ«ã˜ã‚ƒãªã‹ã£ãŸã‚‰
 	if (len != 0)	*this /= len;
 }
 
@@ -37,7 +37,7 @@ Vector2D& Vector2D::GetNormalize()
 {
 	float len = GetLength();
 
-	//	0ƒxƒNƒgƒ‹‚¶‚á‚È‚©‚Á‚½‚ç
+	//	0ãƒ™ã‚¯ãƒˆãƒ«ã˜ã‚ƒãªã‹ã£ãŸã‚‰
 	if (len != 0)	return *this /= len;
 
 	return *this;
@@ -67,19 +67,19 @@ bool Vector2D::operator==(const Vector2D& vec)
 	return (this->x == vec.x) && (this->y == vec.y);
 }
 
-const Vector2D operator-(const Vector2D& v1, const Vector2D& v2)
+Vector2D operator-(const Vector2D& v1, const Vector2D& v2)
 {
 	Vector2D temp(v1);
 	return temp -= v2;
 }
 
-const Vector2D operator*(const Vector2D& v, float s)
+Vector2D operator*(const Vector2D& v, float s)
 {
 	Vector2D temp(v);
 	return temp *= s;
 }
 
-const Vector2D operator*(float s, const Vector2D& v)
+Vector2D operator*(float s, const Vector2D& v)
 {
 	return v * s;
 }

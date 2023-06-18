@@ -1,4 +1,5 @@
-#pragma once
+ï»¿#pragma once
+#include <cstdint>
 
 class Matrix;
 class Vector2D;
@@ -11,22 +12,22 @@ public:
 	float y;
 	float z;
 public:
-	//	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Vector3D();
 	Vector3D(float x, float y, float z);
-	Vector3D(int x, int y, int z);
+	Vector3D(int32_t x, int32_t y, int32_t z);
 	Vector3D(const Vector2D& vec, float z);
-	Vector3D(const Vector2D& vec, int z);
+	Vector3D(const Vector2D& vec, int32_t z);
 	Vector3D(const Vector4D& vec);
 
-	//	ƒxƒNƒgƒ‹‚Ì’·‚³
+	//	ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•
 	float GetLength() const;
-	//	³‹K‰»
+	//	æ­£è¦åŒ–
 	void Normalize();
 	Vector3D& GetNormalize();
-	//	“àÏ
+	//	å†…ç©
 	float dot(const Vector3D& v) const;
-	//	ŠOÏ
+	//	å¤–ç©
 	Vector3D cross(const Vector3D& v) const;
 
 	Vector3D operator+() const;
@@ -40,10 +41,10 @@ public:
 	bool operator!=(const Vector3D& vec);
 };
 
-const Vector3D operator+(const Vector3D& v1, const Vector3D& v2);
-const Vector3D operator-(const Vector3D& v1, const Vector3D& v2);
-const Vector3D operator*(const Vector3D& v, float s);
-const Vector3D operator*(float s, const Vector3D& v);
+Vector3D operator+(const Vector3D& v1, const Vector3D& v2);
+Vector3D operator-(const Vector3D& v1, const Vector3D& v2);
+Vector3D operator*(const Vector3D& v, float s);
+Vector3D operator*(float s, const Vector3D& v);
 
-const Vector3D Vec3Transform(const Vector3D& v, const Matrix& m);
-const Vector3D Vec3TransformNormal(const Vector3D& v, const Matrix& m);
+Vector3D Vec3Transform(const Vector3D& v, const Matrix& m);
+Vector3D Vec3TransformNormal(const Vector3D& v, const Matrix& m);

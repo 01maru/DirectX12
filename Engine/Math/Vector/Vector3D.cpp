@@ -1,4 +1,4 @@
-#include "Vector3D.h"
+﻿#include "Vector3D.h"
 
 #include "Vector4D.h"
 #include "Vector2D.h"
@@ -9,11 +9,11 @@ Vector3D::Vector3D() :x(0.0f), y(0.0f), z(0.0f) {}
 
 Vector3D::Vector3D(float x, float y, float z) : x(x), y(y), z(z) {}
 
-Vector3D::Vector3D(int x, int y, int z) :x((float)x), y((float)y), z((float)z) {}
+Vector3D::Vector3D(int32_t x, int32_t y, int32_t z) :x((float)x), y((float)y), z((float)z) {}
 
 Vector3D::Vector3D(const Vector2D& vec, float z) : x(vec.x), y(vec.y), z(z) {}
 
-Vector3D::Vector3D(const Vector2D& vec, int z) :x(vec.x), y(vec.y), z((float)z) {}
+Vector3D::Vector3D(const Vector2D& vec, int32_t z) :x(vec.x), y(vec.y), z((float)z) {}
 
 Vector3D::Vector3D(const Vector4D& vec) :x(vec.x), y(vec.y), z(vec.z) {}
 
@@ -99,30 +99,30 @@ bool Vector3D::operator!=(const Vector3D& vec)
 	return (this->x != vec.x) || (this->y != vec.y) || (this->z != vec.z);
 }
 
-const Vector3D operator+(const Vector3D& v1, const Vector3D& v2)
+Vector3D operator+(const Vector3D& v1, const Vector3D& v2)
 {
 	Vector3D temp(v1);
 	return temp += v2;
 }
 
-const Vector3D operator-(const Vector3D& v1, const Vector3D& v2)
+Vector3D operator-(const Vector3D& v1, const Vector3D& v2)
 {
 	Vector3D temp(v1);
 	return temp -= v2;
 }
 
-const Vector3D operator*(const Vector3D& v, float s)
+Vector3D operator*(const Vector3D& v, float s)
 {
 	Vector3D temp(v);
 	return temp *= s;
 }
 
-const Vector3D operator*(float s, const Vector3D& v)
+Vector3D operator*(float s, const Vector3D& v)
 {
 	return v * s;
 }
 
-const Vector3D Vec3Transform(const Vector3D& v, const Matrix& m)
+Vector3D Vec3Transform(const Vector3D& v, const Matrix& m)
 {
 	Vector3D ans;
 	ans.x = v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + m.m[3][0];
@@ -133,7 +133,7 @@ const Vector3D Vec3Transform(const Vector3D& v, const Matrix& m)
 	return ans;
 }
 
-const Vector3D Vec3TransformNormal(const Vector3D& v, const Matrix& m)
+Vector3D Vec3TransformNormal(const Vector3D& v, const Matrix& m)
 {
 	Vector3D ans;
 	ans.x = v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0];
