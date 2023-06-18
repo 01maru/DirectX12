@@ -1,4 +1,4 @@
-#include "GaussBlur.h"
+ï»¿#include "GaussBlur.h"
 #include "DirectX.h"
 #include "ConstBuffStruct.h"
 #include <cassert>
@@ -11,12 +11,12 @@ void GaussBlur::Initialize(float weight)
 
 	weights_.resize(8);
 	MyMath::CalcGaussianWeightsTable(
-		weights_,        // d‚Ý‚ÌŠi”[æ
-		weight          // ƒ{ƒP‹ï‡B‚±‚Ì”’l‚ª‘å‚«‚­‚È‚é‚Æƒ{ƒP‚ª‹­‚­‚È‚é
+		weights_,        // é‡ã¿ã®æ ¼ç´å…ˆ
+		weight          // ãƒœã‚±å…·åˆã€‚ã“ã®æ•°å€¤ãŒå¤§ãããªã‚‹ã¨ãƒœã‚±ãŒå¼·ããªã‚‹
 	);
 
 	CBuff::CBufferBlurWeight* mapWeight = nullptr;
-	HRESULT result = weight_.GetResource()->Map(0, nullptr, (void**)&mapWeight);	//	ƒ}ƒbƒsƒ“ƒO
+	HRESULT result = weight_.GetResource()->Map(0, nullptr, (void**)&mapWeight);	//	ãƒžãƒƒãƒ”ãƒ³ã‚°
 	mapWeight->weight[0] = Vector4D(weights_[0], weights_[1], weights_[2], weights_[3]);
 	mapWeight->weight[1] = Vector4D(weights_[4], weights_[5], weights_[6], weights_[7]);
 	assert(SUCCEEDED(result));
