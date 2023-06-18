@@ -18,7 +18,6 @@ namespace MyMath {
 	const float PIx2 = 6.2831853071f;
 #pragma endregion
 	//	ガウシアンブラー用のWeight計算
-	void CalcGaussianWeightsTable(float* weights, int32_t numWeights, float sigma);
 	void CalcGaussianWeightsTable(std::vector<float> weights, float sigma);
 
 	//	視点座標、注視点座標、上方向ベクトル

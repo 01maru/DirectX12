@@ -22,26 +22,6 @@ template float MyMath::mMin<float>(float, float);
 template int32_t MyMath::mMin<int32_t>(int32_t, int32_t);
 template double MyMath::mMin<double>(double, double);
 
-void MyMath::CalcGaussianWeightsTable(float* weights, int32_t numWeights, float sigma)
-{
-	// 重みの合計を記録する変数を定義する
-	float total = 0;
-
-	// ここからガウス関数を用いて重みを計算している
-	// ループ変数のxが基準テクセルからの距離
-	for (size_t x = 0; x < numWeights; x++)
-	{
-		weights[x] = expf(-0.5f * (float)(x * x) / sigma);
-		total += 2.0f * weights[x];
-	}
-
-	// 重みの合計で除算することで、重みの合計を1にしている
-	for (size_t i = 0; i < numWeights; i++)
-	{
-		weights[i] /= total;
-	}
-}
-
 void MyMath::CalcGaussianWeightsTable(std::vector<float> weights, float sigma)
 {
 	// 重みの合計を記録する変数を定義する
