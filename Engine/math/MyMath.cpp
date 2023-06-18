@@ -1,4 +1,4 @@
-#include "MyMath.h"
+ï»¿#include "MyMath.h"
 #include <cassert>
 #include <random>
 
@@ -9,7 +9,7 @@ T MyMath::mMax(T a, T b)
 	return b;
 }
 template float MyMath::mMax<float>(float, float);
-template int MyMath::mMax<int>(int, int);
+template int32_t MyMath::mMax<int32_t>(int32_t, int32_t);
 template double MyMath::mMax<double>(double, double);
 
 template<typename T>
@@ -19,24 +19,24 @@ T MyMath::mMin(T a, T b)
 	return a;
 }
 template float MyMath::mMin<float>(float, float);
-template int MyMath::mMin<int>(int, int);
+template int32_t MyMath::mMin<int32_t>(int32_t, int32_t);
 template double MyMath::mMin<double>(double, double);
 
-void MyMath::CalcGaussianWeightsTable(float* weights, int numWeights, float sigma)
+void MyMath::CalcGaussianWeightsTable(float* weights, int32_t numWeights, float sigma)
 {
-	// d‚İ‚Ì‡Œv‚ğ‹L˜^‚·‚é•Ï”‚ğ’è‹`‚·‚é
+	// é‡ã¿ã®åˆè¨ˆã‚’è¨˜éŒ²ã™ã‚‹å¤‰æ•°ã‚’å®šç¾©ã™ã‚‹
 	float total = 0;
 
-	// ‚±‚±‚©‚çƒKƒEƒXŠÖ”‚ğ—p‚¢‚Äd‚İ‚ğŒvZ‚µ‚Ä‚¢‚é
-	// ƒ‹[ƒv•Ï”‚Ìx‚ªŠî€ƒeƒNƒZƒ‹‚©‚ç‚Ì‹——£
-	for (int x = 0; x < numWeights; x++)
+	// ã“ã“ã‹ã‚‰ã‚¬ã‚¦ã‚¹é–¢æ•°ã‚’ç”¨ã„ã¦é‡ã¿ã‚’è¨ˆç®—ã—ã¦ã„ã‚‹
+	// ãƒ«ãƒ¼ãƒ—å¤‰æ•°ã®xãŒåŸºæº–ãƒ†ã‚¯ã‚»ãƒ«ã‹ã‚‰ã®è·é›¢
+	for (size_t x = 0; x < numWeights; x++)
 	{
 		weights[x] = expf(-0.5f * (float)(x * x) / sigma);
 		total += 2.0f * weights[x];
 	}
 
-	// d‚İ‚Ì‡Œv‚ÅœZ‚·‚é‚±‚Æ‚ÅAd‚İ‚Ì‡Œv‚ğ1‚É‚µ‚Ä‚¢‚é
-	for (int i = 0; i < numWeights; i++)
+	// é‡ã¿ã®åˆè¨ˆã§é™¤ç®—ã™ã‚‹ã“ã¨ã§ã€é‡ã¿ã®åˆè¨ˆã‚’1ã«ã—ã¦ã„ã‚‹
+	for (size_t i = 0; i < numWeights; i++)
 	{
 		weights[i] /= total;
 	}
@@ -95,7 +95,7 @@ bool MyMath::CollisionCircleLay(const Vector3D& startL, const Vector3D& endL, co
 	Vector3D start_to_center = Vector3D(pos.x - startL.x, pos.y - startL.y, pos.z - startL.z);
 	Vector3D end_to_center = Vector3D(pos.x - endL.x, pos.y - endL.y, pos.z - endL.z);
 	Vector3D start_to_end = Vector3D(endL.x - startL.x, endL.y - startL.y, endL.z - startL.z);
-	// ’PˆÊƒxƒNƒgƒ‹‰»‚·‚é
+	// å˜ä½ãƒ™ã‚¯ãƒˆãƒ«åŒ–ã™ã‚‹
 	start_to_end.Normalize();
 	Vector3D dis = start_to_end.cross(start_to_center);
 
@@ -103,12 +103,12 @@ bool MyMath::CollisionCircleLay(const Vector3D& startL, const Vector3D& endL, co
 
 	if (fabs(distance_projection) >= rad) return false;
 
-	// n“_ => I“_‚Æn“_ => ‰~‚Ì’†S‚Ì“àÏ‚ğŒvZ‚·‚é
+	// å§‹ç‚¹ => çµ‚ç‚¹ã¨å§‹ç‚¹ => å††ã®ä¸­å¿ƒã®å†…ç©ã‚’è¨ˆç®—ã™ã‚‹
 	float dot01 = start_to_center.dot(start_to_end);
-	// n“_ => I“_‚ÆI“_ => ‰~‚Ì’†S‚Ì“àÏ‚ğŒvZ‚·‚é
+	// å§‹ç‚¹ => çµ‚ç‚¹ã¨çµ‚ç‚¹ => å††ã®ä¸­å¿ƒã®å†…ç©ã‚’è¨ˆç®—ã™ã‚‹
 	float dot02 = end_to_center.dot(start_to_end);
 
-	// “ñ‚Â‚Ì“àÏ‚ÌŠ|‚¯ZŒ‹‰Ê‚ª0ˆÈ‰º‚È‚ç“–‚½‚è
+	// äºŒã¤ã®å†…ç©ã®æ›ã‘ç®—çµæœãŒ0ä»¥ä¸‹ãªã‚‰å½“ãŸã‚Š
 	if (dot01 * dot02 <= 0.0f)
 	{
 		return true;
@@ -135,7 +135,7 @@ Vector3D MyMath::CreatePolygonNormal(const Vector3D& a, const Vector3D& b, const
 	return normal;
 }
 
-Matrix MyMath::PerspectiveFovLH(const int winwidth, const int winheight, float fovY, float nearZ, float farZ)
+Matrix MyMath::PerspectiveFovLH(int32_t winwidth, int32_t winheight, float fovY, float nearZ, float farZ)
 {
 	assert(nearZ > 0.f && farZ > 0.f);
 	//assert(!XMScalarNearEqual(FovAngleY, 0.0f, 0.00001f * 2.0f));
@@ -159,7 +159,7 @@ Matrix MyMath::PerspectiveFovLH(const int winwidth, const int winheight, float f
 	return matProjection;
 }
 
-Matrix MyMath::OrthoLH(const int winwidth, const int winheight, float nearZ, float farZ)
+Matrix MyMath::OrthoLH(int32_t winwidth, int32_t winheight, float nearZ, float farZ)
 {
 	Matrix matProjection;
 	matProjection.Identity();
@@ -246,15 +246,15 @@ void MyMath::ObjMatrix::Update()
 {
 	matWorld.Identity();
 
-	//	ƒXƒP[ƒŠƒ“ƒO
+	//	ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 	SetMatScaling();
 	matWorld *= matScale;
 
-	//	‰ñ“]
+	//	å›è»¢
 	SetMatRotation();
 	matWorld *= matRot;
 
-	//	•½sˆÚ“®
+	//	å¹³è¡Œç§»å‹•
 	SetMatTransform();
 	matWorld *= matTrans;
 }
@@ -284,11 +284,11 @@ void MyMath::SpriteMatrix::Update()
 {
 	matWorld.Identity();
 
-	//	‰ñ“]
+	//	å›è»¢
 	SetMatRotation();
 	matWorld *= matRot;
 
-	//	•½sˆÚ“®
+	//	å¹³è¡Œç§»å‹•
 	SetMatTransform();
 	matWorld *= matTrans;
 }

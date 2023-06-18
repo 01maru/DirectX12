@@ -1,47 +1,47 @@
-#pragma once
+ï»¿#pragma once
 #include "Vector2D.h"
 #include "Vector3D.h"
 #include "Vector4D.h"
 #include "Matrix.h"
 
 namespace MyMath {
-	//	‘å‚«‚¢’l‚ğ•Ô‚·
+	//	å¤§ãã„å€¤ã‚’è¿”ã™
 	template<typename T>
 	T mMax(T a, T b);
-	//	¬‚³‚¢’l‚ğ•Ô‚·
+	//	å°ã•ã„å€¤ã‚’è¿”ã™
 	template<typename T>
 	T mMin(T a, T b);
 
-#pragma region ‰~ü—¦
+#pragma region å††å‘¨ç‡
 	const float PI = 3.14159265358979f;
 	const float PIx2 = 6.2831853071f;
 #pragma endregion
-	//	ƒKƒEƒVƒAƒ“ƒuƒ‰[—p‚ÌWeightŒvZ
-	void CalcGaussianWeightsTable(float* weights, int numWeights, float sigma);
+	//	ã‚¬ã‚¦ã‚·ã‚¢ãƒ³ãƒ–ãƒ©ãƒ¼ç”¨ã®Weightè¨ˆç®—
+	void CalcGaussianWeightsTable(float* weights, int32_t numWeights, float sigma);
 
-	//	‹“_À•WA’‹“_À•WAã•ûŒüƒxƒNƒgƒ‹
+	//	è¦–ç‚¹åº§æ¨™ã€æ³¨è¦–ç‚¹åº§æ¨™ã€ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	Matrix LookAtLH(const Vector3D& eye, const Vector3D& target, const Vector3D& up);
 
-	Matrix PerspectiveFovLH(const int winwidth, const int winheight, float fovY, float nearZ, float farZ);
-	Matrix OrthoLH(const int winwidth, const int winheight, float nearZ, float farZ);
+	Matrix PerspectiveFovLH(int32_t winwidth, int32_t winheight, float fovY, float nearZ, float farZ);
+	Matrix OrthoLH(int32_t winwidth, int32_t winheight, float nearZ, float farZ);
 
-	//	ƒ‰ƒWƒAƒ“•ÏŠ·
+	//	ãƒ©ã‚¸ã‚¢ãƒ³å¤‰æ›
 	float ConvertToRad(float angle);
 
-	//	—”
+	//	ä¹±æ•°
 	float GetRand(float min, float max);
 
 	bool CollisionCircleLay(const Vector3D& startL, const Vector3D& endL, const Vector3D& pos, float rad);
 
-	//’¸“_ABC‚Åì‚ç‚ê‚½ƒ|ƒŠƒSƒ“‚©‚ç–@ü‚ğŒvZ‚·‚éB
+	//é ‚ç‚¹ABCã§ä½œã‚‰ã‚ŒãŸãƒãƒªã‚´ãƒ³ã‹ã‚‰æ³•ç·šã‚’è¨ˆç®—ã™ã‚‹ã€‚
 	Vector3D CreatePolygonNormal(const Vector3D& a, const Vector3D& b, const Vector3D& c);
 
 	class MatView {
 	public:
 		Matrix mat;
-		Vector3D eye;		//	‹“_À•W
-		Vector3D target;	//	’‹“_À•W
-		Vector3D up;		//	ã•ûŒüƒxƒNƒgƒ‹
+		Vector3D eye;		//	è¦–ç‚¹åº§æ¨™
+		Vector3D target;	//	æ³¨è¦–ç‚¹åº§æ¨™
+		Vector3D up;		//	ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	public:
 		MatView();
 		void Init(const Vector3D& _eye, const Vector3D& _target, const Vector3D& _up);
@@ -53,13 +53,13 @@ namespace MyMath {
 		Matrix matWorld;
 
 		Matrix matScale;
-		Vector3D scale;		//	ƒXƒP[ƒ‹
+		Vector3D scale;		//	ã‚¹ã‚±ãƒ¼ãƒ«
 
 		Matrix matRot;
-		Vector3D rotAngle;	//	‰ñ“](’PˆÊ‚Íƒ‰ƒWƒAƒ“)
+		Vector3D rotAngle;	//	å›è»¢(å˜ä½ã¯ãƒ©ã‚¸ã‚¢ãƒ³)
 
 		Matrix matTrans;
-		Vector3D trans;		//	ˆÊ’u
+		Vector3D trans;		//	ä½ç½®
 
 	public:
 		void SetMatScaling();
