@@ -1,17 +1,18 @@
-#pragma once
+ï»¿#pragma once
 #include "VertIdxBuff.h"
-#include "Material.h"
 #include <iostream>
 #include <unordered_map>
+
+class Material;
 
 class Mesh :public VertIdxBuff
 {
 private:
-    std::vector<ModelVertex> vertices_;        // ’¸“_ƒf[ƒ^”z—ñ
-    std::vector<uint16_t> indices_;          // ƒCƒ“ƒfƒbƒNƒX”z—ñ
-    std::string diffuseMap_;                 // ƒeƒNƒXƒ`ƒƒ‚Ìƒtƒ@ƒCƒ‹ƒpƒX
+    std::vector<ModelVertex> vertices_;        // é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿é…åˆ—
+    std::vector<uint16_t> indices_;          // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—
+    std::string diffuseMap_;                 // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
     Material* mtl_ = nullptr;
-    std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData_;
+    std::unordered_map<uint16_t, std::vector<uint16_t>> smoothData_;
 
 private:
     void SetVertices() override;
@@ -26,16 +27,16 @@ public:
     Material* GetMaterial() { return mtl_; }
     size_t GetVertexCount() { return vertices_.size(); }
     inline const std::vector<ModelVertex>& GetVertices() { return vertices_; }
-    inline const std::vector<unsigned short>& GetIndices() { return indices_; }
+    inline const std::vector<uint16_t>& GetIndices() { return indices_; }
 
     //  Setter
     void SetMaterial(Material* material) { mtl_ = material; }
-    void SetBone(int vertexID, UINT boneIndex, float weight);
+    void SetBone(size_t vertexID, uint16_t boneIndex, float weight);
     void SetTextureFilePath(const std::string& filePath);
 
     //  Add
-    void AddIndex(unsigned short index) { indices_.emplace_back(index); }
+    void AddIndex(uint16_t index) { indices_.emplace_back(index); }
     void AddVertex(const ModelVertex& vertex) { vertices_.emplace_back(vertex); }
-    void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex) { smoothData_[indexPosition].emplace_back(indexVertex); }
+    void AddSmoothData(uint16_t indexPosition, uint16_t indexVertex) { smoothData_[indexPosition].emplace_back(indexVertex); }
 };
 

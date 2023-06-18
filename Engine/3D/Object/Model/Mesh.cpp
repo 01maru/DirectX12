@@ -1,15 +1,14 @@
-#include "Mesh.h"
+Ôªø#include "Mesh.h"
 #include "DirectX.h"
 #include "TextureManager.h"
+#include "Material.h"
 #include <cassert>
 
 void Mesh::Initialzie()
 {
-	UINT sizeVB = static_cast<UINT>(sizeof(vertices_[0]) * vertices_.size());
-	UINT sizeIB = static_cast<UINT>(sizeof(uint16_t) * indices_.size());
+	uint32_t sizeVB = static_cast<uint32_t>(sizeof(vertices_[0]) * vertices_.size());
 
-	BuffInitialize(MyDirectX::GetInstance()->GetDev(), sizeVB, sizeIB, &indices_.front(), (int)indices_.size());
-	//VertIdxBuff::Initialize(sizeVB, indices);
+	VertIdxBuff::Initialize(sizeVB, indices_);
 }
 
 void Mesh::Draw()
@@ -39,25 +38,25 @@ void Mesh::DrawShadowReciever()
 void Mesh::CalcSmoothedNormals()
 {
 	for (auto itr = smoothData_.begin(); itr != smoothData_.end(); ++itr) {
-		std::vector<unsigned short>& v = itr->second;
+		std::vector<uint16_t>& v = itr->second;
 
 		Vector3D normal;
-		for (unsigned short index : v) {
+		for (uint16_t index : v) {
 			normal += vertices_[index].normal;
 		}
 		normal /= (float)v.size();
 		normal.Normalize();
 
-		for (unsigned short index : v) {
+		for (uint16_t index : v) {
 			vertices_[index].normal = normal;
 		}
 	}
 }
 
-void Mesh::SetBone(int vertexID, UINT boneIndex, float weight)
+void Mesh::SetBone(size_t vertexID, uint16_t boneIndex, float weight)
 {
-	for (UINT i = 0; i < 4; i++) {
-		//	É{Å[ÉìÇÃweightÇ™0ÇæÇ¡ÇΩÇÁílë„ì¸
+	for (size_t i = 0; i < 4; i++) {
+		//	„Éú„Éº„É≥„ÅÆweight„Åå0„Å†„Å£„Åü„ÇâÂÄ§‰ª£ÂÖ•
 		if (vertices_[vertexID].boneWeight[i] == 0.0f) {
 			vertices_[vertexID].boneIndex[i] = boneIndex;
 			vertices_[vertexID].boneWeight[i] = weight;
@@ -73,17 +72,17 @@ void Mesh::SetTextureFilePath(const std::string& filePath)
 
 void Mesh::SetVertices()
 {
-	//	GPUÉÅÉÇÉäÇÃílèëÇ´ä∑Ç¶ÇÊÇ§
-	// GPUè„ÇÃÉoÉbÉtÉ@Ç…ëŒâûÇµÇΩâºëzÉÅÉÇÉä(ÉÅÉCÉìÉÅÉÇÉäè„)ÇéÊìæ
+	//	GPU„É°„É¢„É™„ÅÆÂÄ§Êõ∏„ÅçÊèõ„Åà„Çà„ÅÜ
+	// GPU‰∏ä„ÅÆ„Éê„ÉÉ„Éï„Ç°„Å´ÂØæÂøú„Åó„Åü‰ªÆÊÉ≥„É°„É¢„É™(„É°„Ç§„É≥„É°„É¢„É™‰∏ä)„ÇíÂèñÂæó
 	ModelVertex* vertMap = nullptr;
 	HRESULT result = vertBuff_->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
-	// ëSí∏ì_Ç…ëŒÇµÇƒ
-	for (int i = 0; i < vertices_.size(); i++) {
-		vertMap[i] = vertices_[i]; // ç¿ïWÇÉRÉsÅ[
+	// ÂÖ®È†ÇÁÇπ„Å´ÂØæ„Åó„Å¶
+	for (size_t i = 0; i < vertices_.size(); i++) {
+		vertMap[i] = vertices_[i]; // Â∫ßÊ®ô„Çí„Ç≥„Éî„Éº
 	}
-	// åqÇ™ÇËÇâèú
+	// Áπã„Åå„Çä„ÇíËß£Èô§
 	vertBuff_->Unmap(0, nullptr);
-	// í∏ì_1Ç¬ï™ÇÃÉfÅ[É^ÉTÉCÉY
+	// È†ÇÁÇπ1„Å§ÂàÜ„ÅÆ„Éá„Éº„Çø„Çµ„Ç§„Ç∫
 	vbView_.StrideInBytes = sizeof(vertices_[0]);
 }
