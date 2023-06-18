@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "IModel.h"
 
 class ObjModel :public IModel

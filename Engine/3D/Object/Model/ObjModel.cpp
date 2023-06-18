@@ -1,4 +1,4 @@
-#include "ObjModel.h"
+ï»¿#include "ObjModel.h"
 #include <sstream>
 #include <fstream>
 #include <assert.h>
@@ -19,7 +19,7 @@ ObjModel::~ObjModel()
 
 void ObjModel::BoneTransform(float /*TimeInSeconds*/, std::vector<Matrix>& /*transforms*/)
 {
-	//	obj‚È‚Ì‚Åbone‚È‚µ
+	//	objãªã®ã§boneãªã—
 }
 
 void ObjModel::AddIndices(const std::vector<uint16_t>& indices, Mesh* mesh)
@@ -74,15 +74,15 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			LoadMaterial(directoryPath, filename_);
 		}
 		
-		//	material‚ÌŠ„‚è“–‚Ä
+		//	materialã®å‰²ã‚Šå½“ã¦
 		if (key == "usemtl")
 		{
 			if (mesh->GetMaterial() == nullptr) {
-				// ƒ}ƒeƒŠƒAƒ‹‚Ì–¼“Ç‚İ‚İ
+				// ãƒãƒ†ãƒªã‚¢ãƒ«ã®åèª­ã¿è¾¼ã¿
 				string materialName;
 				line_stream >> materialName;
 
-				// ƒ}ƒeƒŠƒAƒ‹–¼‚ÅŒŸõ‚µAƒ}ƒeƒŠƒAƒ‹‚ğŠ„‚è“–‚Ä‚é
+				// ãƒãƒ†ãƒªã‚¢ãƒ«åã§æ¤œç´¢ã—ã€ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹
 				auto itr = materials_.find(materialName);
 				if (itr != materials_.end()) {
 					mesh->SetMaterial(itr->second.get());
@@ -92,23 +92,23 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 
 		if (key == "o") {
 
-			// ƒƒbƒVƒ…‚Ìî•ñ‚ª‘µ‚Á‚Ä‚¢‚é‚È‚ç
+			// ãƒ¡ãƒƒã‚·ãƒ¥ã®æƒ…å ±ãŒæƒã£ã¦ã„ã‚‹ãªã‚‰
 			if (mesh->GetVertexCount() > 0) {
-				// ’¸“_–@ü‚Ì•½‹Ï‚É‚æ‚éƒGƒbƒW‚Ì•½ŠŠ‰»
+				// é ‚ç‚¹æ³•ç·šã®å¹³å‡ã«ã‚ˆã‚‹ã‚¨ãƒƒã‚¸ã®å¹³æ»‘åŒ–
 				if (smoothing) {
 					mesh->CalcSmoothedNormals();
 				}
-				// Ÿ‚ÌƒƒbƒVƒ…¶¬
+				// æ¬¡ã®ãƒ¡ãƒƒã‚·ãƒ¥ç”Ÿæˆ
 				meshes_.emplace_back(new Mesh);
 				mesh = meshes_.back().get();
 				indexCount = 0;
 			}
 
-			//// ƒOƒ‹[ƒv–¼“Ç‚İ‚İ
+			//// ã‚°ãƒ«ãƒ¼ãƒ—åèª­ã¿è¾¼ã¿
 			//string groupName;
 			//line_stream >> groupName;
 
-			//// ƒƒbƒVƒ…‚É–¼‘O‚ğƒZƒbƒg
+			//// ãƒ¡ãƒƒã‚·ãƒ¥ã«åå‰ã‚’ã‚»ãƒƒãƒˆ
 			//mesh->SetName(groupName);
 		}
 
@@ -151,7 +151,7 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 			string index_string;
 			while (getline(line_stream, index_string, ' '))
 			{
-				//	’¸“_‚²‚Æ‚ÌIndexî•ñæ“¾
+				//	é ‚ç‚¹ã”ã¨ã®Indexæƒ…å ±å–å¾—
 				std::istringstream index_stream(index_string);
 				unsigned short indexPos, indexNormal, indexUV;
 				index_stream >> indexPos;
@@ -165,14 +165,14 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 				vertex.pos = temp_poss[indexPos - 1];
 				vertex.normal = temp_normals[indexNormal - 1];
 				vertex.uv = temp_uvs[indexUV - 1];
-				vertex.boneWeight[0] = 1.0f;			//	fbxVertex—p
+				vertex.boneWeight[0] = 1.0f;			//	fbxVertexç”¨
 				mesh->AddVertex(vertex);
 
 				if (smoothing) {
 					mesh->AddSmoothData(indexPos, (unsigned short)mesh->GetVertexCount() - 1);
 				}
 
-				if (indexNum >= 3)	//	ˆê–Ê‚Ìindex”‚ª3‚ğ‰z‚¦‚½‚ç(4‚ÂˆÈã‚Í‘z’èŠO)
+				if (indexNum >= 3)	//	ä¸€é¢ã®indexæ•°ãŒ3ã‚’è¶ŠãˆãŸã‚‰(4ã¤ä»¥ä¸Šã¯æƒ³å®šå¤–)
 				{
 					indices.emplace_back((unsigned short)(indexCount - 1));
 					indices.emplace_back((unsigned short)indexCount);
@@ -205,7 +205,7 @@ void ObjModel::LoadMaterial(const std::string& directoryPath, const std::string&
 	file.open(directoryPath + filename);
 	if (file.fail()) { assert(0); }
 
-	//	•¡”ƒ}ƒeƒŠƒAƒ‹‚É‘Î‰‚·‚é‚½‚ß‚É‰Šú’lnullptr
+	//	è¤‡æ•°ãƒãƒ†ãƒªã‚¢ãƒ«ã«å¯¾å¿œã™ã‚‹ãŸã‚ã«åˆæœŸå€¤nullptr
 	Material* material = nullptr;
 	string line;
 	while (getline(file, line))
@@ -220,15 +220,15 @@ void ObjModel::LoadMaterial(const std::string& directoryPath, const std::string&
 		}
 
 		if (key == "newmtl") {
-			// Šù‚Éƒ}ƒeƒŠƒAƒ‹‚ª‚ ‚ê‚Î
+			// æ—¢ã«ãƒãƒ†ãƒªã‚¢ãƒ«ãŒã‚ã‚Œã°
 			if (material) {
-				// ƒ}ƒeƒŠƒAƒ‹‚ğƒRƒ“ƒeƒi‚É“o˜^
+				// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ã‚³ãƒ³ãƒ†ãƒŠã«ç™»éŒ²
 				AddMaterial(material);
 			}
 
-			// V‚µ‚¢ƒ}ƒeƒŠƒAƒ‹‚ğ¶¬
+			// æ–°ã—ã„ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ç”Ÿæˆ
 			material = Material::Create();
-			// ƒ}ƒeƒŠƒAƒ‹–¼“Ç‚İ‚İ
+			// ãƒãƒ†ãƒªã‚¢ãƒ«åèª­ã¿è¾¼ã¿
 			if (material) {
 				line_stream >> material->name_;
 			}
@@ -254,7 +254,7 @@ void ObjModel::LoadMaterial(const std::string& directoryPath, const std::string&
 				line_stream >> material->specular_.z;
 			}
 
-			//	‰æ‘œƒZƒbƒg
+			//	ç”»åƒã‚»ãƒƒãƒˆ
 			if (key == "map_Kd") {
 				line_stream >> material->textureFilename_;
 
@@ -266,7 +266,7 @@ void ObjModel::LoadMaterial(const std::string& directoryPath, const std::string&
 	file.close();
 
 	if (material) {
-		// ƒ}ƒeƒŠƒAƒ‹‚ğ“o˜^
+		// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’ç™»éŒ²
 		AddMaterial(material);
 	}
 }
