@@ -76,7 +76,7 @@ void MyDirectX::Initialize()
 	for (size_t i = 0; i < _countof(levels); i++) {
 		// 採用したアダプターでデバイスを生成
 		result = D3D12CreateDevice(tmpAdapter.Get(), levels[i],
-			IID_PPV_ARGS(&device));
+			IID_PPV_ARGS(&device_));
 		if (result == S_OK) {
 			// デバイスを生成できた時点でループを抜ける
 			featureLevel = levels[i];
@@ -88,7 +88,7 @@ void MyDirectX::Initialize()
 
 #ifdef _DEBUG
 	ComPtr<ID3D12InfoQueue> infoQueue;
-	device.As(&infoQueue);
+	device_.As(&infoQueue);
 
 	D3D12_MESSAGE_ID denyIds[] = {
 	  D3D12_MESSAGE_ID_CLEARRENDERTARGETVIEW_MISMATCHINGCLEARVALUE,
@@ -105,7 +105,7 @@ void MyDirectX::Initialize()
 
 	infoQueue->PushStorageFilter(&filter);
 
-	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+	if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
@@ -114,24 +114,24 @@ void MyDirectX::Initialize()
 
 #pragma region CmdList
 	// コマンドアロケータを生成
-	result = device->CreateCommandAllocator(
+	result = device_->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		IID_PPV_ARGS(&cmdAllocator));
 	assert(SUCCEEDED(result));
 	// コマンドリストを生成
-	result = device->CreateCommandList(0,
+	result = device_->CreateCommandList(0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		cmdAllocator.Get(), nullptr,
 		IID_PPV_ARGS(&cmdList));
 	assert(SUCCEEDED(result));
 
 	// コマンドアロケータを生成
-	result = device->CreateCommandAllocator(
+	result = device_->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		IID_PPV_ARGS(&loadTexAllocator));
 	assert(SUCCEEDED(result));
 	// コマンドリストを生成
-	result = device->CreateCommandList(0,
+	result = device_->CreateCommandList(0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		loadTexAllocator.Get(), nullptr,
 		IID_PPV_ARGS(&loadTexCmdList));
@@ -142,11 +142,11 @@ void MyDirectX::Initialize()
 	//コマンドキューの設定
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	//コマンドキューを生成
-	result = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&cmdQueue));
+	result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&cmdQueue));
 	assert(SUCCEEDED(result));
 
 	//コマンドキューを生成
-	result = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&loadTexQueue));
+	result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&loadTexQueue));
 	assert(SUCCEEDED(result));
 #pragma endregion CmdQueue
 
@@ -177,7 +177,7 @@ void MyDirectX::Initialize()
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー
 	rtvHeapDesc.NumDescriptors = swapChainDesc.BufferCount; // 裏表の2つ
 	// デスクリプタヒープの生成
-	device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
+	device_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap));
 #pragma endregion DesHeap
 
 #pragma region BackBuff
@@ -192,14 +192,14 @@ void MyDirectX::Initialize()
 		// デスクリプタヒープのハンドルを取得(先頭アドレス)
 		rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		// 裏か表かでアドレスがずれる
-		rtvHandle.ptr += i * device->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
+		rtvHandle.ptr += i * device_->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
 		// レンダーターゲットビューの設定
 		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 		// シェーダーの計算結果をSRGBに変換して書き込む
 		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 		// レンダーターゲットビューの生成
-		device->CreateRenderTargetView(backBuffers[i].Get(), &rtvDesc, rtvHandle);
+		device_->CreateRenderTargetView(backBuffers[i].Get(), &rtvDesc, rtvHandle);
 	}
 #pragma endregion RTV
 #pragma endregion
@@ -212,7 +212,7 @@ void MyDirectX::Initialize()
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	
-	result = device->CreateDescriptorHeap(
+	result = device_->CreateDescriptorHeap(
 		&heapDesc,
 		IID_PPV_ARGS(srvHeap.ReleaseAndGetAddressOf()));
 	assert(SUCCEEDED(result));
@@ -235,7 +235,7 @@ void MyDirectX::Initialize()
 	depthClearValue.DepthStencil.Depth = 1.0f;
 	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
 	//	Resource生成
-	result = device->CreateCommittedResource(
+	result = device_->CreateCommittedResource(
 		&depthHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&depthResourceDesc,
@@ -246,12 +246,12 @@ void MyDirectX::Initialize()
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
 	dsvHeapDesc.NumDescriptors = 1;
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	result = device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+	result = device_->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
 	//	view
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	device->CreateDepthStencilView(
+	device_->CreateDepthStencilView(
 		depthBuff.Get(),
 		&dsvDesc,
 		dsvHeap->GetCPUDescriptorHandleForHeapStart());
@@ -259,10 +259,10 @@ void MyDirectX::Initialize()
 
 #pragma region fence
 	// フェンスの生成
-	result = device->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	result = device_->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 
 	// フェンスの生成
-	result = device->CreateFence(uploadTexFenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&uploadTexFence));
+	result = device_->CreateFence(uploadTexFenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&uploadTexFence));
 #pragma endregion fence
 
 	//	ビューポート
@@ -327,7 +327,7 @@ void MyDirectX::PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor_)
 #pragma region ScreenClear
 	for (int i = 0; i < postEffect->GetTextureNum(); i++)
 	{
-		rtvHandle_.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * i;
+		rtvHandle_.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * i;
 
 		if (clearColor_ != nullptr) {
 			ScreenClear(clearColor_, rtvHandle_);
@@ -365,7 +365,7 @@ void MyDirectX::PrevDraw(FLOAT* clearColor_)
 #pragma region Change
 	// レンダーターゲットビューのハンドルを取得
 	rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
-	rtvHandle.ptr += bbIndex * device->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
+	rtvHandle.ptr += bbIndex * device_->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
 	dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
 #pragma endregion Change
 

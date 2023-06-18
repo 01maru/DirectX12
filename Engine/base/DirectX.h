@@ -18,7 +18,7 @@ class MyDirectX
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	ComPtr<ID3D12Device> device;
+	ComPtr<ID3D12Device> device_;
 
 	ComPtr<ID3D12CommandAllocator> cmdAllocator;
 	ComPtr<ID3D12GraphicsCommandList> cmdList;
@@ -45,8 +45,6 @@ private:
 	UINT64 uploadTexFenceVal = 0;
 
 	D3D12_RESOURCE_BARRIER barrierDesc{};
-
-	FLOAT clearColor[4] = {};
 
 	ComPtr<ID3D12DescriptorHeap> dsvHeap;
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
@@ -89,7 +87,7 @@ public:
 	const D3D12_GPU_DESCRIPTOR_HANDLE GetGPUSRVHeapForHeapStart() { return srvHeap->GetGPUDescriptorHandleForHeapStart(); }
 
 	ID3D12DescriptorHeap* GetSRVHeap() { return srvHeap.Get(); }
-	ID3D12Device* GetDev() { return device.Get(); }
+	ID3D12Device* GetDev() { return device_.Get(); }
 	ID3D12GraphicsCommandList* GetCmdList() { return cmdList.Get(); }
 	ID3D12GraphicsCommandList* GetLoadTexCmdList() { return loadTexCmdList.Get(); }
 	D3D12_RESOURCE_DESC GetBackBuffDesc() { return backBuffers[0]->GetDesc(); }
