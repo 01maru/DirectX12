@@ -4,17 +4,17 @@ NormalCamera::~NormalCamera()
 {
 }
 
-void NormalCamera::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
+void NormalCamera::Initialize(Vector3D eye, Vector3D target, Vector3D up)
 {
-	eye = eye_;
-	target = target_;
-	up = up_;
-	//matProjection = MyMath::OrthoLH(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 0.1f, 50.0f);
+	eye_ = eye;
+	target_ = target;
+	up_ = up;
+	//matProjection_ = MyMath::OrthoLH(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 0.1f, 50.0f);
 	MatUpdate();
 
 	CalcDirectionVec();
 
-	up = -downVec;
+	up_ = -downVec_;
 
 	MatUpdate();
 }

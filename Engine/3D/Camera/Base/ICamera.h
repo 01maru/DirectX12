@@ -1,52 +1,54 @@
-#pragma once
+ï»¿#pragma once
 #include "MyMath.h"
 #include "Window.h"
 
 class ICamera
 {
 protected:
-	Matrix matView;
-	Matrix matProjection = MyMath::PerspectiveFovLH(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, MyMath::ConvertToRad(48.0f), 0.1f, 1000.0f);
+	Matrix matView_;
+	Matrix matProjection_ = MyMath::PerspectiveFovLH(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, MyMath::ConvertToRad(48.0f), 0.1f, 1000.0f);
 
-	Vector3D eye;		//	‹“_À•W
-	Vector3D target;	//	’‹“_À•W
-	Vector3D up;		//	ã•ûŒüƒxƒNƒgƒ‹
-	Vector3D frontVec;
-	Vector3D rightVec;
-	Vector3D downVec;
+	Vector3D eye_;		//	è¦–ç‚¹åº§æ¨™
+	Vector3D target_;	//	æ³¨è¦–ç‚¹åº§æ¨™
+	Vector3D up_;		//	ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+	Vector3D frontVec_;
+	Vector3D rightVec_;
+	Vector3D downVec_;
 
-	Matrix billboard;
-	Matrix billboardY;
+	Matrix billboard_;
+	Matrix billboardY_;
 
-	//	ƒrƒ‹ƒ{[ƒhŒvZ—p(‹“_‚â’‹“_‚Ì’l‚ª•Ï‚í‚Á‚½‚ç•ûŒüƒxƒNƒgƒ‹‚ÌXV‚µ‚Ä‚©‚çŒvZ‚·‚é•K—v‚ ‚è)
+protected:
+	//	ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰è¨ˆç®—ç”¨(è¦–ç‚¹ã‚„æ³¨è¦–ç‚¹ã®å€¤ãŒå¤‰ã‚ã£ãŸã‚‰æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã®æ›´æ–°ã—ã¦ã‹ã‚‰è¨ˆç®—ã™ã‚‹å¿…è¦ã‚ã‚Š)
 	void CalcBillboard();
-	//	•ûŒüƒxƒNƒgƒ‹ŒvZ
+	//	æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«è¨ˆç®—
 	void CalcDirectionVec();
+
 public:
 	virtual ~ICamera() = default;
-	virtual void Initialize(Vector3D eye_, Vector3D target_, Vector3D up_) = 0;
+	virtual void Initialize(Vector3D eye, Vector3D target, Vector3D up) = 0;
 	virtual void Update() = 0;
-	//	ƒrƒ…[s—ñXV
-	void MatUpdate() { matView = MyMath::LookAtLH(eye, target, up); }
+	//	ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—æ›´æ–°
+	void MatUpdate() { matView_ = MyMath::LookAtLH(eye_, target_, up_); }
 
 	//	Getter
-	const Vector3D& GetEye() { return eye; }
-	const Vector3D& GetTarget() { return target; }
-	const Vector3D& GetUp() { return up; }
-	const Vector3D& GetFrontVec() { return frontVec; }
-	const Vector3D& GetRightVec() { return rightVec; }
-	const Vector3D& GetDownVec() { return downVec; }
-	const Matrix& GetView() { return matView; }
-	const Matrix& GetProjection() { return matProjection; }
-	Matrix GetViewProj() const { return matView * matProjection; }
-	const Matrix& GetBillboard() { return billboard; }
-	const Matrix& GetBillboardY() { return billboardY; }
+	const Vector3D& GetEye() { return eye_; }
+	const Vector3D& GetTarget() { return target_; }
+	const Vector3D& GetUp() { return up_; }
+	const Vector3D& GetFrontVec() { return frontVec_; }
+	const Vector3D& GetRightVec() { return rightVec_; }
+	const Vector3D& GetDownVec() { return downVec_; }
+	const Matrix& GetView() { return matView_; }
+	const Matrix& GetProjection() { return matProjection_; }
+	Matrix GetViewProj() const { return matView_ * matProjection_; }
+	const Matrix& GetBillboard() { return billboard_; }
+	const Matrix& GetBillboardY() { return billboardY_; }
 
 	//	Setter
-	//	fovY‚Ì’PˆÊ‚Íƒ‰ƒWƒAƒ“
-	void SetProjectionMatrix(int width, int height, float fovY);
-	void SetTarget(const Vector3D& t) { target = t; }
-	void SetEye(const Vector3D& e) { eye = e; }
-	void EyeMove(const Vector3D& moveE) { eye += moveE; }
+	//	fovYã®å˜ä½ã¯ãƒ©ã‚¸ã‚¢ãƒ³
+	void SetProjectionMatrix(int32_t width, int32_t height, float fovY);
+	void SetTarget(const Vector3D& t) { target_ = t; }
+	void SetEye(const Vector3D& e) { eye_ = e; }
+	void EyeMove(const Vector3D& moveE) { eye_ += moveE; }
 };
 

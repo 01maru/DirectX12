@@ -1,56 +1,56 @@
-#include "ICamera.h"
+ï»¿#include "ICamera.h"
 
 void ICamera::CalcBillboard()
 {
-	//	s—ñ‰Šú‰»
-	billboard.Identity();
+	//	è¡Œåˆ—åˆæœŸåŒ–
+	billboard_.Identity();
 
-#pragma region ‘S•ûŒüƒrƒ‹ƒ{[ƒh
-	billboard.m[0][0] = rightVec.x;
-	billboard.m[0][1] = rightVec.y;
-	billboard.m[0][2] = rightVec.z;
-	billboard.m[1][0] = -downVec.x;
-	billboard.m[1][1] = -downVec.y;
-	billboard.m[1][2] = -downVec.z;
-	billboard.m[2][0] = frontVec.x;
-	billboard.m[2][1] = frontVec.y;
-	billboard.m[2][2] = frontVec.z;
+#pragma region å…¨æ–¹å‘ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰
+	billboard_.m[0][0] = rightVec_.x;
+	billboard_.m[0][1] = rightVec_.y;
+	billboard_.m[0][2] = rightVec_.z;
+	billboard_.m[1][0] = -downVec_.x;
+	billboard_.m[1][1] = -downVec_.y;
+	billboard_.m[1][2] = -downVec_.z;
+	billboard_.m[2][0] = frontVec_.x;
+	billboard_.m[2][1] = frontVec_.y;
+	billboard_.m[2][2] = frontVec_.z;
 #pragma endregion
 
-	//	s—ñ‰Šú‰»
-	billboardY.Identity();
+	//	è¡Œåˆ—åˆæœŸåŒ–
+	billboardY_.Identity();
 
-#pragma region Y²ƒrƒ‹ƒ{[ƒh
-	billboardY.m[0][0] = rightVec.x;
-	billboardY.m[0][1] = rightVec.y;
-	billboardY.m[0][2] = rightVec.z;
-	Vector3D billYvecZ = rightVec.cross(up);
-	billboardY.m[2][0] = billYvecZ.x;
-	billboardY.m[2][1] = billYvecZ.y;
-	billboardY.m[2][2] = billYvecZ.z;
+#pragma region Yè»¸ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰
+	billboardY_.m[0][0] = rightVec_.x;
+	billboardY_.m[0][1] = rightVec_.y;
+	billboardY_.m[0][2] = rightVec_.z;
+	Vector3D billYvecZ = rightVec_.cross(up_);
+	billboardY_.m[2][0] = billYvecZ.x;
+	billboardY_.m[2][1] = billYvecZ.y;
+	billboardY_.m[2][2] = billYvecZ.z;
 #pragma endregion
 }
 
 void ICamera::CalcDirectionVec()
 {
-	//	‘O•û•ûŒüƒxƒNƒgƒ‹
-	frontVec = target - eye;
-	frontVec.Normalize();
+	//	å‰æ–¹æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+	frontVec_ = target_ - eye_;
+	frontVec_.Normalize();
 
-	//	‰E•ûŒüƒxƒNƒgƒ‹
-	rightVec = Vector3D(0, 1, 0).cross(frontVec);
-	if (rightVec == Vector3D()) {
-		rightVec = Vector3D(1.0f, 0.0f, 0.0f);
+	//	å³æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+	rightVec_ = Vector3D(0, 1, 0).cross(frontVec_);
+	if (rightVec_ == Vector3D()) {
+		rightVec_ = Vector3D(1.0f, 0.0f, 0.0f);
 	}
-	//	‰º•ûŒüƒxƒNƒgƒ‹
-	downVec = rightVec.cross(frontVec);
+	//	ä¸‹æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+	downVec_ = rightVec_.cross(frontVec_);
 
-	//	ƒxƒNƒgƒ‹‚Ì³‹K‰»
-	rightVec.Normalize();
-	downVec.Normalize();
+	//	ãƒ™ã‚¯ãƒˆãƒ«ã®æ­£è¦åŒ–
+	rightVec_.Normalize();
+	downVec_.Normalize();
 }
 
-void ICamera::SetProjectionMatrix(int width, int height, float fovY)
+void ICamera::SetProjectionMatrix(int32_t width, int32_t height, float fovY)
 {
-	matProjection = MyMath::PerspectiveFovLH(width, height, fovY, 0.1f, 1000.0f);
+	matProjection_ = MyMath::PerspectiveFovLH(width, height, fovY, 0.1f, 1000.0f);
 }

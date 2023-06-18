@@ -2,22 +2,22 @@
 
 ObjCamera2D::ObjCamera2D()
 {
-	eye = { 0.0f,0.0f,-100.0f };
-	target = { 0.0f,0.0f,0.0f };
-	up = { 0.0f,1.0f,0.0f };
+	eye_ = { 0.0f,0.0f,-100.0f };
+	target_ = { 0.0f,0.0f,0.0f };
+	up_ = { 0.0f,1.0f,0.0f };
 
-	matProjection = MyMath::OrthoLH(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 0.1f, 1000.0f);
+	matProjection_ = MyMath::OrthoLH(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 0.1f, 1000.0f);
 
 	MatUpdate();
 
 	CalcDirectionVec();
 }
 
-void ObjCamera2D::Initialize(Vector3D eye_, Vector3D target_, Vector3D up_)
+void ObjCamera2D::Initialize(Vector3D eye, Vector3D target, Vector3D up)
 {
-	eye = eye_;
-	target = target_;
-	up = up_;
+	eye_ = eye;
+	target_ = target;
+	up_ = up;
 
 	MatUpdate();
 
