@@ -22,7 +22,7 @@ template float MyMath::mMin<float>(float, float);
 template int32_t MyMath::mMin<int32_t>(int32_t, int32_t);
 template double MyMath::mMin<double>(double, double);
 
-void MyMath::CalcGaussianWeightsTable(std::vector<float> weights, float sigma)
+void MyMath::CalcGaussianWeightsTable(std::vector<float>& weights, float sigma)
 {
 	// 重みの合計を記録する変数を定義する
 	float total = 0;
