@@ -1,4 +1,4 @@
-#include "Object3D.h"
+ï»¿#include "Object3D.h"
 #include "BaseCollider.h"
 #include "CollisionManager.h"
 #include <assimp/Importer.hpp>
@@ -11,29 +11,28 @@
 
 #include "ConstBuffStruct.h"
 
-Light* Object3D::light = nullptr;
-GPipeline* Object3D::pipeline = nullptr;
-ICamera* Object3D::camera = nullptr;
-MyDirectX* Object3D::dx = MyDirectX::GetInstance();
+Light* Object3D::sLight = nullptr;
+GPipeline* Object3D::sPipeline = nullptr;
+ICamera* Object3D::sCamera = nullptr;
 
 void Object3D::SetLight(Light* light_)
 {
-	Object3D::light = light_;
+	Object3D::sLight = light_;
 }
 
 void Object3D::SetPipeline(GPipeline* pipeline_)
 {
-	Object3D::pipeline = pipeline_;
+	Object3D::sPipeline = pipeline_;
 }
 
 void Object3D::SetCamera(ICamera* camera_)
 {
-	Object3D::camera = camera_;
+	Object3D::sCamera = camera_;
 }
 
-void Object3D::SetModel(IModel* model_)
+void Object3D::SetModel(IModel* model)
 {
-	model = model_;
+	model_ = model;
 }
 
 //void Object3D::SetCollider(BaseCollider* collider_)
@@ -45,10 +44,10 @@ void Object3D::SetModel(IModel* model_)
 //	collider_->Update();
 //}
 
-void Object3D::SetAttribute(unsigned short /*attribute*/)
-{
-	//collider->SetAttribute(attribute);
-}
+//void Object3D::SetAttribute(unsigned short /*attribute*/)
+//{
+//	//collider->SetAttribute(attribute);
+//}
 
 Object3D::~Object3D()
 {
@@ -58,19 +57,19 @@ Object3D::~Object3D()
 	//}
 }
 
-Object3D* Object3D::Create(IModel* model)
+Object3D* Object3D::Create(IModel* model_)
 {
-	// 3DƒIƒuƒWƒFƒNƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬
+	// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
 	Object3D* obj = new Object3D();
 	if (obj == nullptr) {
 		return nullptr;
 	}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	obj->Initialize();
 
-	if (model) {
-		obj->SetModel(model);
+	if (model_) {
+		obj->SetModel(model_);
 	}
 
 	return obj;
@@ -82,39 +81,39 @@ void Object3D::Initialize()
 
 #pragma region ConstBuff
 
-	transform.Initialize(sizeof(CBuff::CBuffObj3DTransform));
-	//	’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	result = transform.GetResource()->Map(0, nullptr, (void**)&cTransformMap);	//	ƒ}ƒbƒsƒ“ƒO
+	transform_.Initialize(sizeof(CBuff::CBuffObj3DTransform));
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ”ãƒ³ã‚°
+	result = transform_.GetResource()->Map(0, nullptr, (void**)&cTransformMap_);	//	ãƒãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
-	shadowTransform.Initialize(sizeof(CBuff::CBuffObj3DTransform));
-	//	’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	result = shadowTransform.GetResource()->Map(0, nullptr, (void**)&cShadowTransMap);	//	ƒ}ƒbƒsƒ“ƒO
+	shadowTransform_.Initialize(sizeof(CBuff::CBuffObj3DTransform));
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ”ãƒ³ã‚°
+	result = shadowTransform_.GetResource()->Map(0, nullptr, (void**)&cShadowTransMap_);	//	ãƒãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
-	lightMaterial.Initialize(sizeof(CBuff::CBuffLightMaterial));
-	//	’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	result = lightMaterial.GetResource()->Map(0, nullptr, (void**)&cLightMap);	//	ƒ}ƒbƒsƒ“ƒO
+	lightMaterial_.Initialize(sizeof(CBuff::CBuffLightMaterial));
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ”ãƒ³ã‚°
+	result = lightMaterial_.GetResource()->Map(0, nullptr, (void**)&cLightMap_);	//	ãƒãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
-	skinData.Initialize(sizeof(CBuff::CBuffSkinData));
-	//	’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	result = skinData.GetResource()->Map(0, nullptr, (void**)&cSkinMap);	//	ƒ}ƒbƒsƒ“ƒO
+	skinData_.Initialize(sizeof(CBuff::CBuffSkinData));
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ”ãƒ³ã‚°
+	result = skinData_.GetResource()->Map(0, nullptr, (void**)&cSkinMap_);	//	ãƒãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
-	colorMaterial.Initialize(sizeof(CBuff::CBuffColorMaterial));
-	//	’è”ƒoƒbƒtƒ@‚Ìƒ}ƒbƒsƒ“ƒO
-	result = colorMaterial.GetResource()->Map(0, nullptr, (void**)&cColorMap);	//	ƒ}ƒbƒsƒ“ƒO
+	colorMaterial_.Initialize(sizeof(CBuff::CBuffColorMaterial));
+	//	å®šæ•°ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ”ãƒ³ã‚°
+	result = colorMaterial_.GetResource()->Map(0, nullptr, (void**)&cColorMap_);	//	ãƒãƒƒãƒ”ãƒ³ã‚°
 	assert(SUCCEEDED(result));
 
 #pragma endregion
 
-	mat.Initialize();
+	mat_.Initialize();
 
-	//	ƒ{[ƒ“‚Ì‰Šú‰»
-	for (UINT i = 0; i < CBuff::MAX_BONES; i++)
+	//	ãƒœãƒ¼ãƒ³ã®åˆæœŸåŒ–
+	for (size_t i = 0; i < CBuff::MAX_BONES; i++)
 	{
-		cSkinMap->bones[i] = Matrix();
+		cSkinMap_->bones[i] = Matrix();
 	}
 }
 
@@ -129,22 +128,22 @@ void Object3D::MatUpdate(ICamera* camera_)
 {
 
 #pragma region WorldMatrix
-	mat.Update();
+	mat_.Update();
 #pragma endregion
 
 	//if (isBillboard) {
 	//	const XMMATRIX& matBillboard = camera->GetBillboardMatrix();
 
 	//	matWorld = XMMatrixIdentity();
-	//	matWorld *= matScale; // ƒ[ƒ‹ƒhs—ñ‚ÉƒXƒP[ƒŠƒ“ƒO‚ğ”½‰f
-	//	matWorld *= matRot; // ƒ[ƒ‹ƒhs—ñ‚É‰ñ“]‚ğ”½‰f
+	//	matWorld *= matScale; // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã‚’åæ˜ 
+	//	matWorld *= matRot; // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«å›è»¢ã‚’åæ˜ 
 	//	matWorld *= matBillboard;
-	//	matWorld *= matTrans; // ƒ[ƒ‹ƒhs—ñ‚É•½sˆÚ“®‚ğ”½‰f
+	//	matWorld *= matTrans; // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«å¹³è¡Œç§»å‹•ã‚’åæ˜ 
 	//}
 
-	// eƒIƒuƒWƒFƒNƒg‚ª‚ ‚ê‚Î
-	if (parent != nullptr) {
-		mat.matWorld_ *= parent->mat.matWorld_;
+	// è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒã‚ã‚Œã°
+	if (parent_ != nullptr) {
+		mat_.matWorld_ *= parent_->mat_.matWorld_;
 	}
 
 	ICamera* cam = nullptr;
@@ -152,65 +151,65 @@ void Object3D::MatUpdate(ICamera* camera_)
 		cam = camera_;
 	}
 	else {
-		cam = camera;
+		cam = sCamera;
 	}
 	const Matrix& matViewProjection = cam->GetViewProj();
 	const Vector3D& cameraPos = cam->GetEye();
 
-	cTransformMap->matViewProj = matViewProjection;
-	cTransformMap->matViewProj = matViewProjection;
-	if (model != nullptr) {
-		cTransformMap->matWorld = model->GetModelTransform();
-		cTransformMap->matWorld *= mat.matWorld_;
+	cTransformMap_->matViewProj = matViewProjection;
+	cTransformMap_->matViewProj = matViewProjection;
+	if (model_ != nullptr) {
+		cTransformMap_->matWorld = model_->GetModelTransform();
+		cTransformMap_->matWorld *= mat_.matWorld_;
 	}
 	else {
-		cTransformMap->matWorld = mat.matWorld_;
+		cTransformMap_->matWorld = mat_.matWorld_;
 	}
-	cTransformMap->cameraPos = cameraPos;
+	cTransformMap_->cameraPos = cameraPos;
 
-	const Matrix& matView_ = light->GetDirLightCamera(0)->GetViewProj();
+	const Matrix& matView_ = sLight->GetDirLightCamera(0)->GetViewProj();
 
 	
-	cShadowTransMap->matViewProj = matView_;
-	if (model != nullptr) {
-		cShadowTransMap->matWorld = model->GetModelTransform();
-		cShadowTransMap->matWorld *= mat.matWorld_;
+	cShadowTransMap_->matViewProj = matView_;
+	if (model_ != nullptr) {
+		cShadowTransMap_->matWorld = model_->GetModelTransform();
+		cShadowTransMap_->matWorld *= mat_.matWorld_;
 	}
 	else {
-		cShadowTransMap->matWorld = mat.matWorld_;
+		cShadowTransMap_->matWorld = mat_.matWorld_;
 	}
 
-	cLightMap->mLVP = matView_;
-	cLightMap->cameraPos = light->GetDirLightCamera(0)->GetEye();
+	cLightMap_->mLVP = matView_;
+	cLightMap_->cameraPos = sLight->GetDirLightCamera(0)->GetEye();
 
-	cColorMap->color = color;
+	cColorMap_->color = color_;
 }
 
 void Object3D::PlayAnimation()
 {
 	std::vector<Matrix> Transforms;
 
-	animationTimer += 0.01f;
-	model->BoneTransform(animationTimer, Transforms);
+	animationTimer_ += 0.01f;
+	model_->BoneTransform(animationTimer_, Transforms);
 
-	for (UINT i = 0; i < model->GetNumBones(); i++)
+	for (size_t i = 0; i < model_->GetNumBones(); i++)
 	{
-		cSkinMap->bones[i] = Transforms[i];
+		cSkinMap_->bones[i] = Transforms[i];
 	}
 }
 
 void Object3D::Draw()
 {
-	pipeline->SetGraphicsRootSignature();
-	pipeline->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	sPipeline->SetGraphicsRootSignature();
+	sPipeline->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	transform.SetGraphicsRootCBuffView(2);
-	skinData.SetGraphicsRootCBuffView(4);
-	colorMaterial.SetGraphicsRootCBuffView(5);
+	transform_.SetGraphicsRootCBuffView(2);
+	skinData_.SetGraphicsRootCBuffView(4);
+	colorMaterial_.SetGraphicsRootCBuffView(5);
 
-	light->SetGraphicsRootCBuffView(3);
+	sLight->SetGraphicsRootCBuffView(3);
 
-	model->Draw();
+	model_->Draw();
 }
 
 void Object3D::DrawSilhouette()
@@ -219,12 +218,12 @@ void Object3D::DrawSilhouette()
 	pipeline_->SetGraphicsRootSignature();
 	pipeline_->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	transform.SetGraphicsRootCBuffView(2);
-	skinData.SetGraphicsRootCBuffView(4);
-	colorMaterial.SetGraphicsRootCBuffView(5);
-	light->SetGraphicsRootCBuffView(3);
+	transform_.SetGraphicsRootCBuffView(2);
+	skinData_.SetGraphicsRootCBuffView(4);
+	colorMaterial_.SetGraphicsRootCBuffView(5);
+	sLight->SetGraphicsRootCBuffView(3);
 
-	model->Draw();
+	model_->Draw();
 }
 
 void Object3D::DrawShadow()
@@ -233,10 +232,10 @@ void Object3D::DrawShadow()
 	pipeline_->SetGraphicsRootSignature();
 	pipeline_->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	shadowTransform.SetGraphicsRootCBuffView(2);
-	lightMaterial.SetGraphicsRootCBuffView(3);
+	shadowTransform_.SetGraphicsRootCBuffView(2);
+	lightMaterial_.SetGraphicsRootCBuffView(3);
 
-	model->Draw();
+	model_->Draw();
 }
 
 void Object3D::DrawShadowReciever()
@@ -245,10 +244,10 @@ void Object3D::DrawShadowReciever()
 	pipeline_->SetGraphicsRootSignature();
 	pipeline_->SetPipeStateAndPrimitive(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	Texture shadowmap = SceneManager::GetInstance()->GetShadowMap();
-	dx->GetCmdList()->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(shadowmap.GetHandle()));
+	MyDirectX::GetInstance()->GetCmdList()->SetGraphicsRootDescriptorTable(1, TextureManager::GetInstance()->GetTextureHandle(shadowmap.GetHandle()));
 
-	transform.SetGraphicsRootCBuffView(2);
-	lightMaterial.SetGraphicsRootCBuffView(3);
+	transform_.SetGraphicsRootCBuffView(2);
+	lightMaterial_.SetGraphicsRootCBuffView(3);
 
-	model->DrawShadowReciever();
+	model_->DrawShadowReciever();
 }
