@@ -46,8 +46,8 @@ void MyDirectX::Initialize()
 	// ここに特定の名前を持つアダプターオブジェクトが入る
 	ComPtr<IDXGIAdapter4> tmpAdapter;
 	// パフォーマンスが高いものから順に、全てのアダプターを列挙する
-	for (UINT i = 0;
-		dxgiFactory->EnumAdapterByGpuPreference(i,
+	for (size_t i = 0;
+		dxgiFactory->EnumAdapterByGpuPreference((UINT)i,
 			DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
 			IID_PPV_ARGS(&tmpAdapter)) != DXGI_ERROR_NOT_FOUND;
 		i++) {
@@ -116,25 +116,25 @@ void MyDirectX::Initialize()
 	// コマンドアロケータを生成
 	result = device_->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		IID_PPV_ARGS(&cmdAllocator));
+		IID_PPV_ARGS(&cmdAllocator_));
 	assert(SUCCEEDED(result));
 	// コマンドリストを生成
 	result = device_->CreateCommandList(0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		cmdAllocator.Get(), nullptr,
-		IID_PPV_ARGS(&cmdList));
+		cmdAllocator_.Get(), nullptr,
+		IID_PPV_ARGS(&cmdList_));
 	assert(SUCCEEDED(result));
 
 	// コマンドアロケータを生成
 	result = device_->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		IID_PPV_ARGS(&loadTexAllocator));
+		IID_PPV_ARGS(&loadTexAllocator_));
 	assert(SUCCEEDED(result));
 	// コマンドリストを生成
 	result = device_->CreateCommandList(0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		loadTexAllocator.Get(), nullptr,
-		IID_PPV_ARGS(&loadTexCmdList));
+		loadTexAllocator_.Get(), nullptr,
+		IID_PPV_ARGS(&loadTexCmdList_));
 	assert(SUCCEEDED(result));
 #pragma endregion CmdList
 
@@ -142,11 +142,11 @@ void MyDirectX::Initialize()
 	//コマンドキューの設定
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	//コマンドキューを生成
-	result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&cmdQueue));
+	result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&cmdQueue_));
 	assert(SUCCEEDED(result));
 
 	//コマンドキューを生成
-	result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&loadTexQueue));
+	result = device_->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&loadTexQueue_));
 	assert(SUCCEEDED(result));
 #pragma endregion CmdQueue
 
@@ -165,10 +165,10 @@ void MyDirectX::Initialize()
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	// スワップチェーンの生成
 	result = dxgiFactory->CreateSwapChainForHwnd(
-		cmdQueue.Get(), Window::GetInstance()->GetHwnd(), &swapChainDesc, nullptr, nullptr,
+		cmdQueue_.Get(), Window::GetInstance()->GetHwnd(), &swapChainDesc, nullptr, nullptr,
 		&swapChain1);
 
-	swapChain1.As(&swapChain);		//	1→4に変換
+	swapChain1.As(&swapChain_);		//	1→4に変換
 	assert(SUCCEEDED(result));
 #pragma endregion swapChain
 
@@ -188,7 +188,7 @@ void MyDirectX::Initialize()
 	// スワップチェーンの全てのバッファについて処理する
 	for (size_t i = 0; i < backBuffers.size(); i++) {
 		// スワップチェーンからバッファを取得
-		swapChain->GetBuffer((UINT)i, IID_PPV_ARGS(&backBuffers[i]));
+		swapChain_->GetBuffer((UINT)i, IID_PPV_ARGS(&backBuffers[i]));
 		// デスクリプタヒープのハンドルを取得(先頭アドレス)
 		rtvHandle = rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		// 裏か表かでアドレスがずれる
@@ -259,16 +259,16 @@ void MyDirectX::Initialize()
 
 #pragma region fence
 	// フェンスの生成
-	result = device_->CreateFence(fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	result = device_->CreateFence(fenceVal_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
 
 	// フェンスの生成
 	result = device_->CreateFence(uploadTexFenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&uploadTexFence));
 #pragma endregion fence
 
 	//	ビューポート
-	viewPort.InitializeVP(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 0, 0, 0.0f, 1.0f);
+	viewPortSciRect_.InitializeVP(Window::sWIN_WIDTH, Window::sWIN_HEIGHT, 0, 0, 0.0f, 1.0f);
 	// シザー矩形
-	viewPort.InitializeSR(0, Window::sWIN_WIDTH, 0, Window::sWIN_HEIGHT);
+	viewPortSciRect_.InitializeSR(0, Window::sWIN_WIDTH, 0, Window::sWIN_HEIGHT);
 }
 
 void MyDirectX::SetResourceBarrier(D3D12_RESOURCE_BARRIER& desc, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, ID3D12Resource* pResource)
@@ -278,10 +278,10 @@ void MyDirectX::SetResourceBarrier(D3D12_RESOURCE_BARRIER& desc, D3D12_RESOURCE_
 	}
 	desc.Transition.StateBefore = StateBefore;
 	desc.Transition.StateAfter = StateAfter;
-	cmdList->ResourceBarrier(1, &desc);
+	cmdList_->ResourceBarrier(1, &desc);
 }
 
-void MyDirectX::CmdListDrawAble(D3D12_RESOURCE_BARRIER& desc, ID3D12Resource* pResource, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_, int rtDescNum, FLOAT* clearColor_)
+void MyDirectX::CmdListDrawAble(D3D12_RESOURCE_BARRIER& desc, ID3D12Resource* pResource, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, D3D12_CPU_DESCRIPTOR_HANDLE& rtvHandle_, D3D12_CPU_DESCRIPTOR_HANDLE& dsvHandle_, int32_t rtDescNum, FLOAT* clearColor)
 {
 	// 1.リソースバリアで書き込み可能に変更
 #pragma region ReleaseBarrier
@@ -289,76 +289,76 @@ void MyDirectX::CmdListDrawAble(D3D12_RESOURCE_BARRIER& desc, ID3D12Resource* pR
 #pragma endregion ReleaseBarrier
 	// 2.描画先の変更
 #pragma region Change
-	cmdList->OMSetRenderTargets(rtDescNum, &rtvHandle_, false, &dsvHandle_);
+	cmdList_->OMSetRenderTargets(rtDescNum, &rtvHandle_, false, &dsvHandle_);
 #pragma endregion Change
 	// 3.画面クリア
 #pragma region ScreenClear
-	if (clearColor_ == nullptr) {
+	if (clearColor == nullptr) {
 		ScreenClear(rtvHandle_);
 	}
 	else {
-		ScreenClear(clearColor_, rtvHandle_);
+		ScreenClear(clearColor, rtvHandle_);
 	}
-	cmdList->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	cmdList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion
 }
 
-void MyDirectX::PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor_)
+void MyDirectX::PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor)
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = postEffect->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart();
 	dsvHandle = postEffect->GetDSVHeap()->GetCPUDescriptorHandleForHeapStart();
 
-	int num = postEffect->GetTextureNum();
-	for (int i = 0; i < num; i++)
+	size_t num = postEffect->GetTextureNum();
+	for (size_t i = 0; i < num; i++)
 	{
 		// 1.リソースバリアで書き込み可能に変更
 #pragma region ReleaseBarrier
 		SetResourceBarrier(postEffect->GetResouceBarrier(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-			D3D12_RESOURCE_STATE_RENDER_TARGET, postEffect->GetTextureBuff(i));
+			D3D12_RESOURCE_STATE_RENDER_TARGET, postEffect->GetTextureBuff((int32_t)i));
 #pragma endregion ReleaseBarrier
 	}
 
 	// 2.描画先の変更
 #pragma region Change
-	cmdList->OMSetRenderTargets(num, &rtvHandle_, true, &dsvHandle);
+	cmdList_->OMSetRenderTargets((UINT)num, &rtvHandle_, true, &dsvHandle);
 #pragma endregion Change
 
 	// 3.画面クリア
 #pragma region ScreenClear
-	for (int i = 0; i < postEffect->GetTextureNum(); i++)
+	for (size_t i = 0; i < postEffect->GetTextureNum(); i++)
 	{
 		rtvHandle_.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * i;
 
-		if (clearColor_ != nullptr) {
-			ScreenClear(clearColor_, rtvHandle_);
+		if (clearColor != nullptr) {
+			ScreenClear(clearColor, rtvHandle_);
 		}
 		else {
 			ScreenClear(rtvHandle_);
 		}
 	}
-	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	cmdList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 #pragma endregion
 
 	postEffect->Setting();
 
-	cmdList->SetDescriptorHeaps(1, srvHeap.GetAddressOf());
+	cmdList_->SetDescriptorHeaps(1, srvHeap.GetAddressOf());
 }
 
 void MyDirectX::PostEffectDraw(PostEffect* postEffect)
 {
-	for (int i = 0; i < postEffect->GetTextureNum(); i++)
+	for (size_t i = 0; i < postEffect->GetTextureNum(); i++)
 	{
 		SetResourceBarrier(postEffect->GetResouceBarrier(), D3D12_RESOURCE_STATE_RENDER_TARGET
-			, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, postEffect->GetTextureBuff(i));
+			, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, postEffect->GetTextureBuff((int32_t)i));
 	}
 }
 
-void MyDirectX::PrevDraw(FLOAT* clearColor_)
+void MyDirectX::PrevDraw(FLOAT* clearColor)
 {
 	// 1.リソースバリアで書き込み可能に変更
 #pragma region ReleaseBarrier
 	// バックバッファの番号を取得(2つなので0番か1番)
-	UINT64 bbIndex = swapChain->GetCurrentBackBufferIndex();		//	現在のバックバッファ設定
+	UINT64 bbIndex = swapChain_->GetCurrentBackBufferIndex();		//	現在のバックバッファ設定
 #pragma endregion ReleaseBarrier
 
 	// 2.描画先の変更
@@ -370,9 +370,9 @@ void MyDirectX::PrevDraw(FLOAT* clearColor_)
 #pragma endregion Change
 
 	CmdListDrawAble(barrierDesc, backBuffers[bbIndex].Get(),
-		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, rtvHandle, dsvHandle, 1, clearColor_);
+		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, rtvHandle, dsvHandle, 1, clearColor);
 
-	viewPort.RSSetVPandSR();
+	viewPortSciRect_.RSSetVPandSR();
 }
 
 void MyDirectX::PostDraw()
@@ -384,33 +384,33 @@ void MyDirectX::PostDraw()
 
 	// 命令のクローズ
 #pragma region CmdClose
-	HRESULT result = cmdList->Close();
+	HRESULT result = cmdList_->Close();
 	assert(SUCCEEDED(result));
 	// 溜めていたコマンドリストの実行(close必須)
-	ID3D12CommandList* commandLists[] = { cmdList.Get()};
-	cmdQueue->ExecuteCommandLists(1, commandLists);
+	ID3D12CommandList* commandLists[] = { cmdList_.Get()};
+	cmdQueue_->ExecuteCommandLists(1, commandLists);
 	// 画面に表示するバッファをフリップ(裏表の入替え)
-	result = swapChain->Present(1, 0);
+	result = swapChain_->Present(1, 0);
 	assert(SUCCEEDED(result));
 #pragma endregion CmdClose
 
 #pragma region ChangeScreen
 	// コマンドの実行完了を待つ
-	cmdQueue->Signal(fence.Get(), ++fenceVal);
-	if (fence->GetCompletedValue() != fenceVal)	//	GPUの処理が完了したか判定
+	cmdQueue_->Signal(fence_.Get(), ++fenceVal_);
+	if (fence_->GetCompletedValue() != fenceVal_)	//	GPUの処理が完了したか判定
 	{
 		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
-		fence->SetEventOnCompletion(fenceVal, event);
+		fence_->SetEventOnCompletion(fenceVal_, event);
 		if (event != 0) {
 			WaitForSingleObject(event, INFINITE);
 			CloseHandle(event);
 		}
 	}
 	// キューをクリア
-	result = cmdAllocator->Reset();
+	result = cmdAllocator_->Reset();
 	assert(SUCCEEDED(result));
 	// 再びコマンドリストを貯める準備
-	result = cmdList->Reset(cmdAllocator.Get(), nullptr);
+	result = cmdList_->Reset(cmdAllocator_.Get(), nullptr);
 	assert(SUCCEEDED(result));
 #pragma endregion ChangeScreen
 }
@@ -419,16 +419,16 @@ void MyDirectX::UploadTexture()
 {
 	// 命令のクローズ
 #pragma region CmdClose
-	HRESULT result = loadTexCmdList->Close();
+	HRESULT result = loadTexCmdList_->Close();
 	assert(SUCCEEDED(result));
 	// 溜めていたコマンドリストの実行(close必須)
-	ID3D12CommandList* commandLists[] = { loadTexCmdList.Get() };
-	loadTexQueue->ExecuteCommandLists(1, commandLists);
+	ID3D12CommandList* commandLists[] = { loadTexCmdList_.Get() };
+	loadTexQueue_->ExecuteCommandLists(1, commandLists);
 #pragma endregion CmdClose
 
 #pragma region ChangeScreen
 	// コマンドの実行完了を待つ
-	loadTexQueue->Signal(uploadTexFence.Get(), ++uploadTexFenceVal);
+	loadTexQueue_->Signal(uploadTexFence.Get(), ++uploadTexFenceVal);
 	if (uploadTexFence->GetCompletedValue() != uploadTexFenceVal)	//	GPUの処理が完了したか判定
 	{
 		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
@@ -439,21 +439,21 @@ void MyDirectX::UploadTexture()
 		}
 	}
 	// キューをクリア
-	result = loadTexAllocator->Reset();
+	result = loadTexAllocator_->Reset();
 	assert(SUCCEEDED(result));
 	// 再びコマンドリストを貯める準備
-	result = loadTexCmdList->Reset(loadTexAllocator.Get(), nullptr);
+	result = loadTexCmdList_->Reset(loadTexAllocator_.Get(), nullptr);
 	assert(SUCCEEDED(result));
 #pragma endregion ChangeScreen
 }
 
-void MyDirectX::ScreenClear(FLOAT* clearColor_, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_)
+void MyDirectX::ScreenClear(FLOAT* clearColor, D3D12_CPU_DESCRIPTOR_HANDLE& rtvHandle_)
 {
-	cmdList->ClearRenderTargetView(rtvHandle_, clearColor_, 0, nullptr);
+	cmdList_->ClearRenderTargetView(rtvHandle_, clearColor, 0, nullptr);
 }
-void MyDirectX::ScreenClear(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_)
+void MyDirectX::ScreenClear(D3D12_CPU_DESCRIPTOR_HANDLE& rtvHandle_)
 {
-	FLOAT clearColor_[] = { 0.1f,0.25f, 0.5f,0.0f };
-	cmdList->ClearRenderTargetView(rtvHandle_, clearColor_, 0, nullptr);
+	FLOAT clearColor[] = { 0.1f,0.25f, 0.5f,0.0f };
+	cmdList_->ClearRenderTargetView(rtvHandle_, clearColor, 0, nullptr);
 }
 

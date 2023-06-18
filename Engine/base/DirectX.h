@@ -20,17 +20,17 @@ private:
 
 	ComPtr<ID3D12Device> device_;
 
-	ComPtr<ID3D12CommandAllocator> cmdAllocator;
-	ComPtr<ID3D12GraphicsCommandList> cmdList;
+	ComPtr<ID3D12CommandAllocator> cmdAllocator_;
+	ComPtr<ID3D12GraphicsCommandList> cmdList_;
 
-	ComPtr<ID3D12CommandQueue> cmdQueue;
+	ComPtr<ID3D12CommandQueue> cmdQueue_;
 
-	ComPtr<ID3D12CommandAllocator> loadTexAllocator;
-	ComPtr<ID3D12GraphicsCommandList> loadTexCmdList;
+	ComPtr<ID3D12CommandAllocator> loadTexAllocator_;
+	ComPtr<ID3D12GraphicsCommandList> loadTexCmdList_;
 
-	ComPtr<ID3D12CommandQueue> loadTexQueue;
+	ComPtr<ID3D12CommandQueue> loadTexQueue_;
 
-	ComPtr<IDXGISwapChain4> swapChain;
+	ComPtr<IDXGISwapChain4> swapChain_;
 
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
@@ -39,8 +39,8 @@ private:
 	std::vector<ComPtr<ID3D12Resource>> backBuffers;
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle;
 
-	ComPtr<ID3D12Fence> fence;
-	UINT64 fenceVal = 0;
+	ComPtr<ID3D12Fence> fence_;
+	UINT64 fenceVal_ = 0;
 	ComPtr<ID3D12Fence> uploadTexFence;
 	UINT64 uploadTexFenceVal = 0;
 
@@ -55,18 +55,18 @@ private:
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	
 	//	ビューポート
-	ViewPortScissorRect viewPort;
+	ViewPortScissorRect viewPortSciRect_;
 	// シザー矩形
 
 private:
 	void DebugLayer();
 
-	void ScreenClear(FLOAT* clearColor_, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_);
-	void ScreenClear(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_);
+	void ScreenClear(FLOAT* clearColor, D3D12_CPU_DESCRIPTOR_HANDLE& rtvHandle_);
+	void ScreenClear(D3D12_CPU_DESCRIPTOR_HANDLE& rtvHandle_);
 	
 	void SetResourceBarrier(D3D12_RESOURCE_BARRIER& desc, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter, ID3D12Resource* pResource = nullptr);
 	void CmdListDrawAble(D3D12_RESOURCE_BARRIER& barrierDesc, ID3D12Resource* pResource, D3D12_RESOURCE_STATES StateBefore, D3D12_RESOURCE_STATES StateAfter,
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_, int rtDescNum = 1, FLOAT* clearColor_ = nullptr);
+		D3D12_CPU_DESCRIPTOR_HANDLE& rtvHandle_, D3D12_CPU_DESCRIPTOR_HANDLE& dsvHandle_, int32_t rtDescNum = 1, FLOAT* clearColor = nullptr);
 	
 	MyDirectX() {};
 	~MyDirectX() {};
@@ -76,9 +76,9 @@ public:
 	MyDirectX& operator=(const MyDirectX& obj) = delete;
 
 	void Initialize();
-	void PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor_ = nullptr);
+	void PrevPostEffect(PostEffect* postEffect, FLOAT* clearColor = nullptr);
 	void PostEffectDraw(PostEffect* postEffect);
-	void PrevDraw(FLOAT* clearColor_ = nullptr);
+	void PrevDraw(FLOAT* clearColor = nullptr);
 	void PostDraw();
 	void UploadTexture();
 
@@ -88,8 +88,8 @@ public:
 
 	ID3D12DescriptorHeap* GetSRVHeap() { return srvHeap.Get(); }
 	ID3D12Device* GetDev() { return device_.Get(); }
-	ID3D12GraphicsCommandList* GetCmdList() { return cmdList.Get(); }
-	ID3D12GraphicsCommandList* GetLoadTexCmdList() { return loadTexCmdList.Get(); }
+	ID3D12GraphicsCommandList* GetCmdList() { return cmdList_.Get(); }
+	ID3D12GraphicsCommandList* GetLoadTexCmdList() { return loadTexCmdList_.Get(); }
 	D3D12_RESOURCE_DESC GetBackBuffDesc() { return backBuffers[0]->GetDesc(); }
 	D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc() { return rtvHeap->GetDesc(); }
 };

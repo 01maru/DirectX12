@@ -186,7 +186,7 @@ namespace
         if (FAILED(hr))
             return hr;
 
-        // Create a fence
+        // Create a fence_
         ComPtr<ID3D12Fence> fence;
         hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_GRAPHICS_PPV_ARGS(fence.GetAddressOf()));
         if (FAILED(hr))
@@ -294,7 +294,7 @@ namespace
         // Execute the command list
         pCommandQ->ExecuteCommandLists(1, CommandListCast(commandList.GetAddressOf()));
 
-        // Signal the fence
+        // Signal the fence_
         hr = pCommandQ->Signal(fence.Get(), 1);
         if (FAILED(hr))
             return hr;
