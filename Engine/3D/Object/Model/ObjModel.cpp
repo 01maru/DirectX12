@@ -12,9 +12,9 @@ ObjModel::ObjModel(const char* filename, bool smoothing)
 
 ObjModel::~ObjModel()
 {
-	meshes.clear();
+	meshes_.clear();
 
-	materials.clear();
+	materials_.clear();
 }
 
 void ObjModel::BoneTransform(float /*TimeInSeconds*/, std::vector<Matrix>& /*transforms*/)
@@ -56,8 +56,8 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 	file_.open(directoryPath + filename);
 	assert(!file_.fail());
 
-	meshes.emplace_back(new Mesh);
-	Mesh* mesh = meshes.back().get();
+	meshes_.emplace_back(new Mesh);
+	Mesh* mesh = meshes_.back().get();
 	int indexCount = 0;
 
 	string line;
@@ -83,8 +83,8 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 				line_stream >> materialName;
 
 				// マテリアル名で検索し、マテリアルを割り当てる
-				auto itr = materials.find(materialName);
-				if (itr != materials.end()) {
+				auto itr = materials_.find(materialName);
+				if (itr != materials_.end()) {
 					mesh->SetMaterial(itr->second.get());
 				}
 			}
@@ -99,8 +99,8 @@ void ObjModel::LoadModel(const std::string& modelname, bool smoothing)
 					mesh->CalcSmoothedNormals();
 				}
 				// 次のメッシュ生成
-				meshes.emplace_back(new Mesh);
-				mesh = meshes.back().get();
+				meshes_.emplace_back(new Mesh);
+				mesh = meshes_.back().get();
 				indexCount = 0;
 			}
 

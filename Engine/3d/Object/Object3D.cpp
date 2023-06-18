@@ -36,14 +36,14 @@ void Object3D::SetModel(IModel* model_)
 	model = model_;
 }
 
-void Object3D::SetCollider(BaseCollider* collider_)
-{
-	collider_->SetObject3D(this);
-	//this->collider = collider_;
-	CollisionManager::GetInstance()->AddCollider(collider_);
-	MatUpdate();
-	collider_->Update();
-}
+//void Object3D::SetCollider(BaseCollider* collider_)
+//{
+//	collider_->SetObject3D(this);
+//	//this->collider = collider_;
+//	CollisionManager::GetInstance()->AddCollider(collider_);
+//	MatUpdate();
+//	collider_->Update();
+//}
 
 void Object3D::SetAttribute(unsigned short /*attribute*/)
 {

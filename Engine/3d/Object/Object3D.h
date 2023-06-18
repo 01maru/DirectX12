@@ -5,7 +5,7 @@
 #include "MyMath.h"
 #include "IModel.h"
 #include "ICamera.h"
-#include "CollisionInfo.h"
+//#include "CollisionInfo.h"
 #include "DirectX.h"
 
 #include "ConstBuff.h"
@@ -75,7 +75,7 @@ public:
 	static void SetPipeline(GPipeline* pipeline_);
 	static void SetCamera(ICamera* camera_);
 	void SetModel(IModel* model_);
-	void SetCollider(BaseCollider* collider_);
+	//void SetCollider(BaseCollider* collider_);
 	//BaseCollider* GetCollider() { return collider; }
 	void SetAttribute(unsigned short attribute);
 
@@ -98,6 +98,6 @@ public:
 	inline IModel* GetModel() { return model; }
 	const Matrix& GetMatWorld() { return mat.matWorld_; }
 
-	virtual void OnCollision(const CollisionInfo& info) { (void)info; }
+	//virtual void OnCollision(const CollisionInfo& info) { (void)info; }
 };
 

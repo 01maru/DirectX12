@@ -213,20 +213,11 @@
     <ClCompile Include="Engine\Math\Quaternion.cpp">
       <Filter>ソース ファイル\lib\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Collider\CollisionInfo.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Base\Window\ViewPortScissorRect.cpp">
       <Filter>ソース ファイル\lib\2D\Screen</Filter>
     </ClCompile>
     <ClCompile Include="Engine\2D\PostEffect\PostEffect.cpp">
       <Filter>ソース ファイル\lib\2D\Screen</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collider\BaseCollider.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collider\SphereCollider.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Math\Vector\Vector2D.cpp">
       <Filter>ソース ファイル\lib\Engine\Math\Vector</Filter>
@@ -255,29 +246,8 @@
     <ClCompile Include="Engine\Base\Window\Window.cpp">
       <Filter>ソース ファイル\lib\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Collider\Collision.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collider\CollisionManager.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collider\RayCast.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collider\CollisionPrimitive.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collider\MeshCollider.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\2D\Particle\Particle.cpp">
       <Filter>ソース ファイル\lib\2D\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collider\CollisionAttribute.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Collider\QueryCallBack.cpp">
-      <Filter>ソース ファイル\lib\Engine\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3D\Light\SpotLight.cpp">
       <Filter>ソース ファイル\lib\Engine\Light</Filter>
@@ -428,18 +398,6 @@
     <ClInclude Include="Engine\3D\Camera\Base\ICamera.h">
       <Filter>ヘッダー ファイル\lib\3D\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Collider\CollisionInfo.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider\CollisionType.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider\BaseCollider.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider\SphereCollider.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Base\Window\ViewPortScissorRect.h">
       <Filter>ヘッダー ファイル\lib\2D\Screen</Filter>
     </ClInclude>
@@ -479,29 +437,8 @@
     <ClInclude Include="Engine\Base\Buffer\VertexStruct.h">
       <Filter>ヘッダー ファイル\lib\Engine\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Collider\Collision.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider\CollisionManager.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider\CollisionPrimitive.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider\RayCast.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider\MeshCollider.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\2D\Particle\Particle.h">
       <Filter>ヘッダー ファイル\lib\2D\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider\CollisionAttribute.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Collider\QueryCallBack.h">
-      <Filter>ヘッダー ファイル\lib\Engine\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3D\Light\Light.h">
       <Filter>ヘッダー ファイル\lib\Engine\Light</Filter>

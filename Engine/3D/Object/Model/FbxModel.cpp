@@ -169,15 +169,15 @@
 //
 //FbxModel::~FbxModel()
 //{
-//	for (auto m : meshes) {
+//	for (auto m : meshes_) {
 //		delete m;
 //	}
-//	meshes.clear();
+//	meshes_.clear();
 //
-//	for (auto m : materials) {
+//	for (auto m : materials_) {
 //		delete m.second;
 //	}
-//	materials.clear();
+//	materials_.clear();
 //}
 //
 //void FbxModel::BoneTransform(float TimeInSeconds, std::vector<Matrix>& transforms)
@@ -210,18 +210,18 @@
 //	if (modelScene == nullptr) { return; }
 //
 //	//	GlobalInverseTransformê›íË
-//	TransformMatToAiMat(globalInverseTransform, modelScene->mRootNode->mTransformation);
+//	TransformMatToAiMat(globalInverseTransform_, modelScene->mRootNode->mTransformation);
 //
 //	//	meshèÓïÒê›íË
-//	meshes.reserve(modelScene->mNumMeshes);
+//	meshes_.reserve(modelScene->mNumMeshes);
 //	for (UINT i = 0; i < modelScene->mNumMeshes; i++)
 //	{
 //		//	aiMeshå^ÇÃèÓïÒéÊìæ
 //		const auto pMesh = modelScene->mMeshes[i];
 //
 //		//	å^ïœä∑
-//		meshes.emplace_back(new Mesh);
-//		Mesh* mesh = meshes.back();
+//		meshes_.emplace_back(new Mesh);
+//		Mesh* mesh = meshes_.back();
 //		LoadMesh(*mesh, pMesh);
 //		//	É{Å[ÉìéÊìæ
 //		LoadBone(i, pMesh);
@@ -325,7 +325,7 @@
 //		for (UINT j = 0; j < src->mBones[i]->mNumWeights; j++) {
 //			UINT VertexID = src->mBones[i]->mWeights[j].mVertexId;
 //			float Weight = src->mBones[i]->mWeights[j].mWeight;
-//			meshes[meshIndex]->SetBone(VertexID, BoneIndex, Weight);
+//			meshes_[meshIndex]->SetBone(VertexID, BoneIndex, Weight);
 //		}
 //	}
 //}
@@ -385,7 +385,7 @@
 //
 //	if (boneMapping.find(NodeName) != boneMapping.end()) {
 //		UINT BoneIndex = boneMapping[NodeName];
-//		boneInfo[BoneIndex].finalTransformation = globalInverseTransform;
+//		boneInfo[BoneIndex].finalTransformation = globalInverseTransform_;
 //		boneInfo[BoneIndex].finalTransformation *= boneInfo[BoneIndex].boneOffset;
 //		boneInfo[BoneIndex].finalTransformation *= GlobalTransformation;
 //	}

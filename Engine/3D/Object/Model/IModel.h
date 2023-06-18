@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Material.h"
 #include "Mesh.h"
 #include <map>
@@ -14,37 +14,37 @@ class IModel
 protected:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	//	bone‚ÌÅ‘å”
-	static const int MAX_BONE_INDICES = 4;
+	//	boneã®æœ€å¤§æ•°
+	static const int sMAX_BONE_INDICES = 4;
 
-	//	ƒƒbƒVƒ…
-	std::vector<std::unique_ptr<Mesh>> meshes;
-	//	ƒ}ƒeƒŠƒAƒ‹
-	std::unordered_map<std::string, std::unique_ptr<Material>> materials;
+	//	ãƒ¡ãƒƒã‚·ãƒ¥
+	std::vector<std::unique_ptr<Mesh>> meshes_;
+	//	ãƒãƒ†ãƒªã‚¢ãƒ«
+	std::unordered_map<std::string, std::unique_ptr<Material>> materials_;
 
-	//	bone‚Ìî•ñ
-	Matrix globalInverseTransform;
-	std::map<std::string, UINT> boneMapping;
-	UINT numBones = 0;
-	std::vector<BoneInfo> boneInfo;
+	//	boneã®æƒ…å ±
+	Matrix globalInverseTransform_;
+	std::map<std::string, size_t> boneMapping_;
+	size_t numBones_ = 0;
+	std::vector<BoneInfo> boneInfo_;
 
 protected:
 	virtual void LoadModel(const std::string& modelname, bool smoothing) = 0;
 
 public:
 	virtual ~IModel() = default;
-	//	ƒtƒ@ƒCƒ‹–¼‚ÆƒXƒ€[ƒWƒ“ƒO‚·‚é‚©
+	//	ãƒ•ã‚¡ã‚¤ãƒ«åã¨ã‚¹ãƒ ãƒ¼ã‚¸ãƒ³ã‚°ã™ã‚‹ã‹
 	void Initialize(const char* filename, bool smoothing = false);
 	void Draw();
 	void DrawShadowReciever();
 
 	virtual void BoneTransform(float TimeInSeconds, std::vector<Matrix>& transforms) = 0;
-	void AddMaterial(Material* material) { materials.emplace(material->name_, material); }
+	void AddMaterial(Material* material) { materials_.emplace(material->name_, material); }
 
-	//@Getter
-	//const std::vector<Mesh*>& GetMeshes() { return meshes; }
-	const Matrix& GetModelTransform() { return globalInverseTransform; }
-	UINT GetNumBones() { return numBones; }
-	std::vector<BoneInfo> GetBoneInfo() { return boneInfo; }
+	//ã€€Getter
+	//const std::vector<Mesh*>& GetMeshes() { return meshes_; }
+	const Matrix& GetModelTransform() { return globalInverseTransform_; }
+	size_t GetNumBones() { return numBones_; }
+	std::vector<BoneInfo> GetBoneInfo() { return boneInfo_; }
 };
 

@@ -21,7 +21,7 @@ public:
 	inline void SetObject3D(Object3D* object) { object3d = object; }
 	inline Object3D* GetObject3D() { return object3d; }
 	inline CollisionShapeType GetShapeType() { return shapeType; }
-	inline void OnCollision(const CollisionInfo& info) { object3d->OnCollision(info); }
+	//inline void OnCollision(const CollisionInfo& info) { object3d->OnCollision(info); }
 
 	inline void SetAttribute(unsigned short attribute_) { attribute = attribute_; }
 	inline void AddAttribute(unsigned short attribute_) { attribute |= attribute_; }
